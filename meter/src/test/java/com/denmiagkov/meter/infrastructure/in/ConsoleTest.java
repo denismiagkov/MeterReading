@@ -45,7 +45,7 @@ class ConsoleTest {
 
         assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(reading))
                 .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
-                .hasMessage("Показания могут подаваться не чаще одного раза в месяц");
+                .hasMessage("Показания могут подаваться не чаще одного раза в месяц!");
     }
 
     @Test

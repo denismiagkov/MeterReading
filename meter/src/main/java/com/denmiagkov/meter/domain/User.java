@@ -75,8 +75,7 @@ public class User {
             this.login = login;
             this.password = password;
         } else {
-            String message = "Invalid data for registration as an admin!";
-            throw new AdminNotAuthorizedException(message);
+            throw new AdminNotAuthorizedException();
         }
     }
 }

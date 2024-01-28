@@ -9,18 +9,19 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
+
 /**
  * Класс контроллера
- * */
+ */
 @AllArgsConstructor
 public class Controller {
     /**
      * Сервис пользователя
-     * */
+     */
     UserService userService;
     /**
      * Сервис подачи показаний
-     * */
+     */
     ReadingService readingService;
 
     /**
@@ -44,7 +45,7 @@ public class Controller {
      * @param phone         Телефон пользователя
      * @param login         Логин пользователя
      * @param password      Пароль пользователя
-     * @param isAdmin  Подтверждение статуса администратора
+     * @param isAdmin       Подтверждение статуса администратора
      * @param adminPassword Единый пароль администратора
      */
     public void registerAdmin(String name, String phone, String login, String password, String isAdmin, String adminPassword) {

@@ -4,7 +4,6 @@ import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.Storage;
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.ActivityType;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserServiceImplTest {
     UserService userService;
     Storage storage;
     User user;
@@ -27,7 +25,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         storage = mock(Storage.class);
-        userService = new UserService(storage);
+        userService = new UserServiceImpl(storage);
         user = new User("John", "11-22-33", "Moscow", "user", "123");
     }
 
@@ -39,6 +37,8 @@ class UserServiceTest {
 
         User user1 = userService.registerUser("John", "11-22-33", "Moscow", "user", "123");
 
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
         assertThat(user1).isEqualTo(user);
     }
 
@@ -47,8 +47,6 @@ class UserServiceTest {
         when(storage.isExistUser(user)).thenReturn(true);
         when(storage.isExistLogin(anyString())).thenReturn(false);
         when(storage.addUser(user)).thenReturn(true);
-
-      //  User user1 = userService.registerUser("John", "11-22-33", "Moscow", "user", "123");
 
         assertThatThrownBy(() -> userService.registerUser(
                 "John", "11-22-33", "Moscow", "user", "123"))
@@ -71,9 +69,9 @@ class UserServiceTest {
         when(storage.isExistUser(user)).thenReturn(false);
         when(storage.isExistLogin(anyString())).thenReturn(false);
         when(storage.addUser(user)).thenReturn(true);
-        User user2 = new User("John", "11-22-33",  "user", "123", "true", "123admin");
+        User user2 = new User("John", "11-22-33", "user", "123", "true", "123admin");
 
-        User user1 = userService.registerUser("John", "11-22-33",  "user", "123", "true", "123admin");
+        User user1 = userService.registerUser("John", "11-22-33", "user", "123", "true", "123admin");
 
         assertThat(user1).isEqualTo(user2);
     }
@@ -85,8 +83,9 @@ class UserServiceTest {
 
         User testUser = userService.authorizeUser("dummy", "dummy");
 
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
         assertThat(testUser).isEqualTo(user);
-
     }
 
     @Test
@@ -107,5 +106,12 @@ class UserServiceTest {
         List<Activity> activities = userService.getUserActivitiesList();
 
         assertThat(activities).isEqualTo(activitiesDummy);
+    }
+
+    @Test
+    void recordExit() {
+        userService.recordExit(user);
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
     }
 }

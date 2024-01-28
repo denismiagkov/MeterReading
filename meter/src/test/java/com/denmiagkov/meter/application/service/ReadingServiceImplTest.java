@@ -1,22 +1,20 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.ActivityType;
 import com.denmiagkov.meter.domain.Reading;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.application.repository.Storage;
+import com.denmiagkov.meter.utils.PublicUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class ReadingServiceTest {
+class ReadingServiceImplTest {
     ReadingService readingService;
     Storage storage;
     User user;
@@ -24,30 +22,23 @@ class ReadingServiceTest {
     @BeforeEach
     void setUp() {
         storage = mock(Storage.class);
-        readingService = new ReadingService(storage);
+        readingService = new ReadingServiceImpl(storage);
         user = new User("John", "11-22-33", "Moscow", "user", "123");
-        storage.addUser(user);
-    }
-
-    @Test
-    void addUtilityType() {
-
     }
 
     @Test
     void submitNewReading() {
-        User user1 = mock(User.class);
         Reading reading = mock(Reading.class);
-        // Activity activity = mock(Activity.class);
 
         readingService.submitNewReading(user, reading);
 
         verify(storage, times(1)).addNewReading(reading);
-        // verify(storage, times(1)).addActivity(activity);
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
     }
 
     @Test
-    void getAllReadingsList(){
+    void getAllReadingsList() {
         List<Reading> readingsDummy = new ArrayList<>();
         when(storage.getAllReadingsList()).thenReturn(readingsDummy);
 
@@ -63,6 +54,8 @@ class ReadingServiceTest {
 
         Reading reading = readingService.getActualReadingByUser(user);
 
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
         assertThat(reading).isEqualTo(readingDummy);
     }
 
@@ -73,6 +66,8 @@ class ReadingServiceTest {
 
         List<Reading> readingsHistory = readingService.getReadingsHistoryByUser(user);
 
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
         assertThat(readingsHistory).isEqualTo(readingHistoryDummy);
     }
 
@@ -84,6 +79,8 @@ class ReadingServiceTest {
 
         Reading reading = readingService.getReadingsForMonthByUser(user, 2023, 11);
 
+        verify(storage, times(1))
+                .addActivity(any(Activity.class));
         assertThat(reading).isEqualTo(readingDummy);
     }
 }

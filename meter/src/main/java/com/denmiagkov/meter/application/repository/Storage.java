@@ -84,8 +84,7 @@ public class Storage {
                 return user;
             }
         }
-        String message = "Ошибка авторизации: пользователя с указанными логином и паролем не существует!";
-        throw new AuthenticationFailedException(message);
+        throw new AuthenticationFailedException();
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.service.ReadingService;
-import com.denmiagkov.meter.application.service.UserService;
+import com.denmiagkov.meter.application.service.ReadingServiceImpl;
+import com.denmiagkov.meter.application.service.UserServiceImpl;
 import com.denmiagkov.meter.domain.Activity;
 import com.denmiagkov.meter.domain.Reading;
 import com.denmiagkov.meter.domain.User;
@@ -20,13 +20,13 @@ import static org.mockito.Mockito.*;
 class ControllerTest {
 
     Controller controller;
-    UserService userService;
-    ReadingService readingService;
+    UserServiceImpl userService;
+    ReadingServiceImpl readingService;
 
     @BeforeEach
     void setUp() {
-        userService = mock(UserService.class);
-        readingService = mock(ReadingService.class);
+        userService = mock(UserServiceImpl.class);
+        readingService = mock(ReadingServiceImpl.class);
         controller = new Controller(userService, readingService);
     }
 

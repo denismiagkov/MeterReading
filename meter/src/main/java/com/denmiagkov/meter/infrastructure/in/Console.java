@@ -2,6 +2,7 @@ package com.denmiagkov.meter.infrastructure.in;
 
 import com.denmiagkov.meter.application.exception.SubmitReadingOnTheSameMonthException;
 import com.denmiagkov.meter.application.exception.NewMeterValueIsLessThenPreviousException;
+import com.denmiagkov.meter.domain.Activity;
 import com.denmiagkov.meter.domain.Reading;
 import com.denmiagkov.meter.domain.User;
 
@@ -87,8 +88,12 @@ public class Console {
         System.out.println("Введите пароль пользователя:");
         String password = scanner.nextLine();
 
-        controller.registerUser(name, phone, address, login, password);
-        System.out.println("Пользователь успешно зарегистрирован");
+        try {
+            controller.registerUser(name, phone, address, login, password);
+            System.out.println("Пользователь успешно зарегистрирован");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -109,8 +114,12 @@ public class Console {
         System.out.println("Введите код верификации:");
         String adminPassword = scanner.nextLine();
 
-        controller.registerAdmin(name, phone, login, password, isAdmin, adminPassword);
-        System.out.println("Пользователь успешно зарегистрирован");
+        try {
+            controller.registerAdmin(name, phone, login, password, isAdmin, adminPassword);
+            System.out.println("Пользователь успешно зарегистрирован");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -122,11 +131,15 @@ public class Console {
         System.out.println("Введите пароль:");
         String password = scanner.nextLine();
 
-        user = controller.authorizeUser(login, password);
-        if (user.isAdmin()) {
-            startAdmin();
-        } else {
-            startUser();
+        try {
+            user = controller.authorizeUser(login, password);
+            if (user.isAdmin()) {
+                startAdmin();
+            } else {
+                startUser();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -184,6 +197,7 @@ public class Console {
 
                 switch (option) {
                     case 0 -> {
+                        controller.recordExit(user);
                         user = null;
                         System.out.println("Выход из профиля");
                         return;
@@ -227,7 +241,11 @@ public class Console {
      */
     private void getActualReadingByUser() {
         Reading reading = controller.getActualReadingByUser(user);
-        System.out.println("Актуальные показатели счетчиков: \n" + reading.getValues());
+        if (reading != null) {
+            System.out.println("Актуальные показатели счетчиков: \n" + reading.getValues());
+        } else {
+            System.out.println("Показания ранее не передавались!");
+        }
     }
 
     /**
@@ -235,19 +253,23 @@ public class Console {
      */
     private void conveyNewReading() {
         Reading lastReading = controller.getActualReadingByUser(user);
-        if (checkMonth(lastReading)) {
-            Map<String, Double> values = new HashMap<>();
-            for (Map.Entry<Integer, String> entry : PUBLIC_UTILITY.getUtilityList().entrySet()) {
-                String utility = entry.getValue();
-                System.out.printf("Введите показания счетчика по услуге: %s : \n", utility);
-                String input = scanner.nextLine();
-                Double value = Double.parseDouble(input);
-                if (checkPreviousMeterValue(lastReading, utility, value)) {
-                    values.put(utility, value);
+        try {
+            if (checkMonth(lastReading)) {
+                Map<String, Double> values = new HashMap<>();
+                for (Map.Entry<Integer, String> entry : PUBLIC_UTILITY.getUtilityList().entrySet()) {
+                    String utility = entry.getValue();
+                    System.out.printf("Введите показания счетчика по услуге: %s : \n", utility);
+                    String input = scanner.nextLine();
+                    Double value = Double.parseDouble(input);
+                    if (checkPreviousMeterValue(lastReading, utility, value)) {
+                        values.put(utility, value);
+                    }
                 }
+                Reading newReading = new Reading(user, values);
+                controller.submitNewReading(user, newReading);
             }
-            Reading newReading = new Reading(user, values);
-            controller.submitNewReading(user, newReading);
+        } catch (NumberFormatException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -267,7 +289,9 @@ public class Console {
      */
     private void getActivityList() {
         var activityList = controller.getUserActivitiesList();
-        System.out.println(activityList);
+        for (int i = 0; i < activityList.size(); i++) {
+            System.out.println(i + "\t" + activityList.get(i));
+        }
     }
 
     /**
@@ -304,8 +328,7 @@ public class Console {
             if (reading == null) return true;
             if (reading.getDate().getMonthValue() == now.getMonthValue()
                 && reading.getDate().getYear() == now.getYear()) {
-                String message = "Показания могут подаваться не чаще одного раза в месяц";
-                throw new SubmitReadingOnTheSameMonthException(message);
+                throw new SubmitReadingOnTheSameMonthException();
             }
             return true;
         }
@@ -321,8 +344,7 @@ public class Console {
         public static boolean checkPreviousMeterValue(Reading reading, String utility, Double value) {
             if (reading == null) return true;
             if (reading.getValues().get(utility) > value) {
-                String message = "Недопустимое знаачение: новое показание счетчика меньше предыдущего!";
-                throw new NewMeterValueIsLessThenPreviousException(message);
+                throw new NewMeterValueIsLessThenPreviousException();
             }
             return true;
         }

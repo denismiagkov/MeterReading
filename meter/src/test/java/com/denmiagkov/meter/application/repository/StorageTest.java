@@ -1,8 +1,7 @@
 package com.denmiagkov.meter.application.repository;
 
 import com.denmiagkov.meter.application.exception.AuthenticationFailedException;
-import com.denmiagkov.meter.application.repository.Storage;
-import com.denmiagkov.meter.application.service.UserService;
+import com.denmiagkov.meter.application.service.UserServiceImpl;
 import com.denmiagkov.meter.domain.Activity;
 import com.denmiagkov.meter.domain.ActivityType;
 import com.denmiagkov.meter.domain.Reading;
@@ -177,7 +176,7 @@ class StorageTest {
     @Test
     void getActivityList() {
         storage.getUsers().clear();
-        UserService userService = new UserService(storage);
+        UserServiceImpl userService = new UserServiceImpl(storage);
         userService.registerUser(user.getName(), user.getPhone(), user.getAddress(), user.getLogin(), user.getPassword());
         userService.authorizeUser("user", "123");
         userService.recordExit(user);
