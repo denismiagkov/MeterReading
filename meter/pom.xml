@@ -11,6 +11,13 @@
     <properties>
         <java.verion>17</java.verion>
         <lombok.version>1.18.30</lombok.version>
+        <junit.platform.commons.version>1.10.1</junit.platform.commons.version>
+        <junit.jupiter.api.version>5.10.1</junit.jupiter.api.version>
+        <junit.jupiter.params.version>5.10.1</junit.jupiter.params.version>
+        <assertj.core.version>3.24.2</assertj.core.version>
+        <mockito.core.version>5.7.0</mockito.core.version>
+        <objenesis.version>3.3</objenesis.version>
+        <commons.collections4.version>4.4</commons.collections4.version>
     </properties>
 
 
@@ -24,37 +31,43 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-commons</artifactId>
-            <version>1.10.1</version>
+            <version>${junit.platform.commons.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.1</version>
+            <version>${junit.jupiter.api.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.10.1</version>
+            <version>${junit.jupiter.params.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.24.2</version>
+            <version>${assertj.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.7.0</version>
+            <version>${mockito.core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
-            <version>3.3</version>
+            <version>${objenesis.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons.collections4.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

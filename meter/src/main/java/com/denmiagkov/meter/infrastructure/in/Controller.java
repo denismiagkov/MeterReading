@@ -1,9 +1,11 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.service.ReadingService;
+import com.denmiagkov.meter.application.service.UserActivityService;
+import com.denmiagkov.meter.application.service.DictionaryService;
+import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import lombok.AllArgsConstructor;
 
@@ -18,11 +20,16 @@ public class Controller {
     /**
      * Сервис пользователя
      */
-    UserService userService;
+    private final UserService userService;
     /**
      * Сервис подачи показаний
      */
-    ReadingService readingService;
+    private final MeterReadingService meterReadingService;
+    /**
+     * Сервис действий пользователя
+     */
+    private final UserActivityService activityService;
+    private final DictionaryService dictionaryService;
 
     /**
      * Метод регистрации обычного пользователя
@@ -77,8 +84,8 @@ public class Controller {
      *
      * @return List<Reading> Общий список показаний счетчиков
      */
-    public List<Reading> getAllReadingsList() {
-        return readingService.getAllReadingsList();
+    public List<List<MeterReading>> getAllReadingsList(int pageSize) {
+        return meterReadingService.getAllReadingsList(pageSize);
     }
 
     /**
@@ -87,7 +94,7 @@ public class Controller {
      * @return List<Activity>
      */
     public List<Activity> getUserActivitiesList() {
-        return userService.getUserActivitiesList();
+        return activityService.getUserActivitiesList();
     }
 
     /**
@@ -96,7 +103,7 @@ public class Controller {
      * @param newUtility новый тип подаваемых показаний
      */
     public void addUtilityType(String newUtility) {
-        readingService.addUtilityType(newUtility);
+        dictionaryService.addUtilityType(newUtility);
     }
 
     /**
@@ -105,8 +112,8 @@ public class Controller {
      * @param user    Пользователь
      * @param reading Показания счетчиков
      */
-    public void submitNewReading(User user, Reading reading) {
-        readingService.submitNewReading(user, reading);
+    public void submitNewReading(User user, MeterReading reading) {
+        meterReadingService.submitNewReading(user, reading);
     }
 
     /**
@@ -115,8 +122,8 @@ public class Controller {
      * @param user Пользователь
      * @return Reading Актуальные показания счетчиков
      */
-    public Reading getActualReadingByUser(User user) {
-        return readingService.getActualReadingByUser(user);
+    public MeterReading getActualReadingByUser(User user) {
+        return meterReadingService.getActualReadingByUser(user);
     }
 
     /**
@@ -125,8 +132,8 @@ public class Controller {
      * @param user Пользователь
      * @return List<Reading> Список поданных показаний
      */
-    public List<Reading> getReadingsHistoryByUser(User user) {
-        return readingService.getReadingsHistoryByUser(user);
+    public List<List<MeterReading>> getReadingsHistoryByUser(User user, int pageSize) {
+        return meterReadingService.getReadingsHistoryByUser(user, pageSize);
     }
 
     /**
@@ -136,8 +143,8 @@ public class Controller {
      * @param year  Год
      * @param month Месяц
      */
-    public Reading getReadingsForMonthByUser(User user, int year, int month) {
-        return readingService.getReadingsForMonthByUser(user, year, month);
+    public MeterReading getReadingsForMonthByUser(User user, int year, int month) {
+        return meterReadingService.getReadingsForMonthByUser(user, year, month);
     }
 
     /**

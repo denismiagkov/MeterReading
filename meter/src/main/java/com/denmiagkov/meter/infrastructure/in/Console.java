@@ -2,9 +2,9 @@ package com.denmiagkov.meter.infrastructure.in;
 
 import com.denmiagkov.meter.application.exception.SubmitReadingOnTheSameMonthException;
 import com.denmiagkov.meter.application.exception.NewMeterValueIsLessThenPreviousException;
-import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
+import com.denmiagkov.meter.domain.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -20,15 +20,15 @@ public class Console {
     /**
      * Контроллер
      */
-    Controller controller;
+    private final Controller controller;
     /**
      * Сканер
      */
-    Scanner scanner;
+    private final Scanner scanner;
     /**
      * Пользователь
      */
-    User user;
+    private User user;
 
     /**
      * Конструктор
@@ -133,7 +133,7 @@ public class Console {
 
         try {
             user = controller.authorizeUser(login, password);
-            if (user.isAdmin()) {
+            if (user.getRole().equals(UserRole.ADMIN)) {
                 startAdmin();
             } else {
                 startUser();
@@ -167,7 +167,7 @@ public class Console {
                         return;
                     }
                     case 1 -> getUserList();
-                    case 2 -> getOverallReadingList();
+                    case 2 -> getOverallReadingList(1);
                     case 3 -> getActivityList();
                     case 4 -> addUtilityType();
                 }
@@ -205,7 +205,7 @@ public class Console {
                     case 1 -> conveyNewReading();
                     case 2 -> getActualReadingByUser();
                     case 3 -> getReadingsForMonthByUser();
-                    case 4 -> getReadingsHistoryReportByUser();
+                    case 4 -> getReadingsHistoryReportByUser(1);
                 }
 
             } else {
@@ -223,24 +223,28 @@ public class Console {
         int year = Integer.parseInt(scanner.nextLine());
         System.out.println("Введите месяц:");
         int month = Integer.parseInt(scanner.nextLine());
-        Reading reading = controller.getReadingsForMonthByUser(user, year, month);
+        MeterReading reading = controller.getReadingsForMonthByUser(user, year, month);
         System.out.println(reading);
     }
 
     /**
      * Метод открытия окна просмотра истории подачи показаний пользователем
      */
-    private void getReadingsHistoryReportByUser() {
-        List<Reading> readingHistory = controller.getReadingsHistoryByUser(user);
+    private void getReadingsHistoryReportByUser(int pageSize) {
+        List<List<MeterReading>> meterReadingHistory = controller.getReadingsHistoryByUser(user, pageSize);
         System.out.println("История подачи показаний пользователем " + user.getName());
-        readingHistory.forEach(System.out::println);
+        int page = 0;
+        for (List<MeterReading> currentPage : meterReadingHistory) {
+            System.out.println(currentPage);
+            page++;
+        }
     }
 
     /**
      * Метод открытия окна просмотра актуальных показаний счетчиков
      */
     private void getActualReadingByUser() {
-        Reading reading = controller.getActualReadingByUser(user);
+        MeterReading reading = controller.getActualReadingByUser(user);
         if (reading != null) {
             System.out.println("Актуальные показатели счетчиков: \n" + reading.getValues());
         } else {
@@ -252,7 +256,7 @@ public class Console {
      * Метод открытия окна подачи новых показаний
      */
     private void conveyNewReading() {
-        Reading lastReading = controller.getActualReadingByUser(user);
+        MeterReading lastReading = controller.getActualReadingByUser(user);
         try {
             if (checkMonth(lastReading)) {
                 Map<String, Double> values = new HashMap<>();
@@ -265,7 +269,7 @@ public class Console {
                         values.put(utility, value);
                     }
                 }
-                Reading newReading = new Reading(user, values);
+                MeterReading newReading = new MeterReading(user, values);
                 controller.submitNewReading(user, newReading);
             }
         } catch (NumberFormatException e) {
@@ -297,9 +301,13 @@ public class Console {
     /**
      * Метод открытия окна просмотра всех переданных показаний всеми пользователями
      */
-    private void getOverallReadingList() {
-        var readingList = controller.getAllReadingsList();
-        System.out.println(readingList);
+    private void getOverallReadingList(int pageSize) {
+        var readingList = controller.getAllReadingsList(pageSize);
+        int page = 0;
+        for (List<MeterReading> currentPage : readingList) {
+            System.out.println(currentPage);
+            page++;
+        }
     }
 
     /**
@@ -323,7 +331,7 @@ public class Console {
          * @param reading Актуальные показания счетчика
          * @return boolean возвращает true - если условие выполняется, false - если нет
          */
-        public static boolean checkMonth(Reading reading) {
+        public static boolean checkMonth(MeterReading reading) {
             LocalDateTime now = LocalDateTime.now();
             if (reading == null) return true;
             if (reading.getDate().getMonthValue() == now.getMonthValue()
@@ -341,7 +349,7 @@ public class Console {
          * @param value   новое значение поеазаний
          * @return boolean возвращает true - если условие выполняется, false - если нет
          */
-        public static boolean checkPreviousMeterValue(Reading reading, String utility, Double value) {
+        public static boolean checkPreviousMeterValue(MeterReading reading, String utility, Double value) {
             if (reading == null) return true;
             if (reading.getValues().get(utility) > value) {
                 throw new NewMeterValueIsLessThenPreviousException();

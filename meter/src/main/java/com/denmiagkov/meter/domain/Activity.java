@@ -15,24 +15,23 @@ import java.util.UUID;
  */
 @Data
 @EqualsAndHashCode(of = "id")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Activity {
     /**
      * Уникальный идентификатор действия
      */
-    UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
     /**
      * Идентификатор пользователя, совершившего действие
      */
-    UUID userId;
+    private final UUID userId;
     /**
      * Дата и время совершения действия
      */
-    LocalDateTime dateTime;
+    private final LocalDateTime dateTime;
     /**
      * Тип действия
      */
-    ActivityType action;
+    private final ActivityType action;
 
     /**
      * Конструктор

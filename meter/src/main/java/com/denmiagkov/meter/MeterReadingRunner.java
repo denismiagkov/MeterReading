@@ -2,7 +2,7 @@ package com.denmiagkov.meter;
 
 import com.denmiagkov.meter.utils.App;
 
-public class MeterRunner {
+public class MeterReadingRunner {
     public static void main(String[] args) {
         App.init();
     }

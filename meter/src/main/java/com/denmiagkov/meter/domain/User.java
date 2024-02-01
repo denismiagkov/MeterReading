@@ -12,40 +12,39 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"name", "phone"})
 @ToString(exclude = "ADMIN_PASSWORD")
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     /**
      * Пароль администратора (необходим для регистрации нового администратора)
      */
-    final String ADMIN_PASSWORD = "123admin";
+    private final String ADMIN_PASSWORD = "123admin";
     /**
      * Уникальный идентификатор пользователя
      */
-    final UUID id = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
     /**
      * Имя пользователя
      */
-    String name;
+    private String name;
     /**
      * Телефон пользователя
      */
-    String phone;
+    private String phone;
     /**
      * Адрес пользователя
      */
-    String address;
+    private String address;
     /**
      * Статус администратора
      */
-    boolean isAdmin;
+    private UserRole role;
     /**
      * Логин пользователя
      */
-    String login;
+    private String login;
     /**
      * Пароль пользователя
      */
-    String password;
+    private String password;
 
 
     /**
@@ -55,7 +54,7 @@ public class User {
         this.name = name;
         this.phone = phone;
         this.address = address;
-        this.isAdmin = false;
+        this.role = UserRole.USER;
         this.login = login;
         this.password = password;
     }
@@ -66,12 +65,12 @@ public class User {
      * @throws AdminNotAuthorizedException
      */
     public User(String name, String phone, String login, String password,
-                String inputIsAdmin, String adminPassword) {
-        boolean isAdmin = Boolean.parseBoolean(inputIsAdmin);
-        if (isAdmin && ADMIN_PASSWORD.equals(adminPassword)) {
+                String isAdmin, String adminPassword) {
+        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN))
+            && ADMIN_PASSWORD.equals(adminPassword)) {
             this.name = name;
             this.phone = phone;
-            this.isAdmin = true;
+            this.role = UserRole.ADMIN;
             this.login = login;
             this.password = password;
         } else {

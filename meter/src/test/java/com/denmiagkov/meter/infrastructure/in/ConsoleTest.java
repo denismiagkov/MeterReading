@@ -2,7 +2,7 @@ package com.denmiagkov.meter.infrastructure.in;
 
 import com.denmiagkov.meter.application.exception.SubmitReadingOnTheSameMonthException;
 import com.denmiagkov.meter.application.exception.NewMeterValueIsLessThenPreviousException;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class ConsoleTest {
         meterValues.put("HEATING", 144.25);
         meterValues.put("HOT_WATER", 37.1);
         meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading reading = new MeterReading(user, meterValues);
 
         assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(reading))
                 .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
@@ -55,9 +55,9 @@ class ConsoleTest {
         meterValues.put("HEATING", 144.25);
         meterValues.put("HOT_WATER", 37.1);
         meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading reading = new MeterReading(user, meterValues);
 
-        Class<?> clazz = Reading.class;
+        Class<?> clazz = MeterReading.class;
         Field fieldDate = clazz.getDeclaredField("date");
         fieldDate.setAccessible(true);
         fieldDate.set(reading, LocalDateTime.now().minusDays(50));
@@ -72,7 +72,7 @@ class ConsoleTest {
         meterValues.put("HEATING", 144.25);
         meterValues.put("HOT_WATER", 37.1);
         meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading reading = new MeterReading(user, meterValues);
         String utility = "HEATING";
         Double meterValue = 100.00;
 
@@ -89,7 +89,7 @@ class ConsoleTest {
         meterValues.put("HEATING", 144.25);
         meterValues.put("HOT_WATER", 37.1);
         meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading reading = new MeterReading(user, meterValues);
         String utility = "HEATING";
         Double meterValue = 200.00;
 

@@ -1,9 +1,8 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.service.ReadingServiceImpl;
-import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.application.service.*;
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,18 @@ import static org.mockito.Mockito.*;
 class ControllerTest {
 
     Controller controller;
-    UserServiceImpl userService;
-    ReadingServiceImpl readingService;
+    UserService userService;
+    MeterReadingService meterReadingService;
+    UserActivityService activityService;
+    DictionaryService dictionaryService;
 
     @BeforeEach
     void setUp() {
         userService = mock(UserServiceImpl.class);
-        readingService = mock(ReadingServiceImpl.class);
-        controller = new Controller(userService, readingService);
+        meterReadingService = mock(MeterReadingServiceImpl.class);
+        activityService = mock(UserActivityServiceImpl.class);
+        dictionaryService = mock(DictionaryServiceImpl.class);
+        controller = new Controller(userService, meterReadingService, activityService, dictionaryService);
     }
 
     @Test
@@ -69,10 +72,10 @@ class ControllerTest {
 
     @Test
     void getReadingList() {
-        List<Reading> readings = new ArrayList<>();
-        when(readingService.getAllReadingsList()).thenReturn(readings);
+        List<List<MeterReading>> readings = mock(ArrayList.class);
+        when(meterReadingService.getAllReadingsList(2)).thenReturn(readings);
 
-        List<Reading> testReadings = controller.getAllReadingsList();
+        List<List<MeterReading>> testReadings = controller.getAllReadingsList(2);
 
         assertThat(testReadings).isEqualTo(readings);
     }
@@ -80,7 +83,7 @@ class ControllerTest {
     @Test
     void getActivityList() {
         List<Activity> activitiesDummy = new ArrayList<>();
-        when(userService.getUserActivitiesList()).thenReturn(activitiesDummy);
+        when(activityService.getUserActivitiesList()).thenReturn(activitiesDummy);
 
         List<Activity> activities = controller.getUserActivitiesList();
 
@@ -91,37 +94,37 @@ class ControllerTest {
     void addUtilityType() {
         controller.addUtilityType("ELECTRICITY");
 
-        verify(readingService, times(1)).addUtilityType("ELECTRICITY");
+        verify(dictionaryService, times(1)).addUtilityType("ELECTRICITY");
     }
 
     @Test
     void addReading() {
         User user = mock(User.class);
-        Reading reading = mock(Reading.class);
+        MeterReading reading = mock(MeterReading.class);
 
         controller.submitNewReading(user, reading);
 
-        verify(readingService, times(1)).submitNewReading(user, reading);
+        verify(meterReadingService, times(1)).submitNewReading(user, reading);
     }
 
     @Test
     void getActualReadingByUser() {
         User userDummy = mock(User.class);
-        Reading readingDummy = mock(Reading.class);
-        when(readingService.getActualReadingByUser(userDummy)).thenReturn(readingDummy);
+        MeterReading readingDummy = mock(MeterReading.class);
+        when(meterReadingService.getActualReadingByUser(userDummy)).thenReturn(readingDummy);
 
-        Reading reading = controller.getActualReadingByUser(userDummy);
+        MeterReading reading = controller.getActualReadingByUser(userDummy);
 
-        verify(readingService, times(1)).getActualReadingByUser(userDummy);
+        verify(meterReadingService, times(1)).getActualReadingByUser(userDummy);
     }
 
     @Test
     void getReadingsHistoryByUser() {
         User userDummy = mock(User.class);
-        List<Reading> readingsDummy = new ArrayList<>();
-        when(readingService.getReadingsHistoryByUser(userDummy)).thenReturn(readingsDummy);
+        List<List<MeterReading>> readingsDummy = mock(ArrayList.class);
+        when(meterReadingService.getReadingsHistoryByUser(userDummy, 1)).thenReturn(readingsDummy);
 
-        List<Reading> readings = controller.getReadingsHistoryByUser(userDummy);
+        List<List<MeterReading>> readings = controller.getReadingsHistoryByUser(userDummy, 1);
 
         assertThat(readings).isEqualTo(readingsDummy);
     }
@@ -129,11 +132,11 @@ class ControllerTest {
     @Test
     void getReadingsForMonthByUser() {
         User userDummy = mock(User.class);
-        Reading readingDummy = mock(Reading.class);
-        when(readingService.getReadingsForMonthByUser(userDummy, 2024, 1))
+        MeterReading readingDummy = mock(MeterReading.class);
+        when(meterReadingService.getReadingsForMonthByUser(userDummy, 2024, 1))
                 .thenReturn(readingDummy);
 
-        Reading reading = controller.getReadingsForMonthByUser(userDummy, 2024, 1);
+        MeterReading reading = controller.getReadingsForMonthByUser(userDummy, 2024, 1);
 
         assertThat(reading).isEqualTo(readingDummy);
     }
