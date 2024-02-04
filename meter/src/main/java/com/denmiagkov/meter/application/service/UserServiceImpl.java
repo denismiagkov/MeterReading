@@ -40,9 +40,7 @@ public class UserServiceImpl implements UserService {
             if (!userRepository.isExistLogin(inputLogin)) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                System.out.println("new user: " + user);
                 Activity activity = new Activity(user, ActivityType.REGISTRATION);
-                System.out.println("new activity: " + activity);
                 activityService.addActivity(activity);
                 return user;
             } else {

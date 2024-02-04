@@ -15,7 +15,8 @@
         <junit.jupiter.api.version>5.10.1</junit.jupiter.api.version>
         <junit.jupiter.params.version>5.10.1</junit.jupiter.params.version>
         <assertj.core.version>3.24.2</assertj.core.version>
-        <mockito.core.version>5.7.0</mockito.core.version>
+        <mockito.core.version>5.10.0</mockito.core.version>
+        <mockito.junit.jupiter.version>5.10.0</mockito.junit.jupiter.version>
         <objenesis.version>3.3</objenesis.version>
         <testcontainers.postgresql.version>1.19.4</testcontainers.postgresql.version>
         <junit.jupiter.testcontainers.version>1.19.4</junit.jupiter.testcontainers.version>
@@ -59,6 +60,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

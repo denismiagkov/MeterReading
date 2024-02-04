@@ -135,7 +135,7 @@ public class Console {
         String password = scanner.nextLine();
 
         try {
-            user = controller.authenticate(login, password);
+            user = controller.authenticateUser(login, password);
             if (user.getRole().equals(UserRole.ADMIN)) {
                 startAdmin();
             } else {

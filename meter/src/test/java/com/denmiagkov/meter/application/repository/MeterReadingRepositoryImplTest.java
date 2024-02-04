@@ -94,8 +94,18 @@ class MeterReadingRepositoryImplTest {
 
 
     @Test
+    @DisplayName("Returns non-empty meter readings list of only one user")
     void getActualMeterReadingsOnAllUtilitiesByUser() {
+        List<MeterReading> testUserActualMeterReadings =
+                meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(testUser);
 
+        List<MeterReading> notTestUserMeterReadings = testUserActualMeterReadings.stream()
+                .filter(e -> e.getUserId() != testUser.getId())
+                .toList();
+        assertAll(
+                () -> assertThat(testUserActualMeterReadings).isNotEmpty(),
+                () -> assertThat(notTestUserMeterReadings).isEmpty()
+        );
     }
 
     @Test

@@ -71,7 +71,7 @@ public class Controller {
      * @param password Пароль пользователя
      * @return User Пользователь
      */
-    public User authenticate(String login, String password) {
+    public User authenticateUser(String login, String password) {
         return userService.authenticateUser(login, password);
     }
 

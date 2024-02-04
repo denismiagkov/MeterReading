@@ -33,7 +33,6 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
                      ADD_PUBLIC_UTILITY_TYPE_TO_DICTIONARY,
                      Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, utilityName);
-            System.out.println(statement);
             statement.executeUpdate();
             ResultSet generatedKey = statement.getGeneratedKeys();
             int newUtilityId = -1;

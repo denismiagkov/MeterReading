@@ -49,6 +49,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public MeterReading getActualMeterReadingOnExactUtilityByUser(User user, int utilityId) {
+        Activity activity = new Activity(user, ActivityType.REVIEW_ACTUAL_READING);
+        activityService.addActivity(activity);
         return meterReadingRepository.getActualMeterReadingOnExactUtility(user, utilityId);
     }
 
