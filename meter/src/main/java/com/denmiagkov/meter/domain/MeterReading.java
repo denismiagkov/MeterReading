@@ -10,34 +10,42 @@ import java.util.UUID;
 /**
  * Класс показаний счетчика
  */
-@Data
-@ToString(of = {"date", "values"})
+
+@ToString(of = {"date", "utilityId", "value"})
+@Builder
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(of = "id")
 public class MeterReading {
     /**
      * Уникальный идентификатор показания
      */
-    private final UUID id = UUID.randomUUID();
+    private int id;
     /**
      * Идентификатор пользователя
      */
-    private final UUID userId;
+    private final int userId;
     /**
      * Дата и время подачи показания
      */
-    @Getter
     private final LocalDateTime date;
     /**
-     * Значения счетчиков по типам услуг
+     * Идентификатор типа услуг
      */
-    @Getter
-    private final Map<String, Double> values;
+    private final int utilityId;
+    /**
+     * Значение счетчика
+     */
+    private final double value;
 
     /**
      * Конструктор
      */
-    public MeterReading(User user, Map<String, Double> values) {
+    @Builder
+    public MeterReading(User user, int utilityId, double value) {
         this.userId = user.getId();
         this.date = LocalDateTime.now();
-        this.values = values;
+        this.utilityId = utilityId;
+        this.value = value;
     }
 }

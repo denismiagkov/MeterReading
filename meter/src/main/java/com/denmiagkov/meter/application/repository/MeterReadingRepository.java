@@ -2,80 +2,62 @@ package com.denmiagkov.meter.application.repository;
 
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс, отвечающий за хранение данных о показаниях счетчиков в памяти приложения
+ * Интерфейс, объявляющий логику взаимодействия с базой данных по поводу сведений о показаниях счетчиков
  */
-@Getter
-@NoArgsConstructor
-public class MeterReadingRepository {
-    /**
-     * Список всех переданных показаний
-     */
-    private static final List<MeterReading> METER_METER_READINGS = new ArrayList<>();
+public interface MeterReadingRepository {
 
 
     /**
-     * Метод добавления новых показаний в коллекцию
+     * Метод добавления нового показания счетчика в базу данных
      *
-     * @param reading новые показания счетчика
+     * @param reading новое показание счетчика
      */
-    public void addNewReading(MeterReading reading) {
-        METER_METER_READINGS.add(reading);
-    }
+    void addNewMeterReading(MeterReading reading);
 
     /**
-     * Метод просмотра актуальных (последних переданных) показаний счетчиков
+     * Метод выборки данных об актуальных показаниях счетчиков определенного пользователя
      *
      * @param user Пользователь
-     * @return Reading последние переданные показания счетчиков
+     * @return List<MeterReading> Список актуальных показаний пользователя
      */
-    public MeterReading getLastReading(User user) {
-        return METER_METER_READINGS.stream()
-                .filter(e -> e.getUserId().equals(user.getId()))
-                .reduce((first, second) -> second)
-                .orElse(null);
-    }
+    List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user);
 
     /**
-     * Метод получения всех переданных показаний
+     * Метод просмотра актуального (последнего переданного) показания счетчика конкретного пользователя
+     * по определенному типу услуг
      *
-     * @return List<Reading> Список всех переданных показаний
+     * @param user      Пользователь
+     * @param utilityId Тип показаний (услуг)
+     * @return MeterReading последние переданные показания счетчиков
      */
-    public List<MeterReading> getAllReadingsList() {
-        return METER_METER_READINGS;
-    }
+    MeterReading getActualMeterReadingOnExactUtility(User user, int utilityId);
 
     /**
-     * Метод получения истории подачи показаний конкретным пользователем
+     * Метод выборки всех показаний счетчиков, переданных всеми пользоваетелями
+     *
+     * @return List<MeterReading> Список всех переданных показаний
+     */
+    List<MeterReading> getAllMeterReadings();
+
+    /**
+     * Метод получения истории передачи показаний конкретным пользователем
      *
      * @param user Пользователь
-     * @return List<Reading> Список показаний, поданных указанным пользователем
+     * @return List<MeterReading> Список показаний, переданных указанным пользователем
      */
-    public List<MeterReading> getReadingsHistory(User user) {
-        return METER_METER_READINGS.stream()
-                .filter(e -> e.getUserId().equals(user.getId()))
-                .toList();
-    }
+    List<MeterReading> getMeterReadingsHistory(User user);
 
     /**
-     * Метод получения показаний, переданных указанным пользователем, в определенный месяц
+     * Метод получения всех показаний, переданных указанным пользователем за определенный месяц
      *
      * @param user  Пользователь
      * @param year  Год
      * @param month Месяц
-     * @return Reading Показания счетчика пользователя за указанные год и месяц
+     * @return List<MeterReading> Список показаний счетчиков пользователя за указанные год и месяц
      */
-    public MeterReading getReadingsForMonthByUser(User user, int year, int month) {
-        return METER_METER_READINGS.stream()
-                .filter(e ->
-                        ((e.getDate().getYear() == year) && (e.getDate().getMonthValue() == month)))
-                .findFirst()
-                .orElse(null);
-    }
+    List<MeterReading> getMeterReadingsForExactMonthByUser(User user, int year, int month);
 }

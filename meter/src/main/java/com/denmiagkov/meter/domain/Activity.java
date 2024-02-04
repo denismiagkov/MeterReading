@@ -1,9 +1,6 @@
 package com.denmiagkov.meter.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -13,17 +10,20 @@ import java.util.UUID;
 /**
  * Класс действия пользователя
  */
-@Data
+@AllArgsConstructor
+@Builder
+@Getter
 @EqualsAndHashCode(of = "id")
+@ToString
 public class Activity {
     /**
      * Уникальный идентификатор действия
      */
-    private final UUID id = UUID.randomUUID();
+    private int id;
     /**
      * Идентификатор пользователя, совершившего действие
      */
-    private final UUID userId;
+    private final int userId;
     /**
      * Дата и время совершения действия
      */
@@ -33,9 +33,7 @@ public class Activity {
      */
     private final ActivityType action;
 
-    /**
-     * Конструктор
-     */
+    @Builder
     public Activity(User user, ActivityType action) {
         this.userId = user.getId();
         this.dateTime = LocalDateTime.now();

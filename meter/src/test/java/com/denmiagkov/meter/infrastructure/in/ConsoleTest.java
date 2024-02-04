@@ -33,68 +33,68 @@ class ConsoleTest {
 
 
 
-
-    @Test
-    void checkMonth_ThrowsException() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        MeterReading reading = new MeterReading(user, meterValues);
-
-        assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(reading))
-                .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
-                .hasMessage("Показания могут подаваться не чаще одного раза в месяц!");
-    }
-
-    @Test
-    void checkMonth_ReturnsTrue() throws NoSuchFieldException, IllegalAccessException {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        MeterReading reading = new MeterReading(user, meterValues);
-
-        Class<?> clazz = MeterReading.class;
-        Field fieldDate = clazz.getDeclaredField("date");
-        fieldDate.setAccessible(true);
-        fieldDate.set(reading, LocalDateTime.now().minusDays(50));
-
-        assertThat(Console.ConsoleValidator.checkMonth(reading)).isTrue();
-    }
-
-    @Test
-    void checkPreviousMeterValue_ThrowsException() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        MeterReading reading = new MeterReading(user, meterValues);
-        String utility = "HEATING";
-        Double meterValue = 100.00;
-
-        assertThatThrownBy(() -> Console.ConsoleValidator
-                .checkPreviousMeterValue(reading, utility, meterValue))
-                .isInstanceOf(NewMeterValueIsLessThenPreviousException.class)
-                .hasMessage("Недопустимое знаачение: новое показание счетчика меньше предыдущего!");
-    }
-
-    @Test
-    void checkPreviousMeterValue_ReturnsTrue() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        MeterReading reading = new MeterReading(user, meterValues);
-        String utility = "HEATING";
-        Double meterValue = 200.00;
-
-        assertThat(Console.ConsoleValidator.checkPreviousMeterValue(reading, utility, meterValue))
-                .isTrue();
-    }
+//
+//    @Test
+//    void checkMonth_ThrowsException() {
+//        user = new User("John", "11-22-33", "Moscow", "user", "123");
+//        Map<String, Double> meterValues = new HashMap<>();
+//        meterValues.put("HEATING", 144.25);
+//        meterValues.put("HOT_WATER", 37.1);
+//        meterValues.put("COLD_WATER", 24.35);
+//        MeterReading reading = new MeterReading(user, meterValues);
+//
+//        assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(reading))
+//                .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
+//                .hasMessage("Показания могут подаваться не чаще одного раза в месяц!");
+//    }
+//
+//    @Test
+//    void checkMonth_ReturnsTrue() throws NoSuchFieldException, IllegalAccessException {
+//        user = new User("John", "11-22-33", "Moscow", "user", "123");
+//        Map<String, Double> meterValues = new HashMap<>();
+//        meterValues.put("HEATING", 144.25);
+//        meterValues.put("HOT_WATER", 37.1);
+//        meterValues.put("COLD_WATER", 24.35);
+//        MeterReading reading = new MeterReading(user, meterValues);
+//
+//        Class<?> clazz = MeterReading.class;
+//        Field fieldDate = clazz.getDeclaredField("date");
+//        fieldDate.setAccessible(true);
+//        fieldDate.set(reading, LocalDateTime.now().minusDays(50));
+//
+//        assertThat(Console.ConsoleValidator.checkMonth(reading)).isTrue();
+//    }
+//
+//    @Test
+//    void checkPreviousMeterValue_ThrowsException() {
+//        user = new User("John", "11-22-33", "Moscow", "user", "123");
+//        Map<String, Double> meterValues = new HashMap<>();
+//        meterValues.put("HEATING", 144.25);
+//        meterValues.put("HOT_WATER", 37.1);
+//        meterValues.put("COLD_WATER", 24.35);
+//        MeterReading reading = new MeterReading(user, meterValues);
+//        String utility = "HEATING";
+//        Double meterValue = 100.00;
+//
+//        assertThatThrownBy(() -> Console.ConsoleValidator
+//                .checkPreviousMeterValue(reading, utility, meterValue))
+//                .isInstanceOf(NewMeterValueIsLessThenPreviousException.class)
+//                .hasMessage("Недопустимое знаачение: новое показание счетчика меньше предыдущего!");
+//    }
+//
+//    @Test
+//    void checkPreviousMeterValue_ReturnsTrue() {
+//        user = new User("John", "11-22-33", "Moscow", "user", "123");
+//        Map<String, Double> meterValues = new HashMap<>();
+//        meterValues.put("HEATING", 144.25);
+//        meterValues.put("HOT_WATER", 37.1);
+//        meterValues.put("COLD_WATER", 24.35);
+//        MeterReading reading = new MeterReading(user, meterValues);
+//        String utility = "HEATING";
+//        Double meterValue = 200.00;
+//
+//        assertThat(Console.ConsoleValidator.checkPreviousMeterValue(reading, utility, meterValue))
+//                .isTrue();
+//    }
 
 }

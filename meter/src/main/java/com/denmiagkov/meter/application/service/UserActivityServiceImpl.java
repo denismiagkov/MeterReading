@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 /**
- * Сервис действий пользователя в системе
+ * Сервис, реализующий логику обработки данных о действиях пользователей в системе
  */
 @AllArgsConstructor
 public class UserActivityServiceImpl implements UserActivityService {

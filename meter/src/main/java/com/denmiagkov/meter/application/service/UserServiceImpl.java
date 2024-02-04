@@ -2,21 +2,21 @@ package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
-import com.denmiagkov.meter.application.repository.UserRepository;
+import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
 import com.denmiagkov.meter.domain.*;
 import lombok.AllArgsConstructor;
 
 import java.util.Set;
 
 /**
- * Сервис пользователя
+ * Класс реализует логику обработки данных о пользователях
  */
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     /**
      * Репозиторий данных о пользователе
      */
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
     /**
      * Сервис данных о действиях пользователя
      */
@@ -26,16 +26,27 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User registerUser(String name, String phone, String address, String login, String password) {
-        User user = new User(name, phone, address, login, password);
+    public User registerUser(String inputName, String inputPhone, String inputAddress,
+                             String inputLogin, String inputPassword) {
+        User user = User.builder()
+                .name(inputName)
+                .phone(inputPhone)
+                .address(inputAddress)
+                .role(UserRole.USER)
+                .login(inputLogin)
+                .password(inputPassword)
+                .build();
         if (!userRepository.isExistUser(user)) {
-            if (!userRepository.isExistLogin(login)) {
-                userRepository.addUser(user);
+            if (!userRepository.isExistLogin(inputLogin)) {
+                int userId = userRepository.addUser(user);
+                user.setId(userId);
+                System.out.println("new user: " + user);
                 Activity activity = new Activity(user, ActivityType.REGISTRATION);
+                System.out.println("new activity: " + activity);
                 activityService.addActivity(activity);
                 return user;
             } else {
-                throw new LoginAlreadyInUseException(login);
+                throw new LoginAlreadyInUseException(inputLogin);
             }
         } else {
             throw new UserAlreadyExistsException(user);
@@ -46,9 +57,9 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User registerUser(String name, String phone, String login, String password,
+    public User registerUser(String name, String phone, String address, String login, String password,
                              String inputIsAdmin, String adminPassword) {
-        User user = new User(name, phone, login, password, inputIsAdmin, adminPassword);
+        User user = new User(name, phone, address, login, password, inputIsAdmin, adminPassword);
         if (!userRepository.isExistUser(user)) {
             if (!userRepository.isExistLogin(login)) {
                 userRepository.addUser(user);
@@ -65,10 +76,10 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User authorizeUser(String login, String password) {
-        User user = userRepository.authorizeUser(login, password);
-        if (user != null && !user.getRole().equals(UserRole.ADMIN)) {
-            Activity activity = new Activity(user, ActivityType.AUTHORIZATION);
+    public User authenticateUser(String login, String password) {
+        User user = userRepository.authenticateUser(login, password);
+        if (!user.getRole().equals(UserRole.ADMIN)) {
+            Activity activity = new Activity(user, ActivityType.AUTHENTICATION);
             activityService.addActivity(activity);
         }
         return user;
@@ -79,7 +90,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Set<User> getAllUsers() {
-        return userRepository.getUsers();
+        return userRepository.getAllUsers();
     }
 
     /**

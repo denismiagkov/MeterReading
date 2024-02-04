@@ -12,6 +12,10 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"name", "phone"})
 @ToString(exclude = "ADMIN_PASSWORD")
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor()
+@Builder
 public class User {
     /**
      * Пароль администратора (необходим для регистрации нового администратора)
@@ -20,7 +24,7 @@ public class User {
     /**
      * Уникальный идентификатор пользователя
      */
-    private final UUID id = UUID.randomUUID();
+    private int id;
     /**
      * Имя пользователя
      */
@@ -50,31 +54,42 @@ public class User {
     /**
      * Конструктор обычного пользователя
      */
+    @Builder
     public User(String name, String phone, String address, String login, String password) {
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
+        createUser(name, phone, address, login, password);
         this.role = UserRole.USER;
-        this.login = login;
-        this.password = password;
     }
 
     /**
      * Конструктор администратора
      *
-     * @throws AdminNotAuthorizedException
+     * @throws AdminNotAuthorizedException в случае ввода некорректного пароля
      */
-    public User(String name, String phone, String login, String password,
+    @Builder
+    public User(String name, String phone, String address, String login, String password,
                 String isAdmin, String adminPassword) {
-        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN))
-            && ADMIN_PASSWORD.equals(adminPassword)) {
-            this.name = name;
-            this.phone = phone;
+        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN)) &&
+            adminPassword.equals(ADMIN_PASSWORD)) {
+            createUser(name, phone, address, login, password);
             this.role = UserRole.ADMIN;
-            this.login = login;
-            this.password = password;
         } else {
             throw new AdminNotAuthorizedException();
         }
+    }
+
+    /**
+     * Метод создания пользователя без учета роли user / admin
+     * @param name Имя
+     * @param phone Телефон
+     * @param address Адрес
+     * @param login Логин
+     * @param password Пароль
+     */
+    private void createUser(String name, String phone, String address, String login, String password) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.login = login;
+        this.password = password;
     }
 }

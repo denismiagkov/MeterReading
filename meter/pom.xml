@@ -17,7 +17,11 @@
         <assertj.core.version>3.24.2</assertj.core.version>
         <mockito.core.version>5.7.0</mockito.core.version>
         <objenesis.version>3.3</objenesis.version>
+        <testcontainers.postgresql.version>1.19.4</testcontainers.postgresql.version>
+        <junit.jupiter.testcontainers.version>1.19.4</junit.jupiter.testcontainers.version>
         <commons.collections4.version>4.4</commons.collections4.version>
+        <postgresql.version>42.7.1</postgresql.version>
+        <liquibase.core.version>4.25.1</liquibase.core.version>
     </properties>
 
 
@@ -63,9 +67,32 @@
             <version>${objenesis.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.postgresql.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${commons.collections4.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.core.version}</version>
         </dependency>
 
     </dependencies>

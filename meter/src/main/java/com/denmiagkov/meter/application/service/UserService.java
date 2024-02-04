@@ -2,12 +2,12 @@ package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
-import com.denmiagkov.meter.domain.Activity;
 import com.denmiagkov.meter.domain.User;
 
-import java.util.List;
 import java.util.Set;
-
+/**
+ * Интерфейс, объявляющий логику обработки данных о пользователе
+ * */
 public interface UserService {
 
     /**
@@ -37,21 +37,21 @@ public interface UserService {
      * @throws LoginAlreadyInUseException при использовании логина, уже зарегистрированного в системе
      * @throws UserAlreadyExistsException при попытке повторной регистрации одного и того же пользователя
      */
-    User registerUser(String name, String phone, String login, String password, String inputIsAdmin, String adminPassword);
+    User registerUser(String name, String phone, String address, String login, String password, String inputIsAdmin, String adminPassword);
 
     /**
-     * Метод авторизации пользователя
+     * Метод аутентификации пользователя
      *
      * @param login    Логин пользователя
      * @param password Пароль пользователя
-     * @return User
+     * @return User Пользователь с указанными логином и паролем
      */
-    User authorizeUser(String login, String password);
+    User authenticateUser(String login, String password);
 
     /**
      * Метод возвращает множество всех пользователей
      *
-     * @return Set<User>
+     * @return Set<User> Множество всех зарегистрированных пользователей
      */
     Set<User> getAllUsers();
 

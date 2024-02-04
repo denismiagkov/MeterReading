@@ -8,34 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс, отвечающий за хранение данных о действиях пользователей в памяти приложения
+ * Класс, отвечающий за взаимодействие с базой данных по поводу сведений о действиях пользователей в системе
  */
-@Getter
-@NoArgsConstructor
-public class ActivityRepository {
-    /**
-     * Список всех действий, совершенных пользователями в системе
-     */
-    private static final List<Activity> ACTIVITIES = new ArrayList<>();
+
+public interface ActivityRepository {
 
     /**
-     * Метод добавления нового пользовательского действия в колекцию
+     * Метод добавляет в базу данных запись о действии, совершенном пользователем в приложении
      *
      * @param activity Новое действие пользователя
      * @return boolean true - в случае успешного добавления,в противном случае - false
      */
-    public boolean addActivity(Activity activity) {
-        return ACTIVITIES.add(activity);
-    }
+    boolean addActivity(Activity activity);
 
     /**
-     * Метод получения всех действий, совершенных пользователями в системе
+     * Метод получения всех записей о действиях, совершенных пользователями в системе
      *
      * @return List<Activity> Список действий пользователей
      */
-    public List<Activity> getActivitiesList() {
-        return ACTIVITIES;
-    }
-
-
+    List<Activity> getActivitiesList();
 }

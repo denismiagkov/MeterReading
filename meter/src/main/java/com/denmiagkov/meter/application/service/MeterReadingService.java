@@ -5,45 +5,60 @@ import com.denmiagkov.meter.domain.User;
 
 import java.util.List;
 
+/**
+ * Интерфейс, объявляющий логику обработки данных о показаниях счетчиков
+ */
 public interface MeterReadingService {
 
     /**
-     * Метод подачи показаний
+     * Метод передачи нового показания
      *
      * @param user    Пользователь
-     * @param reading Показания счетчиков
+     * @param reading Показание счетчика
      */
     void submitNewReading(User user, MeterReading reading);
 
     /**
-     * Метод получения всех показаний всех пользователей
+     * Метод получения всех показаний счетчиков всех пользователей с учетом параметров пагинации
      *
-     * @return List<Reading> Общий список показаний счетчиков
+     * @param pageSize Параметр пагинации (размер страницы)
+     * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметров панинации
      */
     List<List<MeterReading>> getAllReadingsList(int pageSize);
 
     /**
-     * Метод получения актуальных (последних переданных) показаний счетчика конкретным пользователем
+     * Метод получения актуального (последнего переданного) показания счетчика конкретного пользователя
      *
-     * @param user Пользователь
-     * @return Reading Актуальные показания счетчиков
+     * @param user      Пользователь
+     * @param utilityId Тип услуги
+     * @return MeterReading Актуальное показание счетчика
      */
-    MeterReading getActualReadingByUser(User user);
+    MeterReading getActualMeterReadingOnExactUtilityByUser(User user, int utilityId);
 
     /**
-     * Метод просмотра истории подачи показаний
+     * Метод получения всех актуальных (последних переданноых) показаний счетчиков конкретного пользователя
      *
      * @param user Пользователь
-     * @return List<Reading> Список поданных показаний
+     * @return List<MeterReading> Список актуальных показаний счетчика
      */
-    List<List<MeterReading>> getReadingsHistoryByUser(User user, int pageSize);
+    List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user);
 
     /**
-     * Метод просмотра показаний за конкретный месяц
+     * Метод просмотра истории подачи показаний конкретным пользователем с учетом параметров пагинации
+     *
+     * @param user     Пользователь
+     * @param pageSize Параметр пагинации (размер страницы)
+     * @return List<List < MeterReading>> Список поданных показаний с учетом параметров пагинации
+     */
+    List<List<MeterReading>> getMeterReadingsHistoryByUser(User user, int pageSize);
+
+    /**
+     * Метод просмотра показаний счетчиков определенного пользователя за конкретный месяц
      *
      * @param user  Пользователь
      * @param year  Год
      * @param month Месяц
+     * @return List<MeterReading> Список показаний счетчиков
      */
-    MeterReading getReadingsForMonthByUser(User user, int year, int month);
+    List<MeterReading> getReadingsForMonthByUser(User user, int year, int month);
 }
