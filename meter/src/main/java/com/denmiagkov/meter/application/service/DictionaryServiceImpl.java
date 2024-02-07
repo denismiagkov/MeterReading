@@ -8,16 +8,16 @@ import java.util.Map;
 
 /**
  * Класс реализует логику обработки данных о справочнике показаний (типов услуг)
- * */
+ */
 public class DictionaryServiceImpl implements DictionaryService {
     /**
      * Справочник услуг
-     * */
+     */
     public static Map<Integer, String> PUBLIC_UTILITIES_LIST;
 
     /**
      * Репозиторий справочника показаний
-     * */
+     */
     DictionaryRepository dictionaryRepository;
 
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
@@ -39,13 +39,12 @@ public class DictionaryServiceImpl implements DictionaryService {
             throw new PublicUtilityTypeAlreadyExistsException(utilityName);
         }
     }
-/**
- * {@inheritDoc}
- * */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<Integer, String> getUtilitiesDictionary() {
         return dictionaryRepository.getAllUtilitiesTypes();
     }
-
-
 }

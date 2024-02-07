@@ -26,7 +26,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
  * SQL-запрос на выборку из базы данных всех записей о пользовательских действиях
  * */
     private static final String GET_ACTIVITIES_LIST = """
-            SELECT *
+            SELECT id, user_id, date, action
             FROM meter_service.activities;
             """;
 

@@ -28,7 +28,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * SQL-запрос на получение из базы данных актуального показателя счетчика по конкретной услуге для одного пользователя
      */
     private static final String GET_ACTUAL_METER_READING_ON_EXACT_UTILITY_BY_USER = """
-            SELECT *
+            SELECT id, user_id, date, utility_id, value
             FROM meter_service.meter_readings
             WHERE user_id = ? AND utility_id = ?
             ORDER BY date desc
@@ -38,7 +38,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * SQL-запрос на получение из базы данных актуальных показателей счетчиков по всем услугам для одного пользователя
      */
     private final static String GET_ACTUAL_METER_READINGS_ON_ALL_UTILITIES_BY_USER = """
-            SELECT DISTINCT ON (utility_id) *
+            SELECT DISTINCT ON (utility_id) id, user_id, date, utility_id, value
             FROM meter_service.meter_readings
             WHERE user_id = ?
             ORDER BY utility_id, date desc ;
@@ -47,14 +47,14 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * SQL-запрос на выборку всех переданных показаний счетчиков всеми пользователями
      */
     private final static String GET_ALL_METER_READINGS_BY_ALL_USERS = """
-            SELECT *
+            SELECT id, user_id, date, utility_id, value
             FROM meter_service.meter_readings;
             """;
     /**
      * SQL-запрос на получение из базы данных истории переданных показаний счетчиков указанным пользователем
      */
     private final static String GET_HISTORY_OF_METER_READINGS_BY_USER = """
-            SELECT *
+            SELECT id, user_id, date, utility_id, value
             FROM meter_service.meter_readings
             WHERE user_id = ?;
             """;
@@ -62,7 +62,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * SQL-запрос на получение всех переданных определенным пользователем показаний счетчиков за определенный месяц
      */
     private final static String GET_METER_READINGS_FOR_EXACT_MONTH_BY_USER = """
-            SELECT *
+            SELECT id, user_id, date, utility_id, value
             FROM meter_service.meter_readings
             WHERE user_id = ?
                 AND extract(year from date) = ?

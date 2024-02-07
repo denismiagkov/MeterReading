@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.repository.MeterReadingRepository;
 import com.denmiagkov.meter.application.repository.MeterReadingRepositoryImpl;
 import com.denmiagkov.meter.domain.Activity;
 import com.denmiagkov.meter.domain.MeterReading;
@@ -88,7 +87,6 @@ class MeterReadingServiceImplTest {
         assertThat(readingsHistory).isEqualTo(readingHistoryPagesDummy);
     }
 
-    //
     @Test
     @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns meter readings list")
     void getReadingsForMonthByUser() {

@@ -30,7 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
      * SQL-запрос на проверку, содержится ли в таблице запись о соответствующем пользователе
      * */
     private static final String IS_EXIST_USER = """
-            SELECT * FROM meter_service.users
+            SELECT id, name, phone, address, role, login, password
+            FROM meter_service.users
             WHERE name = ? AND phone = ?;
             """;
 
@@ -38,7 +39,8 @@ public class UserRepositoryImpl implements UserRepository {
      * SQL-запрос на проверку, содержится ли в таблице запись о пользователе с соответствующим логином
      * */
     private static final String IS_EXIST_LOGIN = """
-            SELECT * FROM meter_service.users
+            SELECT id, name, phone, address, role, login, password
+            FROM meter_service.users
             WHERE login = ?;
             """;
 
@@ -46,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
      * SQL-запрос на получение записи о пользователе, владеющем указанными логином и паролем
      * */
     private static final String AUTHENTICATE_USER = """
-            SELECT * 
+            SELECT id, name, phone, address, role, login, password
             FROM meter_service.users
             WHERE login = ? AND password = ?;
             """;
@@ -55,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
      * SQL-запрос на выборку из таблицы всех записей о пользователях
      * */
     private static final String GET_ALL_USERS = """
-            SELECT *
+            SELECT id, name, phone, address, role, login, password
             FROM meter_service.users;
             """;
 

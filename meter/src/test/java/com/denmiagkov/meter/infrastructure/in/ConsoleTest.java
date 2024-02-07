@@ -3,15 +3,11 @@ package com.denmiagkov.meter.infrastructure.in;
 import com.denmiagkov.meter.application.exception.SubmitReadingOnTheSameMonthException;
 import com.denmiagkov.meter.application.exception.NewMeterValueIsLessThenPreviousException;
 import com.denmiagkov.meter.domain.MeterReading;
-import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,7 +33,6 @@ class ConsoleTest {
                 .utilityId(1)
                 .value(1500)
                 .build();
-
 
         assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(meterReading))
                 .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
@@ -89,5 +84,4 @@ class ConsoleTest {
         assertThat(Console.ConsoleValidator.checkPreviousMeterValue(meterReading, 125.0))
                 .isTrue();
     }
-
 }

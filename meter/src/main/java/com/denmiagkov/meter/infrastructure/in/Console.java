@@ -309,10 +309,8 @@ public class Console {
      */
     private void getOverallReadingList(int pageSize) {
         var readingList = controller.getAllReadingsList(pageSize);
-        int page = 0;
         for (List<MeterReading> currentPage : readingList) {
             System.out.println(currentPage);
-            page++;
         }
     }
 
@@ -355,7 +353,9 @@ public class Console {
          * @return boolean возвращает true - если условие выполняется, false - если нет
          */
         public static boolean checkPreviousMeterValue(MeterReading reading, Double value) {
-            if (reading == null) return true;
+            if (reading == null) {
+                return true;
+            }
             if (reading.getValue() > value) {
                 throw new NewMeterValueIsLessThenPreviousException();
             }

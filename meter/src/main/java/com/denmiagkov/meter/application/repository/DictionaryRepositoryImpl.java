@@ -20,7 +20,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
      * SQL-запрос на выборку всех типов услуг из справочника
      * */
     private static final String GET_ALL_PUBLIC_UTILITIES_TYPES = """
-            SELECT * 
+            SELECT id, utility_type
             FROM meter_service.utilities_dictionary;
             """;
     /**
