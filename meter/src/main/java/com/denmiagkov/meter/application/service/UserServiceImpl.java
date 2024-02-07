@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
             if (!userRepository.isExistLogin(inputLogin)) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                Activity activity = new Activity(user, ActivityType.REGISTRATION);
-                activityService.addActivity(activity);
+                UserActivity userActivity = new UserActivity(user, ActivityType.REGISTRATION);
+                activityService.addActivity(userActivity);
                 return user;
             } else {
                 throw new LoginAlreadyInUseException(inputLogin);
@@ -77,8 +77,8 @@ public class UserServiceImpl implements UserService {
     public User authenticateUser(String login, String password) {
         User user = userRepository.authenticateUser(login, password);
         if (!user.getRole().equals(UserRole.ADMIN)) {
-            Activity activity = new Activity(user, ActivityType.AUTHENTICATION);
-            activityService.addActivity(activity);
+            UserActivity userActivity = new UserActivity(user, ActivityType.AUTHENTICATION);
+            activityService.addActivity(userActivity);
         }
         return user;
     }
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void recordExit(User user) {
-        Activity activity = new Activity(user, ActivityType.EXIT);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.EXIT);
+        activityService.addActivity(userActivity);
     }
 }

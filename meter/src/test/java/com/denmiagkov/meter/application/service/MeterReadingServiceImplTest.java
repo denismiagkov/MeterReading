@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.repository.MeterReadingRepositoryImpl;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import org.apache.commons.collections4.ListUtils;
@@ -44,7 +44,7 @@ class MeterReadingServiceImplTest {
 
         verify(meterReadingRepository, times(1)).addNewMeterReading(reading);
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
     }
 
     @Test
@@ -69,7 +69,7 @@ class MeterReadingServiceImplTest {
         MeterReading reading = meterReadingService.getActualMeterReadingOnExactUtilityByUser(user, 1);
 
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
         assertThat(reading).isEqualTo(readingDummy);
     }
 
@@ -83,7 +83,7 @@ class MeterReadingServiceImplTest {
         List<List<MeterReading>> readingsHistory = meterReadingService.getMeterReadingsHistoryByUser(user, 1);
 
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
         assertThat(readingsHistory).isEqualTo(readingHistoryPagesDummy);
     }
 
@@ -97,7 +97,7 @@ class MeterReadingServiceImplTest {
         List<MeterReading> reading = meterReadingService.getReadingsForMonthByUser(user, 2023, 11);
 
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
         assertThat(reading).isEqualTo(readingDummy);
     }
 }

@@ -1,11 +1,8 @@
 package com.denmiagkov.meter.domain;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Класс действия пользователя
@@ -15,7 +12,7 @@ import java.util.UUID;
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString
-public class Activity {
+public class UserActivity {
     /**
      * Уникальный идентификатор действия
      */
@@ -34,7 +31,7 @@ public class Activity {
     private final ActivityType action;
 
     @Builder
-    public Activity(User user, ActivityType action) {
+    public UserActivity(User user, ActivityType action) {
         this.userId = user.getId();
         this.dateTime = LocalDateTime.now();
         this.action = action;

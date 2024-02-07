@@ -38,7 +38,7 @@ public class User {
      */
     private String address;
     /**
-     * Статус администратора
+     * Роль
      */
     private UserRole role;
     /**

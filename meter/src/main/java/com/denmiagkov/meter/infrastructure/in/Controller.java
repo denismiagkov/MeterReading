@@ -4,7 +4,7 @@ import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import lombok.AllArgsConstructor;
@@ -99,7 +99,7 @@ public class Controller {
      *
      * @return List<Activity>
      */
-    public List<Activity> getUserActivitiesList() {
+    public List<UserActivity> getUserActivitiesList() {
         return activityService.getUserActivitiesList();
     }
 

@@ -3,7 +3,7 @@ package com.denmiagkov.meter.application.service;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ class UserServiceImplTest {
         User user1 = userService.registerUser("John", "11-22-33", "Moscow", "user", "123");
 
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
         assertThat(user1).isEqualTo(user);
     }
 
@@ -93,7 +93,7 @@ class UserServiceImplTest {
         User testUser = userService.authenticateUser("dummy", "dummy");
 
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
         assertThat(testUser).isEqualTo(user);
     }
 
@@ -113,6 +113,6 @@ class UserServiceImplTest {
     void recordExit() {
         userService.recordExit(user);
         verify(activityService, times(1))
-                .addActivity(any(Activity.class));
+                .addActivity(any(UserActivity.class));
     }
 }

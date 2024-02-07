@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import com.denmiagkov.meter.domain.ActivityType;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import lombok.Getter;
@@ -34,12 +34,12 @@ public class ActivityRepositoryImpl implements ActivityRepository {
      * {@inheritDoc}
      */
     @Override
-    public boolean addActivity(Activity activity) {
+    public boolean addActivity(UserActivity userActivity) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_ACTIVITY)) {
-            statement.setInt(1, activity.getUserId());
-            statement.setTimestamp(2, Timestamp.valueOf(activity.getDateTime()));
-            statement.setString(3, String.valueOf(activity.getAction()));
+            statement.setInt(1, userActivity.getUserId());
+            statement.setTimestamp(2, Timestamp.valueOf(userActivity.getDateTime()));
+            statement.setString(3, String.valueOf(userActivity.getAction()));
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -50,14 +50,14 @@ public class ActivityRepositoryImpl implements ActivityRepository {
      * {@inheritDoc}
      * */
     @Override
-    public List<Activity> getActivitiesList() {
-        List<Activity> userActivitiesList = new ArrayList<>();
+    public List<UserActivity> getActivitiesList() {
+        List<UserActivity> userActivitiesList = new ArrayList<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_ACTIVITIES_LIST)) {
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {
-                Activity activity = getActivity(queryResult);
-                userActivitiesList.add(activity);
+                UserActivity userActivity = getActivity(queryResult);
+                userActivitiesList.add(userActivity);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -65,8 +65,8 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         return userActivitiesList;
     }
 
-    private Activity getActivity(ResultSet queryResult) throws SQLException {
-        return Activity.builder()
+    private UserActivity getActivity(ResultSet queryResult) throws SQLException {
+        return UserActivity.builder()
                 .id(queryResult.getInt("id"))
                 .userId(queryResult.getInt("user_id"))
                 .dateTime(queryResult.getTimestamp("date")

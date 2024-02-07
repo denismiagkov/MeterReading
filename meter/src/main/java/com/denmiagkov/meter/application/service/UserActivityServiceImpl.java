@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.repository.ActivityRepository;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -20,15 +20,15 @@ public class UserActivityServiceImpl implements UserActivityService {
      * {@inheritDoc}
      */
     @Override
-    public boolean addActivity(Activity activity) {
-        return activityRepository.addActivity(activity);
+    public boolean addActivity(UserActivity userActivity) {
+        return activityRepository.addActivity(userActivity);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Activity> getUserActivitiesList() {
+    public List<UserActivity> getUserActivitiesList() {
         return activityRepository.getActivitiesList();
     }
 }

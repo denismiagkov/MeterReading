@@ -5,9 +5,7 @@ import com.denmiagkov.meter.domain.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Сервис подачи показаний
@@ -30,8 +28,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
     @Override
     public void submitNewReading(User user, MeterReading reading) {
         meterReadingRepository.addNewMeterReading(reading);
-        Activity activity = new Activity(user, ActivityType.SUBMIT_NEW_READING);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.SUBMIT_NEW_READING);
+        activityService.addActivity(userActivity);
     }
 
     /**
@@ -49,8 +47,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public MeterReading getActualMeterReadingOnExactUtilityByUser(User user, int utilityId) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_ACTUAL_READING);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.REVIEW_ACTUAL_READING);
+        activityService.addActivity(userActivity);
         return meterReadingRepository.getActualMeterReadingOnExactUtility(user, utilityId);
     }
 
@@ -59,8 +57,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_ACTUAL_READING);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.REVIEW_ACTUAL_READING);
+        activityService.addActivity(userActivity);
         return meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(user);
     }
 
@@ -69,8 +67,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<List<MeterReading>> getMeterReadingsHistoryByUser(User user, int pageSize) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_CONVEYING_READINGS_HISTORY);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.REVIEW_CONVEYING_READINGS_HISTORY);
+        activityService.addActivity(userActivity);
         List<MeterReading> meterReadingHistoryByList = meterReadingRepository.getMeterReadingsHistory(user);
         List<List<MeterReading>> meterReadingHistoryByPages =
                 ListUtils.partition(meterReadingHistoryByList, pageSize);
@@ -82,8 +80,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<MeterReading> getReadingsForMonthByUser(User user, int year, int month) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_READINGS_FOR_MONTH);
-        activityService.addActivity(activity);
+        UserActivity userActivity = new UserActivity(user, ActivityType.REVIEW_READINGS_FOR_MONTH);
+        activityService.addActivity(userActivity);
         return meterReadingRepository.getMeterReadingsForExactMonthByUser(user, year, month);
     }
 }

@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.repository.ActivityRepository;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,20 +31,20 @@ class UserActivityServiceImplTest {
     @Test
     @DisplayName("Method invokes appropriate method on dependent object")
     void addActivity() {
-        Activity activity = mock(Activity.class);
-        activityService.addActivity(activity);
+        UserActivity userActivity = mock(UserActivity.class);
+        activityService.addActivity(userActivity);
 
         verify(activityRepository, times(1))
-                .addActivity(activity);
+                .addActivity(userActivity);
     }
 
     @Test
     @DisplayName("Dependent object returns appropriate list")
     void getUserActivitiesList() {
-        List<Activity> activitiesDummy = mock(ArrayList.class);
+        List<UserActivity> activitiesDummy = mock(ArrayList.class);
         when(activityRepository.getActivitiesList()).thenReturn(activitiesDummy);
 
-        List<Activity> activities = activityService.getUserActivitiesList();
+        List<UserActivity> activities = activityService.getUserActivitiesList();
 
         assertThat(activities).isEqualTo(activitiesDummy);
     }

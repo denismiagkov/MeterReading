@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in;
 
 import com.denmiagkov.meter.application.service.*;
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.domain.UserActivity;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.DisplayName;
@@ -87,10 +87,10 @@ class ControllerTest {
     @Test
     @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")
     void getActivityList() {
-        List<Activity> activitiesDummy = new ArrayList<>();
+        List<UserActivity> activitiesDummy = new ArrayList<>();
         when(activityService.getUserActivitiesList()).thenReturn(activitiesDummy);
 
-        List<Activity> activities = controller.getUserActivitiesList();
+        List<UserActivity> activities = controller.getUserActivitiesList();
 
         assertThat(activities).isEqualTo(activitiesDummy);
     }
