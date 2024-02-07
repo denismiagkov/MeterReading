@@ -7,7 +7,7 @@ public enum ActivityType {
     /**
      * Авторизация
      */
-    AUTHORIZATION,
+    AUTHENTICATION,
     /**
      * Передача показаний
      */

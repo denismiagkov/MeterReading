@@ -5,41 +5,47 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Класс показаний счетчика
  */
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@ToString(of = {"date", "values"})
-public class Reading {
+
+@ToString(of = {"date", "utilityId", "value"})
+@Builder
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(of = "id")
+public class MeterReading {
     /**
      * Уникальный идентификатор показания
      */
-    UUID id = UUID.randomUUID();
+    private int id;
     /**
      * Идентификатор пользователя
      */
-    UUID userId;
+    private final int userId;
     /**
      * Дата и время подачи показания
      */
-    @Getter
-    LocalDateTime date;
+    private final LocalDateTime date;
     /**
-     * Значения счетчиков по типам услуг
+     * Идентификатор типа услуг
      */
-    @Getter
-    Map<String, Double> values;
+    private final int utilityId;
+    /**
+     * Значение счетчика
+     */
+    private final double value;
 
     /**
      * Конструктор
      */
-    public Reading(User user, Map<String, Double> values) {
+    @Builder
+    public MeterReading(User user, int utilityId, double value) {
         this.userId = user.getId();
         this.date = LocalDateTime.now();
-        this.values = values;
+        this.utilityId = utilityId;
+        this.value = value;
     }
 }

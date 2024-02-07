@@ -1,28 +1,39 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.service.ReadingService;
+import com.denmiagkov.meter.application.service.UserActivityService;
+import com.denmiagkov.meter.application.service.DictionaryService;
+import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Класс контроллера
+ * Контроллер
  */
 @AllArgsConstructor
 public class Controller {
     /**
      * Сервис пользователя
      */
-    UserService userService;
+    private final UserService userService;
     /**
      * Сервис подачи показаний
      */
-    ReadingService readingService;
+    private final MeterReadingService meterReadingService;
+    /**
+     * Сервис действий пользователя
+     */
+    private final UserActivityService activityService;
+    /**
+     * Сервис справочника показаний (типов услуг)
+     */
+    private final DictionaryService dictionaryService;
 
     /**
      * Метод регистрации обычного пользователя
@@ -43,13 +54,14 @@ public class Controller {
      *
      * @param name          Имя пользоыателя
      * @param phone         Телефон пользователя
+     * @param address       Адрес пользователя
      * @param login         Логин пользователя
      * @param password      Пароль пользователя
      * @param isAdmin       Подтверждение статуса администратора
      * @param adminPassword Единый пароль администратора
      */
-    public void registerAdmin(String name, String phone, String login, String password, String isAdmin, String adminPassword) {
-        userService.registerUser(name, phone, login, password, isAdmin, adminPassword);
+    public void registerAdmin(String name, String phone, String login, String address, String password, String isAdmin, String adminPassword) {
+        userService.registerUser(name, phone, address, login, password, isAdmin, adminPassword);
     }
 
     /**
@@ -57,28 +69,29 @@ public class Controller {
      *
      * @param login    Логин пользователя
      * @param password Пароль пользователя
-     * @return User
+     * @return User Пользователь
      */
-    public User authorizeUser(String login, String password) {
-        return userService.authorizeUser(login, password);
+    public User authenticateUser(String login, String password) {
+        return userService.authenticateUser(login, password);
     }
 
     /**
      * Метод возвращает множество всех пользователей
      *
-     * @return Set<User>
+     * @return Set<User> Множество зарегистрированных пользователей
      */
     public Set<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     /**
-     * Метод получения всех показаний всех пользователей
+     * Метод получения всех показаний всех пользователей с учетом параметров пагинации
      *
-     * @return List<Reading> Общий список показаний счетчиков
+     * @param pageSize Параметр пагинации (размер страницы)
+     * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
-    public List<Reading> getAllReadingsList() {
-        return readingService.getAllReadingsList();
+    public List<List<MeterReading>> getAllReadingsList(int pageSize) {
+        return meterReadingService.getAllReadingsList(pageSize);
     }
 
     /**
@@ -87,57 +100,70 @@ public class Controller {
      * @return List<Activity>
      */
     public List<Activity> getUserActivitiesList() {
-        return userService.getUserActivitiesList();
+        return activityService.getUserActivitiesList();
     }
 
     /**
      * Метод добавляет новый тип услуг (расширяет перечень подаваемых показаний)
      *
-     * @param newUtility новый тип подаваемых показаний
+     * @param utilityName новый тип подаваемых показаний
      */
-    public void addUtilityType(String newUtility) {
-        readingService.addUtilityType(newUtility);
+    public void addUtilityType(String utilityName) {
+        dictionaryService.addUtilityTypeToDictionary(utilityName);
     }
 
     /**
-     * Метод подачи показаний
+     * Метод передачи показания счетчика
      *
      * @param user    Пользователь
-     * @param reading Показания счетчиков
+     * @param reading Показание счетчика
      */
-    public void submitNewReading(User user, Reading reading) {
-        readingService.submitNewReading(user, reading);
+    public void submitNewReading(User user, MeterReading reading) {
+        meterReadingService.submitNewReading(user, reading);
     }
 
     /**
-     * Метод получения актуальных (последних переданных) показаний счетчика конкретным пользователем
+     * Метод получения актуального  показания счетчика конкретного пользователя по указанной услуге
+     *
+     * @param user      Пользователь
+     * @param utilityId id типа услуг
+     * @return Reading Актуальное показание счетчика
+     */
+    public MeterReading getActualReadingOnExactUtilityByUser(User user, int utilityId) {
+        return meterReadingService.getActualMeterReadingOnExactUtilityByUser(user, utilityId);
+    }
+
+    /**
+     * Метод получения всех актуальных (последних переданноых) показаний счетчиков конкретного пользователя
      *
      * @param user Пользователь
-     * @return Reading Актуальные показания счетчиков
+     * @return List<MeterReading> Список актуальных показаний счетчика
      */
-    public Reading getActualReadingByUser(User user) {
-        return readingService.getActualReadingByUser(user);
+    public List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user) {
+        return meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(user);
     }
 
     /**
-     * Метод просмотра истории подачи показаний
+     * Метод просмотра истории подачи показаний счетчиков конкретным пользователем с учетом параметра пагинации
      *
-     * @param user Пользователь
-     * @return List<Reading> Список поданных показаний
+     * @param user     Пользователь
+     * @param pageSize Параметр пагинации (размер страницы)
+     * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
-    public List<Reading> getReadingsHistoryByUser(User user) {
-        return readingService.getReadingsHistoryByUser(user);
+    public List<List<MeterReading>> getReadingsHistoryByUser(User user, int pageSize) {
+        return meterReadingService.getMeterReadingsHistoryByUser(user, pageSize);
     }
 
     /**
-     * Метод просмотра показаний за конкретный месяц
+     * Метод просмотра показаний, переданных конкретным пользователем, в конкретном месяце
      *
      * @param user  Пользователь
      * @param year  Год
      * @param month Месяц
+     * @return List<MeterReading> Список показаний счетчиков
      */
-    public Reading getReadingsForMonthByUser(User user, int year, int month) {
-        return readingService.getReadingsForMonthByUser(user, year, month);
+    public List<MeterReading> getReadingsForMonthByUser(User user, int year, int month) {
+        return meterReadingService.getReadingsForMonthByUser(user, year, month);
     }
 
     /**
@@ -149,5 +175,12 @@ public class Controller {
         userService.recordExit(user);
     }
 
-
+    /**
+     * Метод получения справочника показаний
+     *
+     * @return Map<Integer, String> Справочник показаний (типов услуг)
+     */
+    public Map<Integer, String> getUtilitiesDictionary() {
+        return dictionaryService.getUtilitiesDictionary();
+    }
 }

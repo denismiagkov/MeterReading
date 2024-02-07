@@ -1,12 +1,15 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.service.ReadingServiceImpl;
-import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.application.service.*;
 import com.denmiagkov.meter.domain.Activity;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,21 +19,21 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class ControllerTest {
-
-    Controller controller;
+    @Mock
     UserServiceImpl userService;
-    ReadingServiceImpl readingService;
-
-    @BeforeEach
-    void setUp() {
-        userService = mock(UserServiceImpl.class);
-        readingService = mock(ReadingServiceImpl.class);
-        controller = new Controller(userService, readingService);
-    }
+    @Mock
+    MeterReadingServiceImpl meterReadingService;
+    @Mock
+    UserActivityServiceImpl activityService;
+    @Mock
+    DictionaryServiceImpl dictionaryService;
+    @InjectMocks
+    Controller controller;
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void registerUser() {
         controller.registerUser("dummy", "dummy", "dummy", "dummy", "dummy");
 
@@ -39,27 +42,30 @@ class ControllerTest {
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void registerAdmin() {
-        controller.registerAdmin("dummy", "dummy", "dummy", "dummy", "dummy",
+        controller.registerAdmin("dummy", "dummy", "dummy", "dummy", "dummy", "dummy",
                 "dummy");
 
-        verify(userService, times(1)).registerUser("dummy", "dummy",
+        verify(userService, times(1)).registerUser("dummy", "dummy", "dummy",
                 "dummy", "dummy", "dummy", "dummy");
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")
     void authorizeUser() {
         User user = mock(User.class);
-        when(userService.authorizeUser(anyString(), anyString()))
+        when(userService.authenticateUser(anyString(), anyString()))
                 .thenReturn(user);
-        User testUser = controller.authorizeUser("dummy", "dummy");
+        User testUser = controller.authenticateUser("dummy", "dummy");
 
         assertThat(testUser).isEqualTo(user);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns hashset")
     void getUserList() {
-        Set<User> users = new HashSet<>();
+        Set<User> users = mock(HashSet.class);
         when(userService.getAllUsers()).thenReturn(users);
 
         Set<User> testUsers = controller.getAllUsers();
@@ -68,19 +74,21 @@ class ControllerTest {
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns list")
     void getReadingList() {
-        List<Reading> readings = new ArrayList<>();
-        when(readingService.getAllReadingsList()).thenReturn(readings);
+        List<List<MeterReading>> readings = mock(ArrayList.class);
+        when(meterReadingService.getAllReadingsList(2)).thenReturn(readings);
 
-        List<Reading> testReadings = controller.getAllReadingsList();
+        List<List<MeterReading>> testReadings = controller.getAllReadingsList(2);
 
         assertThat(testReadings).isEqualTo(readings);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")
     void getActivityList() {
         List<Activity> activitiesDummy = new ArrayList<>();
-        when(userService.getUserActivitiesList()).thenReturn(activitiesDummy);
+        when(activityService.getUserActivitiesList()).thenReturn(activitiesDummy);
 
         List<Activity> activities = controller.getUserActivitiesList();
 
@@ -88,57 +96,67 @@ class ControllerTest {
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void addUtilityType() {
-        controller.addUtilityType("ELECTRICITY");
+        String utilityName = "ELECTRICITY";
+        controller.addUtilityType(utilityName);
 
-        verify(readingService, times(1)).addUtilityType("ELECTRICITY");
+        verify(dictionaryService, times(1))
+                .addUtilityTypeToDictionary(utilityName);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void addReading() {
         User user = mock(User.class);
-        Reading reading = mock(Reading.class);
+        MeterReading reading = mock(MeterReading.class);
 
         controller.submitNewReading(user, reading);
 
-        verify(readingService, times(1)).submitNewReading(user, reading);
+        verify(meterReadingService, times(1)).submitNewReading(user, reading);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void getActualReadingByUser() {
         User userDummy = mock(User.class);
-        Reading readingDummy = mock(Reading.class);
-        when(readingService.getActualReadingByUser(userDummy)).thenReturn(readingDummy);
+        List<MeterReading> readingDummy = mock(ArrayList.class);
+        when(meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(userDummy))
+                .thenReturn(readingDummy);
 
-        Reading reading = controller.getActualReadingByUser(userDummy);
+        List<MeterReading> meterReading = controller.getActualMeterReadingsOnAllUtilitiesByUser(userDummy);
 
-        verify(readingService, times(1)).getActualReadingByUser(userDummy);
+        assertThat(meterReading).isEqualTo(readingDummy);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")
     void getReadingsHistoryByUser() {
         User userDummy = mock(User.class);
-        List<Reading> readingsDummy = new ArrayList<>();
-        when(readingService.getReadingsHistoryByUser(userDummy)).thenReturn(readingsDummy);
+        List<List<MeterReading>> readingsDummy = mock(ArrayList.class);
+        when(meterReadingService.getMeterReadingsHistoryByUser(userDummy, 1))
+                .thenReturn(readingsDummy);
 
-        List<Reading> readings = controller.getReadingsHistoryByUser(userDummy);
+        List<List<MeterReading>> readings = controller.getReadingsHistoryByUser(userDummy, 1);
 
         assertThat(readings).isEqualTo(readingsDummy);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")
     void getReadingsForMonthByUser() {
         User userDummy = mock(User.class);
-        Reading readingDummy = mock(Reading.class);
-        when(readingService.getReadingsForMonthByUser(userDummy, 2024, 1))
+        List<MeterReading> readingDummy = mock(ArrayList.class);
+        when(meterReadingService.getReadingsForMonthByUser(userDummy, 2024, 1))
                 .thenReturn(readingDummy);
 
-        Reading reading = controller.getReadingsForMonthByUser(userDummy, 2024, 1);
+        List<MeterReading> reading = controller.getReadingsForMonthByUser(userDummy, 2024, 1);
 
         assertThat(reading).isEqualTo(readingDummy);
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
     void recordExit() {
         User userDummy = mock(User.class);
         controller.recordExit(userDummy);

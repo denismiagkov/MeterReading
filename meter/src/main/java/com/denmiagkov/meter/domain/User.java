@@ -12,70 +12,84 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"name", "phone"})
 @ToString(exclude = "ADMIN_PASSWORD")
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor()
+@Builder
 public class User {
     /**
      * Пароль администратора (необходим для регистрации нового администратора)
      */
-    final String ADMIN_PASSWORD = "123admin";
+    private final String ADMIN_PASSWORD = "123admin";
     /**
      * Уникальный идентификатор пользователя
      */
-    final UUID id = UUID.randomUUID();
+    private int id;
     /**
      * Имя пользователя
      */
-    String name;
+    private String name;
     /**
      * Телефон пользователя
      */
-    String phone;
+    private String phone;
     /**
      * Адрес пользователя
      */
-    String address;
+    private String address;
     /**
      * Статус администратора
      */
-    boolean isAdmin;
+    private UserRole role;
     /**
      * Логин пользователя
      */
-    String login;
+    private String login;
     /**
      * Пароль пользователя
      */
-    String password;
+    private String password;
 
 
     /**
      * Конструктор обычного пользователя
      */
+    @Builder
     public User(String name, String phone, String address, String login, String password) {
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
-        this.isAdmin = false;
-        this.login = login;
-        this.password = password;
+        createUser(name, phone, address, login, password);
+        this.role = UserRole.USER;
     }
 
     /**
      * Конструктор администратора
      *
-     * @throws AdminNotAuthorizedException
+     * @throws AdminNotAuthorizedException в случае ввода некорректного пароля
      */
-    public User(String name, String phone, String login, String password,
-                String inputIsAdmin, String adminPassword) {
-        boolean isAdmin = Boolean.parseBoolean(inputIsAdmin);
-        if (isAdmin && ADMIN_PASSWORD.equals(adminPassword)) {
-            this.name = name;
-            this.phone = phone;
-            this.isAdmin = true;
-            this.login = login;
-            this.password = password;
+    @Builder
+    public User(String name, String phone, String address, String login, String password,
+                String isAdmin, String adminPassword) {
+        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN)) &&
+            adminPassword.equals(ADMIN_PASSWORD)) {
+            createUser(name, phone, address, login, password);
+            this.role = UserRole.ADMIN;
         } else {
             throw new AdminNotAuthorizedException();
         }
+    }
+
+    /**
+     * Метод создания пользователя без учета роли user / admin
+     * @param name Имя
+     * @param phone Телефон
+     * @param address Адрес
+     * @param login Логин
+     * @param password Пароль
+     */
+    private void createUser(String name, String phone, String address, String login, String password) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.login = login;
+        this.password = password;
     }
 }

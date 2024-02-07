@@ -2,9 +2,10 @@ package com.denmiagkov.meter.infrastructure.in;
 
 import com.denmiagkov.meter.application.exception.SubmitReadingOnTheSameMonthException;
 import com.denmiagkov.meter.application.exception.NewMeterValueIsLessThenPreviousException;
-import com.denmiagkov.meter.domain.Reading;
+import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -19,7 +20,6 @@ import static org.mockito.Mockito.mock;
 class ConsoleTest {
     Console console;
     Controller controller;
-    User user;
 
     @BeforeEach
     void setUp() {
@@ -28,72 +28,65 @@ class ConsoleTest {
     }
 
     @Test
-    void start() {
-    }
-
-
-
-
-    @Test
+    @DisplayName("Throws exception when the last and new meter readings are submitted on the same month")
     void checkMonth_ThrowsException() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading meterReading = MeterReading.builder()
+                .id(350)
+                .userId(1)
+                .date(LocalDateTime.now().minusHours(1))
+                .utilityId(1)
+                .value(1500)
+                .build();
 
-        assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(reading))
+
+        assertThatThrownBy(() -> Console.ConsoleValidator.checkMonth(meterReading))
                 .isInstanceOf(SubmitReadingOnTheSameMonthException.class)
                 .hasMessage("Показания могут подаваться не чаще одного раза в месяц!");
     }
 
     @Test
+    @DisplayName("Returns true when the last and new meter readings are submitted on different months")
     void checkMonth_ReturnsTrue() throws NoSuchFieldException, IllegalAccessException {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
+        MeterReading meterReading = MeterReading.builder()
+                .id(350)
+                .userId(1)
+                .date(LocalDateTime.now().minusDays(32))
+                .utilityId(1)
+                .value(1500)
+                .build();
 
-        Class<?> clazz = Reading.class;
-        Field fieldDate = clazz.getDeclaredField("date");
-        fieldDate.setAccessible(true);
-        fieldDate.set(reading, LocalDateTime.now().minusDays(50));
-
-        assertThat(Console.ConsoleValidator.checkMonth(reading)).isTrue();
+        assertThat(Console.ConsoleValidator.checkMonth(meterReading)).isTrue();
     }
 
     @Test
+    @DisplayName("Throws exception when new meter reading is less than actual")
     void checkPreviousMeterValue_ThrowsException() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
-        String utility = "HEATING";
-        Double meterValue = 100.00;
+        MeterReading meterReading = MeterReading.builder()
+                .id(350)
+                .userId(1)
+                .date(LocalDateTime.now().minusDays(32))
+                .utilityId(1)
+                .value(100)
+                .build();
 
         assertThatThrownBy(() -> Console.ConsoleValidator
-                .checkPreviousMeterValue(reading, utility, meterValue))
+                .checkPreviousMeterValue(meterReading, 75.0))
                 .isInstanceOf(NewMeterValueIsLessThenPreviousException.class)
-                .hasMessage("Недопустимое знаачение: новое показание счетчика меньше предыдущего!");
+                .hasMessage("Недопустимое значение: новое показание счетчика меньше предыдущего!");
     }
 
     @Test
+    @DisplayName("Returns true when new meter reading is larger than actual")
     void checkPreviousMeterValue_ReturnsTrue() {
-        user = new User("John", "11-22-33", "Moscow", "user", "123");
-        Map<String, Double> meterValues = new HashMap<>();
-        meterValues.put("HEATING", 144.25);
-        meterValues.put("HOT_WATER", 37.1);
-        meterValues.put("COLD_WATER", 24.35);
-        Reading reading = new Reading(user, meterValues);
-        String utility = "HEATING";
-        Double meterValue = 200.00;
+        MeterReading meterReading = MeterReading.builder()
+                .id(35)
+                .userId(1)
+                .date(LocalDateTime.now().minusHours(1))
+                .utilityId(1)
+                .value(100)
+                .build();
 
-        assertThat(Console.ConsoleValidator.checkPreviousMeterValue(reading, utility, meterValue))
+        assertThat(Console.ConsoleValidator.checkPreviousMeterValue(meterReading, 125.0))
                 .isTrue();
     }
 
