@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
 import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Loggable
 @WebServlet("/api/user/readings/month")
 public class GetReadingsByMonthByUserServlet extends HttpServlet {
     ObjectMapper mapper;

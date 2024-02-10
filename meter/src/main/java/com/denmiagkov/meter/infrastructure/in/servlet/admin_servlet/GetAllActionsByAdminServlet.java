@@ -2,6 +2,7 @@ package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
 
 import com.denmiagkov.meter.application.dto.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.UserActionDto;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+@Loggable
 @WebServlet("/api/admin/actions")
 public class GetAllActionsByAdminServlet extends HttpServlet {
     ObjectMapper mapper;

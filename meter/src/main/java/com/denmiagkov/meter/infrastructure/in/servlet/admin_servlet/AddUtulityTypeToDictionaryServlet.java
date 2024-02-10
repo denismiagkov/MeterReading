@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
 
 import com.denmiagkov.meter.application.dto.UserActionDto;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Loggable
 @WebServlet("/api/admin/dictionary/new")
 public class AddUtulityTypeToDictionaryServlet extends HttpServlet {
     ObjectMapper mapper;

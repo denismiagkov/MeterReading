@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
 import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+@Loggable
 @WebServlet("/api/user/readings")
 public class GetReadingHistoryByUserServlet extends HttpServlet {
     ObjectMapper mapper;

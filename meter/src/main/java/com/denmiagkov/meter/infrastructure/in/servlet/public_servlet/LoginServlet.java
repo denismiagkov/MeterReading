@@ -6,6 +6,7 @@ import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserActivityServiceImpl;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtProvider;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+@Loggable
 @WebServlet("/api/login")
 public class LoginServlet extends HttpServlet {
 

@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Интерфейс, объявляющий логику обработки данных о пользователе
  */
-@Loggable
+
 public interface UserService {
 
     /**

@@ -31,7 +31,6 @@ public class RegistrationServlet extends HttpServlet {
         mapper = new ObjectMapper();
     }
 
-    @Loggable
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("entered in doPost");

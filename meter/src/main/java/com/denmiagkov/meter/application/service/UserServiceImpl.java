@@ -21,7 +21,7 @@ import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.USER_LOGIN
 /**
  * Класс реализует логику обработки данных о пользователях
  */
-@Loggable
+
 public class UserServiceImpl implements UserService {
     /**
      * Репозиторий данных о пользователе
