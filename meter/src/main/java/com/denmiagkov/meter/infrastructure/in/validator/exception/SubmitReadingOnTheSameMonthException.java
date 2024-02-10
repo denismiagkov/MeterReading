@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.exception;
+package com.denmiagkov.meter.infrastructure.in.validator.exception;
 /**
  * Исключение, выбрасываемое при попытке повторной подачи показаний в текущем месяце
  * */

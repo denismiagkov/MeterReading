@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.utils.LiquibaseManager;
@@ -108,7 +108,8 @@ class UserRepositoryImplTest {
     @Test
     @DisplayName("Returns true if there IS user in database with given login and password")
     void authenticateUser_ReturnsUser() {
-        User user1 = userRepository.authenticateUser("user", "123");
+        User user1 = userRepository.findUserByLogin("user")
+                .orElseThrow(AuthenticationFailedException::new);
 
         assertThat(user1).isEqualTo(user);
     }
@@ -116,7 +117,8 @@ class UserRepositoryImplTest {
     @Test
     @DisplayName("Throws exception if given password doesn't correlate to user's password in database")
     void authorizeUser_ThrowsExceptionIfPasswordIsIncorrect() {
-        assertThatThrownBy(() -> userRepository.authenticateUser("user", "321"))
+        assertThatThrownBy(() -> userRepository.findUserByLogin("user")
+                .orElseThrow(AuthenticationFailedException::new))
                 .isInstanceOf(AuthenticationFailedException.class)
                 .hasMessage("Ошибка авторизации: пользователя с указанными логином и паролем не существует!");
     }

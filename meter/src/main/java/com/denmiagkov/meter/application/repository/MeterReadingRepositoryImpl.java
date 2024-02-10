@@ -1,5 +1,10 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingMapper;
+import com.denmiagkov.meter.application.service.MeterReadingServiceImpl;
+import com.denmiagkov.meter.application.service.UserActivityServiceImpl;
+import com.denmiagkov.meter.application.service.UserServiceImpl;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.utils.ConnectionManager;
@@ -9,6 +14,8 @@ import lombok.NoArgsConstructor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Класс реализует логику взаимодействия с базой данных, связанную с показаниями счетчиков
@@ -73,13 +80,13 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public void addNewMeterReading(MeterReading reading) {
+    public void addNewMeterReading(MeterReadingDto meterReading) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_NEW_METER_READING)) {
-            statement.setInt(1, reading.getUserId());
-            statement.setTimestamp(2, Timestamp.valueOf(reading.getDate()));
-            statement.setInt(3, reading.getUtilityId());
-            statement.setDouble(4, reading.getValue());
+            statement.setInt(1, meterReading.getUserId());
+            statement.setTimestamp(2, Timestamp.valueOf(meterReading.getDate()));
+            statement.setInt(3, meterReading.getUtilityId());
+            statement.setDouble(4, meterReading.getValue());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -90,11 +97,11 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user) {
+    public List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(int userId) {
         List<MeterReading> allActualMeterReadings = new ArrayList<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_ACTUAL_METER_READINGS_ON_ALL_UTILITIES_BY_USER)) {
-            statement.setInt(1, user.getId());
+            statement.setInt(1, userId);
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {
                 allActualMeterReadings.add(getMeterReadingFromDatabase(queryResult));
@@ -109,11 +116,11 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public MeterReading getActualMeterReadingOnExactUtility(User user, int utilityId) {
+    public MeterReading getActualMeterReadingOnExactUtility(int userId, int utilityId) {
         MeterReading meterReading = null;
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_ACTUAL_METER_READING_ON_EXACT_UTILITY_BY_USER)) {
-            statement.setInt(1, user.getId());
+            statement.setInt(1, userId);
             statement.setInt(2, utilityId);
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {
@@ -124,6 +131,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
         }
         return meterReading;
     }
+
 
     /**
      * Метод получения объекта показания счетчика из выбранной записи из базы данных
@@ -167,10 +175,10 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getMeterReadingsHistory(User user) {
+    public List<MeterReading> getMeterReadingsHistory(int userId) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_HISTORY_OF_METER_READINGS_BY_USER)) {
-            statement.setInt(1, user.getId());
+            statement.setInt(1, userId);
             statement.setFetchSize(50);
             ResultSet resultSet = statement.executeQuery();
             List<MeterReading> userMeterReadingsHistory = new ArrayList<>();
@@ -187,12 +195,12 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getMeterReadingsForExactMonthByUser(User user, int year, int month) {
+    public List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, Map<String, Integer> month) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_METER_READINGS_FOR_EXACT_MONTH_BY_USER)) {
-            statement.setInt(1, user.getId());
-            statement.setInt(2, year);
-            statement.setInt(3, month);
+            statement.setInt(1, userId);
+            statement.setInt(2, month.get("year"));
+            statement.setInt(3, month.get("month"));
             ResultSet queryResult = statement.executeQuery();
             List<MeterReading> userMeterReadingsByMonth = new ArrayList<>();
             while (queryResult.next()) {

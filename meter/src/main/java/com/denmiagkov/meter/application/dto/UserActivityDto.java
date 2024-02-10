@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.dto;
 
-import com.denmiagkov.meter.domain.ActivityType;
+import com.denmiagkov.meter.domain.ActionType;
 import lombok.Value;
 
 import java.time.LocalDateTime;
@@ -18,5 +18,5 @@ public class UserActivityDto {
     /**
      * Тип действия
      */
-    ActivityType action;
+    ActionType action;
 }

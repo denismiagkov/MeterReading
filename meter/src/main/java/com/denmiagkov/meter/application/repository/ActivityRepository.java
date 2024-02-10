@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.domain.UserActivity;
+import com.denmiagkov.meter.domain.UserAction;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ public interface ActivityRepository {
     /**
      * Метод добавляет в базу данных запись о действии, совершенном пользователем в приложении
      *
-     * @param userActivity Новое действие пользователя
+     * @param userAction Новое действие пользователя
      * @return boolean true - в случае успешного добавления,в противном случае - false
      */
-    boolean addActivity(UserActivity userActivity);
+    boolean addActivity(UserAction userAction);
 
     /**
      * Метод получения всех записей о действиях, совершенных пользователями в системе
      *
      * @return List<Activity> Список действий пользователей
      */
-    List<UserActivity> getActivitiesList();
+    List<UserAction> getActivitiesList();
 }

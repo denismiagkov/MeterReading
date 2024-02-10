@@ -22,19 +22,17 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
         this.dictionaryRepository = dictionaryRepository;
-        PUBLIC_UTILITIES_LIST = getUtilitiesDictionary();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean addUtilityTypeToDictionary(String utilityName) {
+    public Map<Integer, String> addUtilityTypeToDictionary(String utilityName) {
         Map<Integer, String> utilitiesDictionary = dictionaryRepository.getAllUtilitiesTypes();
         if (!utilitiesDictionary.containsValue(utilityName)) {
-            int newUtilityId = dictionaryRepository.addUtilityTypeToDictionary(utilityName.toUpperCase());
-            PUBLIC_UTILITIES_LIST.put(newUtilityId, utilityName.toUpperCase());
-            return true;
+            dictionaryRepository.addUtilityTypeToDictionary(utilityName.toUpperCase());
+            return getUtilitiesDictionary();
         } else {
             throw new PublicUtilityTypeAlreadyExistsException(utilityName);
         }

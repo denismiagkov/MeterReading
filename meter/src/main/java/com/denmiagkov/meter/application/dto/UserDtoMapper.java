@@ -7,10 +7,9 @@ import org.mapstruct.factory.Mappers;
 import java.util.Set;
 
 @Mapper
-public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
+public interface UserDtoMapper {
+    UserDtoMapper USER_DTO_MAPPER = Mappers.getMapper(UserDtoMapper.class);
     UserDto userToUserDto(User user);
 
-    Set<UserDto> userSetToUserDtoSet(Set<User> users);
+    Set<UserDto> usersToUserDtos(Set<User> users);
 }

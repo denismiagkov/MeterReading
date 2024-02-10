@@ -13,5 +13,5 @@ public interface MeterReadingMapper {
 
     MeterReadingDto meterReadingToMeterReadingDto(MeterReading meterReading);
 
-    List<MeterReading> listMeterReadingToListMeterReadingDto(List<MeterReading> meterReadings);
+    List<MeterReadingDto> listMeterReadingToListMeterReadingDto(List<MeterReading> meterReadings);
 }

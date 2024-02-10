@@ -12,7 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 /**
  * Класс поднимает общий тестконтейнер PostgreSQL для проведения интеграционных тестов для всех репозиториев
  */
-@Testcontainers
+//@Testcontainers
 @UtilityClass
 public final class PostgresContainerManager {
     private static final int CONTAINER_PORT = 5432;

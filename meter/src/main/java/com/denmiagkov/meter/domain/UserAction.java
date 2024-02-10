@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.domain;
 
+import com.denmiagkov.meter.application.dto.UserDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString
-public class UserActivity {
+public class UserAction {
     /**
      * Уникальный идентификатор действия
      */
@@ -28,11 +29,11 @@ public class UserActivity {
     /**
      * Тип действия
      */
-    private final ActivityType action;
+    private final ActionType action;
 
     @Builder
-    public UserActivity(User user, ActivityType action) {
-        this.userId = user.getId();
+    public UserAction(int userId, ActionType action) {
+        this.userId = userId;
         this.dateTime = LocalDateTime.now();
         this.action = action;
     }

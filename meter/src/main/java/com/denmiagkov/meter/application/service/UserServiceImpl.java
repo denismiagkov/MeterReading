@@ -1,12 +1,21 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.UserDto;
+import com.denmiagkov.meter.application.dto.UserIncomingDto;
+import com.denmiagkov.meter.application.dto.UserLoginDto;
+import com.denmiagkov.meter.application.exception.AdminNotAuthorizedException;
+import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
-import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
+import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.*;
 import lombok.AllArgsConstructor;
 
 import java.util.Set;
+
+import static com.denmiagkov.meter.application.dto.UserIncomingDtoMapper.USER_INCOMING_DTO_MAPPER;
+import static com.denmiagkov.meter.application.dto.UserDtoMapper.USER_DTO_MAPPER;
+import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.USER_LOGIN_DTO_MAPPER;
 
 /**
  * Класс реализует логику обработки данных о пользователях
@@ -16,7 +25,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Репозиторий данных о пользователе
      */
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
     /**
      * Сервис данных о действиях пользователя
      */
@@ -26,28 +35,36 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User registerUser(String inputName, String inputPhone, String inputAddress,
-                             String inputLogin, String inputPassword) {
-        User user = User.builder()
-                .name(inputName)
-                .phone(inputPhone)
-                .address(inputAddress)
-                .role(UserRole.USER)
-                .login(inputLogin)
-                .password(inputPassword)
-                .build();
+    public UserDto registerUser(UserIncomingDto userInDto) {
+        User user = USER_INCOMING_DTO_MAPPER.incomingUserDtoToUser(userInDto);
+        setUserRole(userInDto, user);
+        return addNewUserToDatabase(user);
+    }
+
+    private UserDto addNewUserToDatabase(User user) {
         if (!userRepository.isExistUser(user)) {
-            if (!userRepository.isExistLogin(inputLogin)) {
+            if (!userRepository.isExistLogin(user.getLogin())) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                UserActivity userActivity = new UserActivity(user, ActivityType.REGISTRATION);
-                activityService.addActivity(userActivity);
-                return user;
+                UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
+                activityService.registerUserAction(userDto.getId(), ActionType.REGISTRATION);
+                return userDto;
             } else {
-                throw new LoginAlreadyInUseException(inputLogin);
+                throw new LoginAlreadyInUseException(user.getLogin());
             }
         } else {
             throw new UserAlreadyExistsException(user);
+        }
+    }
+
+    private void setUserRole(UserIncomingDto userDto, User user) {
+        if (user.getRole() != null &&
+            user.getRole().equals(UserRole.ADMIN) &&
+            (userDto.getAdminPassword() == null ||
+             !userDto.getAdminPassword().equals(user.getADMIN_PASSWORD()))) {
+            throw new AdminNotAuthorizedException();
+        } else if (user.getRole() == null) {
+            user.setRole(UserRole.USER);
         }
     }
 
@@ -55,48 +72,34 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User registerUser(String name, String phone, String address, String login, String password,
-                             String inputIsAdmin, String adminPassword) {
-        User user = new User(name, phone, address, login, password, inputIsAdmin, adminPassword);
-        if (!userRepository.isExistUser(user)) {
-            if (!userRepository.isExistLogin(login)) {
-                userRepository.addUser(user);
-                return user;
-            } else {
-                throw new LoginAlreadyInUseException(login);
-            }
-        } else {
-            throw new UserAlreadyExistsException(user);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User authenticateUser(String login, String password) {
-        User user = userRepository.authenticateUser(login, password);
+    public UserLoginDto getPasswordByLogin(String login) {
+        User user = userRepository.findUserByLogin(login)
+                .orElseThrow(AuthenticationFailedException::new);
+        UserLoginDto loginDto = USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
+        UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
         if (!user.getRole().equals(UserRole.ADMIN)) {
-            UserActivity userActivity = new UserActivity(user, ActivityType.AUTHENTICATION);
-            activityService.addActivity(userActivity);
+            activityService.registerUserAction(userDto.getId(), ActionType.AUTHENTICATION);
         }
-        return user;
+        return loginDto;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<User> getAllUsers() {
-        return userRepository.getAllUsers();
+    public Set<UserDto> getAllUsers() {
+        Set<User> users = userRepository.getAllUsers();
+        return USER_DTO_MAPPER.usersToUserDtos(users);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void recordExit(User user) {
-        UserActivity userActivity = new UserActivity(user, ActivityType.EXIT);
-        activityService.addActivity(userActivity);
+    public void recordExit(UserDto user) {
+//        UserActivity userActivity = new UserActivity(user, ActivityType.EXIT);
+//        activityService.addActivity(userActivity);
     }
+
+
 }

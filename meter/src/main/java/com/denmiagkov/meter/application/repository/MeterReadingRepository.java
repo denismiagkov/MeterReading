@@ -1,9 +1,11 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.MeterReadingDto;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Интерфейс, объявляющий логику взаимодействия с базой данных по поводу сведений о показаниях счетчиков
@@ -16,7 +18,7 @@ public interface MeterReadingRepository {
      *
      * @param reading новое показание счетчика
      */
-    void addNewMeterReading(MeterReading reading);
+    void addNewMeterReading(MeterReadingDto reading);
 
     /**
      * Метод выборки данных об актуальных показаниях счетчиков определенного пользователя
@@ -24,7 +26,7 @@ public interface MeterReadingRepository {
      * @param user Пользователь
      * @return List<MeterReading> Список актуальных показаний пользователя
      */
-    List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user);
+    List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(int userId);
 
     /**
      * Метод просмотра актуального (последнего переданного) показания счетчика конкретного пользователя
@@ -34,7 +36,7 @@ public interface MeterReadingRepository {
      * @param utilityId Тип показаний (услуг)
      * @return MeterReading последние переданные показания счетчиков
      */
-    MeterReading getActualMeterReadingOnExactUtility(User user, int utilityId);
+    MeterReading getActualMeterReadingOnExactUtility(int userId, int utilityId);
 
     /**
      * Метод выборки всех показаний счетчиков, переданных всеми пользоваетелями
@@ -49,7 +51,7 @@ public interface MeterReadingRepository {
      * @param user Пользователь
      * @return List<MeterReading> Список показаний, переданных указанным пользователем
      */
-    List<MeterReading> getMeterReadingsHistory(User user);
+    List<MeterReading> getMeterReadingsHistory(int userId);
 
     /**
      * Метод получения всех показаний, переданных указанным пользователем за определенный месяц
@@ -59,5 +61,5 @@ public interface MeterReadingRepository {
      * @param month Месяц
      * @return List<MeterReading> Список показаний счетчиков пользователя за указанные год и месяц
      */
-    List<MeterReading> getMeterReadingsForExactMonthByUser(User user, int year, int month);
+    List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, Map<String, Integer> month);
 }

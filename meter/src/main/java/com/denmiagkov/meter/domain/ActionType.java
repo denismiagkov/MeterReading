@@ -3,7 +3,7 @@ package com.denmiagkov.meter.domain;
 /**
  * Перечисление типов действий пользователей
  */
-public enum ActivityType {
+public enum ActionType {
     /**
      * Авторизация
      */

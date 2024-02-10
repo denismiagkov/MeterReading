@@ -1,12 +1,16 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Set;
+
 /**
  * Интерфейс, объявляющий методы взаимодействия с базой данных по поводу сведений о пользователях
- * */
+ */
 public interface UserRepository {
 
     /**
@@ -42,7 +46,7 @@ public interface UserRepository {
      * @return User Зарегистрированный пользователь с указанными логином и паролем
      * @throws AuthenticationFailedException в случае, если пользователь с указанными логином и паролем не зарегистрирован
      */
-    User authenticateUser(String login, String password);
+    Optional<User> findUserByLogin(String login);
 
     /**
      * Метод получения сведений о всех пользователях из базы данных
@@ -50,4 +54,13 @@ public interface UserRepository {
      * @return Set<User> Множество зарегистрованных пользователей
      */
     Set<User> getAllUsers();
+
+    /**
+     * Метод возвращает пользователя на основе соответствующей записи в базе данных
+     *
+     * @param queryResult Запись о пользователе в базе данных
+     * @return User Пользователь
+     * @throws SQLException
+     */
+    User getUser(ResultSet queryResult) throws SQLException;
 }

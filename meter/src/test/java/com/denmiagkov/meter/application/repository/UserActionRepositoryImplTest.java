@@ -1,11 +1,10 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.domain.UserActivity;
-import com.denmiagkov.meter.domain.ActivityType;
+import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,8 +14,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
-class UserActivityRepositoryImplTest {
+//@Testcontainers
+class UserActionRepositoryImplTest {
     ActivityRepositoryImpl activityRepository;
     Connection connection;
 
@@ -47,36 +46,36 @@ class UserActivityRepositoryImplTest {
     @Test
     @DisplayName("Returns true if given activity is added to database")
     void addActivity() {
-        UserActivity userActivity = UserActivity.builder()
+        UserAction userAction = UserAction.builder()
                 .userId(1)
                 .dateTime(LocalDateTime.of(2024, 2, 4, 15, 48))
-                .action(ActivityType.REVIEW_READINGS_FOR_MONTH)
+                .action(ActionType.REVIEW_READINGS_FOR_MONTH)
                 .build();
 
-        boolean result = activityRepository.addActivity(userActivity);
-        List<UserActivity> activities = activityRepository.getActivitiesList();
-        UserActivity testUserActivity = activities.get(activities.size() - 1);
+        boolean result = activityRepository.addActivity(userAction);
+        List<UserAction> activities = activityRepository.getActivitiesList();
+        UserAction testUserAction = activities.get(activities.size() - 1);
 
         assertAll(
                 () -> assertThat(result).isTrue(),
-                () -> assertThat(testUserActivity.getUserId()).isEqualTo(userActivity.getUserId()),
-                () -> assertThat(testUserActivity.getDateTime()).isEqualTo(userActivity.getDateTime()),
-                () -> assertThat(testUserActivity.getAction()).isEqualTo(userActivity.getAction())
+                () -> assertThat(testUserAction.getUserId()).isEqualTo(userAction.getUserId()),
+                () -> assertThat(testUserAction.getDateTime()).isEqualTo(userAction.getDateTime()),
+                () -> assertThat(testUserAction.getAction()).isEqualTo(userAction.getAction())
         );
     }
 
     @Test
     @DisplayName("Returns activities list and verifies its elements")
     void getActivityList() {
-        List<UserActivity> userActivities = activityRepository.getActivitiesList();
+        List<UserAction> userActivities = activityRepository.getActivitiesList();
 
         assertAll(
                 () -> assertThat(userActivities)
                         .isNotNull(),
                 () -> assertThat(userActivities.get(0).getAction())
-                        .isEqualTo(ActivityType.REGISTRATION),
+                        .isEqualTo(ActionType.REGISTRATION),
                 () -> assertThat(userActivities.get(1).getAction())
-                        .isEqualTo(ActivityType.AUTHENTICATION),
+                        .isEqualTo(ActionType.AUTHENTICATION),
                 () -> assertThat(userActivities.get(2).getUserId())
                         .isEqualTo(1));
     }

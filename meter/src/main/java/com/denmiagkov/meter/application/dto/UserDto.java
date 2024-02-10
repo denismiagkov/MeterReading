@@ -1,11 +1,19 @@
 package com.denmiagkov.meter.application.dto;
 
 import com.denmiagkov.meter.domain.UserRole;
-import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.Value;
 
+import java.io.Serializable;
+
 @Value
-public class UserDto {
+public class UserDto implements Serializable {
+    /**
+     * id пользователя
+     */
+    int id;
     /**
      * Имя пользователя
      */
@@ -19,7 +27,7 @@ public class UserDto {
      */
     String address;
     /**
-     * Роль
+     * Роль пользователя
      */
     UserRole role;
     /**

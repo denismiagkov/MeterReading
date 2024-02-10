@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.dto;
 
-import com.denmiagkov.meter.domain.UserActivity;
+import com.denmiagkov.meter.domain.UserAction;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,8 +11,8 @@ public interface UserActivityMapper {
 
     UserActivityMapper INSTANCE = Mappers.getMapper(UserActivityMapper.class);
 
-    UserActivityDto userActivityToUserActivityDto(UserActivity userActivity);
+    UserActivityDto userActivityToUserActivityDto(UserAction userAction);
 
-    List<UserActivity> listUserActivityToListUserActivityDto(List<UserActivity> meterReadings);
+    List<UserAction> listUserActivityToListUserActivityDto(List<UserAction> meterReadings);
 
 }

@@ -1,10 +1,15 @@
 package com.denmiagkov.meter.application.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Value;
 
 import java.time.LocalDateTime;
 
-@Value
+@NoArgsConstructor
+@Getter
+@Setter
 public class MeterReadingDto {
     /**
      * Идентификатор пользователя
@@ -17,9 +22,9 @@ public class MeterReadingDto {
     /**
      * Идентификатор типа услуг
      */
-    int utilityId;
+    private int utilityId;
     /**
      * Значение счетчика
      */
-    double value;
+    private double value;
 }
