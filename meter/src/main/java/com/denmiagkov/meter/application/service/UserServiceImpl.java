@@ -1,15 +1,16 @@
 package com.denmiagkov.meter.application.service;
 
+
 import com.denmiagkov.meter.application.dto.UserDto;
 import com.denmiagkov.meter.application.dto.UserIncomingDto;
 import com.denmiagkov.meter.application.dto.UserLoginDto;
 import com.denmiagkov.meter.application.exception.AdminNotAuthorizedException;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.*;
-import lombok.AllArgsConstructor;
 
 import java.util.Set;
 
@@ -20,7 +21,7 @@ import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.USER_LOGIN
 /**
  * Класс реализует логику обработки данных о пользователях
  */
-@AllArgsConstructor
+@Loggable
 public class UserServiceImpl implements UserService {
     /**
      * Репозиторий данных о пользователе
@@ -31,11 +32,18 @@ public class UserServiceImpl implements UserService {
      */
     private final UserActivityService activityService;
 
+    public UserServiceImpl(UserRepository userRepository, UserActivityService activityService) {
+        this.userRepository = userRepository;
+        this.activityService = activityService;
+    }
+
+
     /**
      * {@inheritDoc}
      */
     @Override
     public UserDto registerUser(UserIncomingDto userInDto) {
+        System.out.println("entered in  registerUser");
         User user = USER_INCOMING_DTO_MAPPER.incomingUserDtoToUser(userInDto);
         setUserRole(userInDto, user);
         return addNewUserToDatabase(user);

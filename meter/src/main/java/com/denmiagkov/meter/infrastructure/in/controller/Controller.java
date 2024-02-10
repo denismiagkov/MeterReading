@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Контроллер
  */
-@AllArgsConstructor
+
 public class Controller {
     /**
      * Сервис пользователя
@@ -35,6 +35,13 @@ public class Controller {
      * Сервис справочника показаний (типов услуг)
      */
     private final DictionaryService dictionaryService;
+
+    public Controller(UserService userService, MeterReadingService meterReadingService, UserActivityService activityService, DictionaryService dictionaryService) {
+        this.userService = userService;
+        this.meterReadingService = meterReadingService;
+        this.activityService = activityService;
+        this.dictionaryService = dictionaryService;
+    }
 
     /**
      * Метод регистрации обычного пользователя

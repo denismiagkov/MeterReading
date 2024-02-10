@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LiquibaseManager {
     private static final String SERVICE_SCHEMA_NAME_KEY = "liquibase.service_schema_name";
     private static final String DEFAULT_SCHEMA_NAME_KEY = "liquibase.default_schema_name";
@@ -23,6 +22,9 @@ public final class LiquibaseManager {
     private static final String QUERY_CREATE_MIGRATION_SCHEMA = String.join(" ",
             "CREATE SCHEMA IF NOT EXISTS",
             PropertiesUtil.get(SERVICE_SCHEMA_NAME_KEY));
+
+    private LiquibaseManager() {
+    }
 
     static {
         try (Connection connection = ConnectionManager.open();

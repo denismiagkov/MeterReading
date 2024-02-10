@@ -1,17 +1,19 @@
 package com.denmiagkov.meter.application.service;
 
+
 import com.denmiagkov.meter.application.dto.UserDto;
 import com.denmiagkov.meter.application.dto.UserIncomingDto;
 import com.denmiagkov.meter.application.dto.UserLoginDto;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
-import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 
 import java.util.Set;
 
 /**
  * Интерфейс, объявляющий логику обработки данных о пользователе
  */
+@Loggable
 public interface UserService {
 
     /**

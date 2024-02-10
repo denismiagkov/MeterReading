@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 
-//@Value
-@Getter
-@ToString
+
 public class UserIncomingDto {
     /**
      * Имя пользователя
@@ -47,5 +45,33 @@ public class UserIncomingDto {
         this.login = login;
         this.password = password;
         this.adminPassword = adminPassword;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
     }
 }

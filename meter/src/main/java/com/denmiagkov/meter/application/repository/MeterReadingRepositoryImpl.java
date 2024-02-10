@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,7 @@ import java.util.Set;
 /**
  * Класс реализует логику взаимодействия с базой данных, связанную с показаниями счетчиков
  */
-@Getter
-@NoArgsConstructor
+
 public class MeterReadingRepositoryImpl implements MeterReadingRepository {
     /**
      * SQL-запрос на добавление в базу данных нового показания счетчика
@@ -141,15 +141,13 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      */
     private MeterReading getMeterReadingFromDatabase(ResultSet queryResult) throws SQLException {
         MeterReading meterReading;
-        meterReading = MeterReading.builder()
-                .id(queryResult.getInt("id"))
-                .userId(queryResult.getInt("user_id"))
-                .date(queryResult.getTimestamp("date")
-                        .toLocalDateTime())
-                .utilityId(queryResult.getInt("utility_id"))
-                .value(queryResult.getDouble("value"))
-                .build();
-        return meterReading;
+        int id = queryResult.getInt("id");
+        int userId = queryResult.getInt("user_id");
+        LocalDateTime date = queryResult.getTimestamp("date")
+                .toLocalDateTime();
+        int utilityId = queryResult.getInt("utility_id");
+        double value = queryResult.getDouble("value");
+        return new MeterReading(id, userId, date, utilityId, value);
     }
 
     /***

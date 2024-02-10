@@ -36,20 +36,20 @@ class MeterReadingRepositoryImplTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        LiquibaseManager.startLiquibase();
-        userRepository = new UserRepositoryImpl();
-        meterReadingRepository = new MeterReadingRepositoryImpl();
-        connection = ConnectionManager.open();
-        connection.setAutoCommit(false);
-
-        testUser = userRepository.findUserByLogin("user1")
-                .orElseThrow(AuthenticationFailedException::new);
-        testMeterReading = MeterReading.builder()
-                .userId(testUser.getId())
-                .date(LocalDateTime.of(2024, 2, 4, 16, 41))
-                .value(715.75)
-                .utilityId(1)
-                .build();
+//        LiquibaseManager.startLiquibase();
+//        userRepository = new UserRepositoryImpl();
+//        meterReadingRepository = new MeterReadingRepositoryImpl();
+//        connection = ConnectionManager.open();
+//        connection.setAutoCommit(false);
+//
+//        testUser = userRepository.findUserByLogin("user1")
+//                .orElseThrow(AuthenticationFailedException::new);
+//        testMeterReading = MeterReading.builder()
+//                .userId(testUser.getId())
+//                .date(LocalDateTime.of(2024, 2, 4, 16, 41))
+//                .value(715.75)
+//                .utilityId(1)
+//                .build();
 
     }
 

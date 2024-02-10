@@ -14,12 +14,16 @@ import java.util.List;
 /**
  * Сервис, реализующий логику обработки данных о действиях пользователей в системе
  */
-@AllArgsConstructor
+
 public class UserActivityServiceImpl implements UserActivityService {
     /**
      * Репозиторий данных о действиях пользователя
      */
     private final ActivityRepository activityRepository;
+
+    public UserActivityServiceImpl(ActivityRepository activityRepository) {
+        this.activityRepository = activityRepository;
+    }
 
     /**
      * {@inheritDoc}

@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@UtilityClass
+
 public final class PropertiesUtil {
     private static final Properties PROPERTIES = new Properties();
+    private PropertiesUtil(){
+    }
 
     static {
         loadProperties();

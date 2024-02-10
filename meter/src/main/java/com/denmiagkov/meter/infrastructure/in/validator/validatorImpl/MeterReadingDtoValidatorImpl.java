@@ -15,12 +15,16 @@ import java.util.Map;
 /**
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
-@AllArgsConstructor
+
 public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingDto> {
     /**
      * Контроллер
      */
     Controller controller;
+
+    public MeterReadingDtoValidatorImpl(Controller controller) {
+        this.controller = controller;
+    }
 
     /**
      * Метод проверки передачи корректного id типа услуг (показаний)

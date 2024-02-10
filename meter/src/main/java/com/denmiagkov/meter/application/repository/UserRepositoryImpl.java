@@ -15,8 +15,7 @@ import java.util.Set;
 /**
  * Класс, отвечающий за реализацию логики взаимодействия с базой данных по поводу сведений о пользователях
  */
-@Getter
-@NoArgsConstructor
+
 public class UserRepositoryImpl implements UserRepository {
 
     /**
@@ -185,14 +184,13 @@ public class UserRepositoryImpl implements UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */ public User getUser(ResultSet queryResult) throws SQLException {
-        return User.builder()
-                .id(queryResult.getInt("id"))
-                .name(queryResult.getString("name"))
-                .phone(queryResult.getString("phone"))
-                .address(queryResult.getString("address"))
-                .role(UserRole.valueOf(queryResult.getString("role")))
-                .login(queryResult.getString("login"))
-                .password(queryResult.getString("password"))
-                .build();
+        int id = queryResult.getInt("id");
+        String name = queryResult.getString("name");
+        String phone = queryResult.getString("phone");
+        String address = queryResult.getString("address");
+        UserRole role = UserRole.valueOf(queryResult.getString("role"));
+        String login = queryResult.getString("login");
+        String password = queryResult.getString("password");
+        return new User(id, name, phone, address, role, login, password);
     }
 }

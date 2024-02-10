@@ -7,24 +7,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Класс реализовывает логику взаимодействия с базой данных по поводу действий пользователей в приложении
- * */
-@Getter
-@NoArgsConstructor
+ */
+
+
 public class ActivityRepositoryImpl implements ActivityRepository {
-/**
- *  SQL-запрос на добавление одного пользовательского действия в базу данных
- * */
+    /**
+     * SQL-запрос на добавление одного пользовательского действия в базу данных
+     */
     private static final String ADD_ACTIVITY = """
             INSERT INTO meter_service.activities (user_id, date, action)
             VALUES (?, ?, ?);
             """;
-/**
- * SQL-запрос на выборку из базы данных всех записей о пользовательских действиях
- * */
+    /**
+     * SQL-запрос на выборку из базы данных всех записей о пользовательских действиях
+     */
     private static final String GET_ACTIVITIES_LIST = """
             SELECT id, user_id, date, action
             FROM meter_service.activities;
@@ -48,7 +50,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public List<UserAction> getActivitiesList() {
         List<UserAction> userActivitiesList = new ArrayList<>();
@@ -66,12 +68,11 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     }
 
     private UserAction getActivity(ResultSet queryResult) throws SQLException {
-        return UserAction.builder()
-                .id(queryResult.getInt("id"))
-                .userId(queryResult.getInt("user_id"))
-                .dateTime(queryResult.getTimestamp("date")
-                        .toLocalDateTime())
-                .action(ActionType.valueOf(queryResult.getString("action")))
-                .build();
+        int id = queryResult.getInt("id");
+        int userId = queryResult.getInt("user_id");
+        LocalDateTime dateTime = queryResult.getTimestamp("date")
+                .toLocalDateTime();
+        ActionType action = ActionType.valueOf(queryResult.getString("action"));
+        return new UserAction(id, userId, dateTime, action);
     }
 }

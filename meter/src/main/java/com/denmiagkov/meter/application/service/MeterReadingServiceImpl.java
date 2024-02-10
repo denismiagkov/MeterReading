@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Сервис подачи показаний
  */
-@AllArgsConstructor
+
 public class MeterReadingServiceImpl implements MeterReadingService {
     /**
      * Репозиторий данных о показаниях счетчика
@@ -25,6 +25,10 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     private final UserActivityService activityService;
 
+    public MeterReadingServiceImpl(MeterReadingRepository meterReadingRepository, UserActivityService activityService) {
+        this.meterReadingRepository = meterReadingRepository;
+        this.activityService = activityService;
+    }
 
     /**
      * {@inheritDoc}

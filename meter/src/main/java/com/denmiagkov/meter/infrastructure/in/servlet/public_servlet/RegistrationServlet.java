@@ -2,6 +2,7 @@ package com.denmiagkov.meter.infrastructure.in.servlet.public_servlet;
 
 import com.denmiagkov.meter.application.dto.UserDto;
 import com.denmiagkov.meter.application.dto.UserIncomingDto;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.UserIncomingDtoValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@Loggable
 @WebServlet("/api/registration")
 public class RegistrationServlet extends HttpServlet {
 
@@ -29,8 +31,10 @@ public class RegistrationServlet extends HttpServlet {
         mapper = new ObjectMapper();
     }
 
+    @Loggable
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("entered in doPost");
         resp.setContentType("application/json");
         try (InputStream requestInputStream = req.getInputStream();
              OutputStream responseOutputStream = resp.getOutputStream()) {

@@ -16,13 +16,16 @@ import java.util.Map;
 /**
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
-@AllArgsConstructor
+
 public class PublicUtilityValidatorImpl implements DtoValidator<String> {
     /**
      * Контроллер
      */
     Controller controller;
 
+    public PublicUtilityValidatorImpl(Controller controller) {
+        this.controller = controller;
+    }
 
     @Override
     public boolean isValid(String newUtility) {

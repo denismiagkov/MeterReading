@@ -7,7 +7,7 @@ import lombok.Value;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Value
+
 public class UserActionDto implements Serializable {
     /**
      * Уникальный идентификатор действия
@@ -25,4 +25,37 @@ public class UserActionDto implements Serializable {
      * Тип действия
      */
     final ActionType action;
+
+//    public UserActionDto(int userId, LocalDateTime dateTime, ActionType action) {
+//        this.userId = userId;
+//        this.dateTime = dateTime;
+//        this.action = action;
+//    }
+
+    public UserActionDto(int id, int userId, LocalDateTime dateTime, ActionType action) {
+        this.id = id;
+        this.userId = userId;
+        this.dateTime = dateTime;
+        this.action = action;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public ActionType getAction() {
+        return action;
+    }
 }
