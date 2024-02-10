@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Loggable
 @WebServlet("/api/user/reading/actual")
@@ -40,9 +38,9 @@ public class GetActualReadingServlet extends HttpServlet {
         String token = authService.getTokenFromRequest(req);
         try {
             if (authService.validateAccessToken(token)) {
-                MeterReadingDto requestMeterReading = createNewMeterReading(req, token);
+                MeterReadingSubmitDto requestMeterReading = createNewMeterReading(req, token);
                 validator.isValidMeterReadingUtilityType(requestMeterReading);
-                MeterReadingDto responseMeterReading =
+                MeterReadingSubmitDto responseMeterReading =
                         controller.getActualReadingOnExactUtilityByUser(requestMeterReading);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getOutputStream(), responseMeterReading);
@@ -60,8 +58,8 @@ public class GetActualReadingServlet extends HttpServlet {
         }
     }
 
-    private MeterReadingDto createNewMeterReading(HttpServletRequest req, String token) throws IOException {
-        MeterReadingDto meterReading = mapper.readValue(req.getInputStream(), MeterReadingDto.class);
+    private MeterReadingSubmitDto createNewMeterReading(HttpServletRequest req, String token) throws IOException {
+        MeterReadingSubmitDto meterReading = mapper.readValue(req.getInputStream(), MeterReadingSubmitDto.class);
         int userId = authService.getUserIdFromToken(token);
         meterReading.setUserId(userId);
         return meterReading;

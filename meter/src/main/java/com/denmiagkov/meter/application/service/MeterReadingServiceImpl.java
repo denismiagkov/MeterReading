@@ -1,11 +1,9 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
-import com.denmiagkov.meter.application.dto.MeterReadingMapper;
-import com.denmiagkov.meter.application.dto.MeterReadingMapperImpl;
+import com.denmiagkov.meter.application.dto.MeterReadingDtoMapper;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.repository.*;
 import com.denmiagkov.meter.domain.*;
-import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public void submitNewMeterReading(MeterReadingDto meterReading) {
+    public void submitNewMeterReading(MeterReadingSubmitDto meterReading) {
         activityService.registerUserAction(meterReading.getUserId(), ActionType.SUBMIT_NEW_READING);
         meterReadingRepository.addNewMeterReading(meterReading);
     }
@@ -43,11 +41,11 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<List<MeterReadingDto>> getAllReadingsList(int pageSize) {
+    public List<List<MeterReadingSubmitDto>> getAllReadingsList(int pageSize) {
         List<MeterReading> meterReadingList = meterReadingRepository.getAllMeterReadings();
-        List<MeterReadingDto> meterReadingDtoList =
-                MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingList);
-        List<List<MeterReadingDto>> meterReadingPages = ListUtils.partition(meterReadingDtoList, pageSize);
+        List<MeterReadingSubmitDto> meterReadingSubmitDtoList =
+                MeterReadingDtoMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingList);
+        List<List<MeterReadingSubmitDto>> meterReadingPages = ListUtils.partition(meterReadingSubmitDtoList, pageSize);
         return meterReadingPages;
     }
 
@@ -55,36 +53,34 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public MeterReadingDto getActualMeterReadingOnExactUtilityByUser(MeterReadingDto meterReading) {
+    public MeterReadingSubmitDto getActualMeterReadingOnExactUtilityByUser(MeterReadingSubmitDto meterReading) {
         activityService.registerUserAction(meterReading.getUserId(), ActionType.REVIEW_ACTUAL_READING);
         MeterReading newMeterReading = meterReadingRepository.getActualMeterReadingOnExactUtility(
                 meterReading.getUserId(), meterReading.getUtilityId());
-        return MeterReadingMapper.INSTANCE.meterReadingToMeterReadingDto(newMeterReading);
+        return MeterReadingDtoMapper.INSTANCE.meterReadingToMeterReadingDto(newMeterReading);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(int userId) {
-        //  UserAction userAction = new UserAction(user, ActionType.REVIEW_ACTUAL_READING);
-        //  activityService.addActivity(userAction);
+    public List<MeterReadingSubmitDto> getActualMeterReadingsOnAllUtilitiesByUser(int userId) {
+        activityService.registerUserAction(userId, ActionType.REVIEW_ACTUAL_READING);
         List<MeterReading> meterReadings = meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(userId);
-        return MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadings);
+        return MeterReadingDtoMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadings);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<List<MeterReadingDto>> getMeterReadingsHistoryByUser(int userId, int pageSize) {
-        //   UserAction userAction = new UserAction(user, ActionType.REVIEW_CONVEYING_READINGS_HISTORY);
-        //   activityService.addActivity(userAction);
+    public List<List<MeterReadingSubmitDto>> getMeterReadingsHistoryByUser(int userId, int pageSize) {
+        activityService.registerUserAction(userId, ActionType.REVIEW_READINGS_HISTORY);
         List<MeterReading> meterReadingHistory = meterReadingRepository.getMeterReadingsHistory(userId);
-        List<MeterReadingDto> meterReadingDtoHistory =
-                MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingHistory);
-        List<List<MeterReadingDto>> meterReadingHistoryByPages =
-                ListUtils.partition(meterReadingDtoHistory, pageSize);
+        List<MeterReadingSubmitDto> meterReadingSubmitDtoHistory =
+                MeterReadingDtoMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingHistory);
+        List<List<MeterReadingSubmitDto>> meterReadingHistoryByPages =
+                ListUtils.partition(meterReadingSubmitDtoHistory, pageSize);
         return meterReadingHistoryByPages;
     }
 
@@ -92,10 +88,9 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getReadingsForMonthByUser(int userId, Map<String, Integer> month) {
-        //   UserAction userAction = new UserAction(user, ActionType.REVIEW_READINGS_FOR_MONTH);
-        //  activityService.addActivity(userAction);
+    public List<MeterReadingSubmitDto> getReadingsForMonthByUser(int userId, Map<String, Integer> month) {
+        activityService.registerUserAction(userId, ActionType.REVIEW_READINGS_FOR_MONTH);
         List<MeterReading> readingsForMonth = meterReadingRepository.getMeterReadingsForExactMonthByUser(userId, month);
-        return MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(readingsForMonth);
+        return MeterReadingDtoMapper.INSTANCE.listMeterReadingToListMeterReadingDto(readingsForMonth);
     }
 }

@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.service.*;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import org.junit.jupiter.api.DisplayName;
@@ -73,10 +73,10 @@ class ControllerTest {
     @Test
     @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns list")
     void getReadingList() {
-        List<List<MeterReadingDto>> readings = mock(ArrayList.class);
+        List<List<MeterReadingSubmitDto>> readings = mock(ArrayList.class);
         when(meterReadingService.getAllReadingsList(2)).thenReturn(readings);
 
-        List<List<MeterReadingDto>> testReadings = controller.getAllReadingsList(2);
+        List<List<MeterReadingSubmitDto>> testReadings = controller.getAllReadingsList(2);
 
         assertThat(testReadings).isEqualTo(readings);
     }

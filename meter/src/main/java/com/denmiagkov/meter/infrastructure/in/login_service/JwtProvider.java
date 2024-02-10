@@ -38,7 +38,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(loginDto.getLogin())
                 .setExpiration(accessExpiration)
-                .claim("userId", loginDto.getId())
+                .claim("userId", loginDto.getUserId())
                 .claim("role", loginDto.getRole())
                 .signWith(JWT_ACCESS_SECRET_KEY)
                 .compact();
@@ -51,7 +51,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(loginDto.getLogin())
                 .setExpiration(refreshExpiration)
-                .claim("userId", loginDto.getId())
+                .claim("userId", loginDto.getUserId())
                 .claim("role", loginDto.getRole())
                 .signWith(JWT_REFRESH_SECRET_KEY)
                 .compact();

@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -38,7 +38,7 @@ public class GetReadingHistoryByUserServlet extends HttpServlet {
         try {
             if (authService.validateAccessToken(token)) {
                 int userId = authService.getUserIdFromToken(token);
-                List<List<MeterReadingDto>> readingsHistory =
+                List<List<MeterReadingSubmitDto>> readingsHistory =
                         controller.getMeterReadingsHistoryByUser(userId, PAGE_SIZE);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getOutputStream(), readingsHistory);

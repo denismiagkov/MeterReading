@@ -1,5 +1,7 @@
 package com.denmiagkov.meter.application.dto;
 
+import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.domain.UserRole;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,14 +10,13 @@ import lombok.Value;
 import java.io.Serializable;
 
 
-public class UserLoginDto implements Serializable {
-    /**
-     * id пользователя
-     * */
-    int id;
+public class UserLoginDto extends IncomingDtoParent {
+    int userId;
+    ActionType action;
+
     /**
      * Роль пользователя
-     * */
+     */
     UserRole role;
     /**
      * Логин пользователя
@@ -26,22 +27,25 @@ public class UserLoginDto implements Serializable {
      */
     String password;
 
-    public UserLoginDto(int id, UserRole role, String login, String password) {
-        this.id = id;
-        this.role = role;
-        this.login = login;
-        this.password = password;
-    }
-
     public UserLoginDto() {
+        this.action = ActionType.AUTHENTICATION;
     }
 
-    public int getId() {
-        return id;
+
+    public ActionType getAction() {
+        return action;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAction(ActionType action) {
+        this.action = action;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public UserRole getRole() {

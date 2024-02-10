@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -37,7 +37,7 @@ public class GetAllReadingsByAdminServlet extends HttpServlet {
         String token = authService.getTokenFromRequest(req);
         try {
             if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
-                List<List<MeterReadingDto>> allMeterReadings = controller.getAllReadingsList(PAGE_SIZE);
+                List<List<MeterReadingSubmitDto>> allMeterReadings = controller.getAllReadingsList(PAGE_SIZE);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getOutputStream(), allMeterReadings);
             } else {

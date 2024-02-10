@@ -27,7 +27,7 @@ public enum ActionType {
     /**
      * Проосмотр истории передачи показаний
      */
-    REVIEW_CONVEYING_READINGS_HISTORY,
+    REVIEW_READINGS_HISTORY,
     /**
      * Просмотр показаний счетчиков за выбранный месяц
      */

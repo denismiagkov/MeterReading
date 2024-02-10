@@ -9,7 +9,7 @@ import lombok.Value;
 import java.io.Serializable;
 
 
-public class UserDto implements Serializable {
+public class UserDto  {
     /**
      * id пользователя
      */

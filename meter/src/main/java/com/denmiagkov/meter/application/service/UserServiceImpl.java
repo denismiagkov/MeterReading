@@ -5,7 +5,6 @@ import com.denmiagkov.meter.application.dto.UserDto;
 import com.denmiagkov.meter.application.dto.UserIncomingDto;
 import com.denmiagkov.meter.application.dto.UserLoginDto;
 import com.denmiagkov.meter.application.exception.AdminNotAuthorizedException;
-import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
@@ -16,7 +15,7 @@ import java.util.Set;
 
 import static com.denmiagkov.meter.application.dto.UserIncomingDtoMapper.USER_INCOMING_DTO_MAPPER;
 import static com.denmiagkov.meter.application.dto.UserDtoMapper.USER_DTO_MAPPER;
-import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.USER_LOGIN_DTO_MAPPER;
+import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.INSTANCE;
 
 /**
  * Класс реализует логику обработки данных о пользователях
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
                 UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
-                activityService.registerUserAction(userDto.getId(), ActionType.REGISTRATION);
+             //   activityService.registerUserAction(userDto.getId(), ActionType.REGISTRATION);
                 return userDto;
             } else {
                 throw new LoginAlreadyInUseException(user.getLogin());
@@ -83,10 +82,10 @@ public class UserServiceImpl implements UserService {
     public UserLoginDto getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)
                 .orElseThrow(AuthenticationFailedException::new);
-        UserLoginDto loginDto = USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
+        UserLoginDto loginDto = INSTANCE.userToUserLoginDto(user);
         UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
         if (!user.getRole().equals(UserRole.ADMIN)) {
-            activityService.registerUserAction(userDto.getId(), ActionType.AUTHENTICATION);
+      //      activityService.registerUserAction(userDto.getId(), ActionType.AUTHENTICATION);
         }
         return loginDto;
     }

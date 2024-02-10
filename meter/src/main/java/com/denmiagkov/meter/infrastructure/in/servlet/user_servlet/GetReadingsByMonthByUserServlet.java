@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -44,7 +44,7 @@ public class GetReadingsByMonthByUserServlet extends HttpServlet {
                 Map<String, Integer> requestMonth = mapper.readValue(req.getInputStream(), HashMap.class);
                 validator.isValidMonth(requestMonth);
                 int userId = authService.getUserIdFromToken(token);
-                List<MeterReadingDto> readingsForMonth =
+                List<MeterReadingSubmitDto> readingsForMonth =
                         controller.getReadingsForMonthByUser(userId, requestMonth);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getOutputStream(), readingsForMonth);

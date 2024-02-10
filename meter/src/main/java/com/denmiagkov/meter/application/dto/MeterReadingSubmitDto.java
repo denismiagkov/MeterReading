@@ -5,11 +5,25 @@ import com.denmiagkov.meter.domain.ActionType;
 import java.time.LocalDateTime;
 
 
-public class MeterReadingDto {
-    /**
-     * Идентификатор пользователя
-     */
-    int userId;
+public class MeterReadingSubmitDto extends IncomingDtoParent{
+    private int userId;
+    private ActionType action;
+
+    public ActionType getAction() {
+        return action;
+    }
+
+    public void setAction(ActionType action) {
+        this.action = action;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
     /**
      * Дата и время подачи показания
      */
@@ -23,16 +37,8 @@ public class MeterReadingDto {
      */
     private double value;
 
-
-    public MeterReadingDto() {
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public MeterReadingSubmitDto() {
+        this.action = ActionType.SUBMIT_NEW_READING;
     }
 
     public LocalDateTime getDate() {
@@ -58,4 +64,5 @@ public class MeterReadingDto {
     public void setValue(double value) {
         this.value = value;
     }
+
 }

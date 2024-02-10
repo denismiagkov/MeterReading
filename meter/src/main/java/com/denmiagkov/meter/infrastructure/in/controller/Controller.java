@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.dto.UserActionDto;
 import com.denmiagkov.meter.application.dto.UserIncomingDto;
 import com.denmiagkov.meter.application.dto.UserDto;
@@ -8,7 +8,6 @@ import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserService;
-import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -73,7 +72,7 @@ public class Controller {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
-    public List<List<MeterReadingDto>> getAllReadingsList(int pageSize) {
+    public List<List<MeterReadingSubmitDto>> getAllReadingsList(int pageSize) {
         return meterReadingService.getAllReadingsList(pageSize);
     }
 
@@ -101,7 +100,7 @@ public class Controller {
      * @param user         Пользователь
      * @param meterReading Показание счетчика
      */
-    public void submitNewMeterReading(MeterReadingDto meterReading) {
+    public void submitNewMeterReading(MeterReadingSubmitDto meterReading) {
         meterReadingService.submitNewMeterReading(meterReading);
     }
 
@@ -112,8 +111,8 @@ public class Controller {
      * @param utilityId id типа услуг
      * @return Reading Актуальное показание счетчика
      */
-    public MeterReadingDto getActualReadingOnExactUtilityByUser(MeterReadingDto meterReadingDto) {
-        return meterReadingService.getActualMeterReadingOnExactUtilityByUser(meterReadingDto);
+    public MeterReadingSubmitDto getActualReadingOnExactUtilityByUser(MeterReadingSubmitDto meterReadingSubmitDto) {
+        return meterReadingService.getActualMeterReadingOnExactUtilityByUser(meterReadingSubmitDto);
     }
 
     /**
@@ -122,7 +121,7 @@ public class Controller {
      * @param user Пользователь
      * @return List<MeterReading> Список актуальных показаний счетчика
      */
-    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(int userId) {
+    public List<MeterReadingSubmitDto> getActualMeterReadingsOnAllUtilitiesByUser(int userId) {
         return meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(userId);
     }
 
@@ -133,7 +132,7 @@ public class Controller {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
-    public List<List<MeterReadingDto>> getMeterReadingsHistoryByUser(int userId, int pageSize) {
+    public List<List<MeterReadingSubmitDto>> getMeterReadingsHistoryByUser(int userId, int pageSize) {
         return meterReadingService.getMeterReadingsHistoryByUser(userId, pageSize);
     }
 
@@ -145,7 +144,7 @@ public class Controller {
      * @param month Месяц
      * @return List<MeterReading> Список показаний счетчиков
      */
-    public List<MeterReadingDto> getReadingsForMonthByUser(int userId, Map<String, Integer> month) {
+    public List<MeterReadingSubmitDto> getReadingsForMonthByUser(int userId, Map<String, Integer> month) {
         return meterReadingService.getReadingsForMonthByUser(userId, month);
     }
 

@@ -1,11 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
-import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.MeterReadingDtoValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -38,7 +37,7 @@ public class GetAllActualReadingsByUserServlet extends HttpServlet {
         try {
             if (authService.validateAccessToken(token)) {
                 int userId = authService.getUserIdFromToken(token);
-                List<MeterReadingDto> allActualReadings =
+                List<MeterReadingSubmitDto> allActualReadings =
                         controller.getActualMeterReadingsOnAllUtilitiesByUser(userId);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getOutputStream(), allActualReadings);

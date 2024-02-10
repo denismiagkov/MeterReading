@@ -1,22 +1,14 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
-import com.denmiagkov.meter.application.dto.MeterReadingMapper;
-import com.denmiagkov.meter.application.service.MeterReadingServiceImpl;
-import com.denmiagkov.meter.application.service.UserActivityServiceImpl;
-import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.domain.MeterReading;
-import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Класс реализует логику взаимодействия с базой данных, связанную с показаниями счетчиков
@@ -80,7 +72,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public void addNewMeterReading(MeterReadingDto meterReading) {
+    public void addNewMeterReading(MeterReadingSubmitDto meterReading) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_NEW_METER_READING)) {
             statement.setInt(1, meterReading.getUserId());

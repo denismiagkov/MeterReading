@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
+import com.denmiagkov.meter.aspect.annotations.Audit;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -38,7 +39,7 @@ public class SubmitMeterReadingServlet extends HttpServlet {
         String token = authService.getTokenFromRequest(req);
         try {
             if (authService.validateAccessToken(token)) {
-                MeterReadingDto meterReading = createNewMeterReading(req, token);
+                MeterReadingSubmitDto meterReading = createNewMeterReading(req, token);
                 validator.isValid(meterReading);
                 controller.submitNewMeterReading(meterReading);
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -55,8 +56,8 @@ public class SubmitMeterReadingServlet extends HttpServlet {
         }
     }
 
-    private MeterReadingDto createNewMeterReading(HttpServletRequest req, String token) throws IOException {
-        MeterReadingDto meterReading = mapper.readValue(req.getInputStream(), MeterReadingDto.class);
+    private MeterReadingSubmitDto createNewMeterReading(HttpServletRequest req, String token) throws IOException {
+        MeterReadingSubmitDto meterReading = mapper.readValue(req.getInputStream(), MeterReadingSubmitDto.class);
         int userId = authService.getUserIdFromToken(token);
         meterReading.setUserId(userId);
         meterReading.setDate(LocalDateTime.now());
