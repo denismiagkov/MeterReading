@@ -1,30 +1,12 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
-import lombok.Getter;
-import lombok.ToString;
 
 
-public class UserIncomingDto extends IncomingDtoParent{
+public class UserRegisterDto extends IncomingDto {
     private int userId;
     private ActionType action;
-
-    public ActionType getAction() {
-        return action;
-    }
-
-    public void setAction(ActionType action) {
-        this.action = action;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
     /**
      * Имя пользователя
      */
@@ -51,11 +33,28 @@ public class UserIncomingDto extends IncomingDtoParent{
     String password;
     String adminPassword;
 
-    public UserIncomingDto() {
+    public ActionType getAction() {
+        return action;
+    }
+
+    public void setAction(ActionType action) {
+        this.action = action;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
+    public UserRegisterDto() {
         this.action = ActionType.REGISTRATION;
     }
 
-    public UserIncomingDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
+    public UserRegisterDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
         this();
         this.name = name;
         this.phone = phone;
@@ -92,5 +91,8 @@ public class UserIncomingDto extends IncomingDtoParent{
 
     public String getAdminPassword() {
         return adminPassword;
+    }
+
+    public void setRole(UserRole userRole) {
     }
 }

@@ -1,7 +1,8 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.UserDtoLogin;
 import com.denmiagkov.meter.application.service.UserService;
+import com.denmiagkov.meter.application.service.UserServiceImpl;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.utils.PropertiesUtil;
 import io.jsonwebtoken.*;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 
 public class JwtProvider {
-
+    public static final JwtProvider INSTANCE = new JwtProvider();
     private static final String VALUE_OF_JWT_ACCESS_SECRET_KEY = "authentication.valueOfJwtAccessSecretKey";
     private static final String VALUE_OF_JWT_REFRESH_SECRET_KEY = "authentication.valueOfJwtRefreshSecretKey";
     private final SecretKey JWT_ACCESS_SECRET_KEY;
@@ -25,13 +26,13 @@ public class JwtProvider {
     private final UserService userService;
 
 
-    public JwtProvider(UserService service) {
-        this.userService = service;
+    public JwtProvider() {
+        this.userService = UserServiceImpl.INSTANCE;
         this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_ACCESS_SECRET_KEY)));
         this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_REFRESH_SECRET_KEY)));
     }
 
-    public String generateAccessToken(UserLoginDto loginDto) {
+    public String generateAccessToken(UserDtoLogin loginDto) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
@@ -44,7 +45,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(UserLoginDto loginDto) {
+    public String generateRefreshToken(UserDtoLogin loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);

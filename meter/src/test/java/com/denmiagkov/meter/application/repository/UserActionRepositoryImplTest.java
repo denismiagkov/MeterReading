@@ -5,10 +5,10 @@ import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +32,7 @@ class UserActionRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         LiquibaseManager.startLiquibase();
-        activityRepository = new ActivityRepositoryImpl();
+        activityRepository = ActivityRepositoryImpl.INSTANCE;
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);
     }

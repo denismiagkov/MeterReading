@@ -1,12 +1,15 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 
 
-public class MeterReadingReviewForMonthDto extends IncomingDtoParent {
+public class MeterReadingReviewForMonthDto extends IncomingDto {
     private int userId;
     private ActionType action;
-@Override
+    private int year;
+    private int month;
+
+    @Override
     public ActionType getAction() {
         return action;
     }
@@ -23,9 +26,6 @@ public class MeterReadingReviewForMonthDto extends IncomingDtoParent {
         this.userId = userId;
     }
 
-
-    int year;
-    int month;
 
     public int getYear() {
         return year;

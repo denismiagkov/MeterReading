@@ -1,13 +1,25 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 
 import java.time.LocalDateTime;
 
 
-public class MeterReadingSubmitDto extends IncomingDtoParent{
+public class MeterReadingSubmitDto extends IncomingDto {
     private int userId;
     private ActionType action;
+    /**
+     * Дата и время подачи показания
+     */
+    LocalDateTime date;
+    /**
+     * Идентификатор типа услуг
+     */
+    private int utilityId;
+    /**
+     * Значение счетчика
+     */
+    private double value;
 
     public ActionType getAction() {
         return action;
@@ -24,18 +36,7 @@ public class MeterReadingSubmitDto extends IncomingDtoParent{
     public void setUserId(int userId) {
         this.userId = userId;
     }
-    /**
-     * Дата и время подачи показания
-     */
-    LocalDateTime date;
-    /**
-     * Идентификатор типа услуг
-     */
-    private int utilityId;
-    /**
-     * Значение счетчика
-     */
-    private double value;
+
 
     public MeterReadingSubmitDto() {
         this.action = ActionType.SUBMIT_NEW_READING;

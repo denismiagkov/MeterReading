@@ -17,6 +17,7 @@ import java.util.List;
 
 
 public class ActivityRepositoryImpl implements ActivityRepository {
+    public static final ActivityRepositoryImpl INSTANCE = new ActivityRepositoryImpl();
     /**
      * SQL-запрос на добавление одного пользовательского действия в базу данных
      */
@@ -31,6 +32,9 @@ public class ActivityRepositoryImpl implements ActivityRepository {
             SELECT id, user_id, date, action
             FROM meter_service.activities;
             """;
+
+    private ActivityRepositoryImpl() {
+    }
 
     /**
      * {@inheritDoc}

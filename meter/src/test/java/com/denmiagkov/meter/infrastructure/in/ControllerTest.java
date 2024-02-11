@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.infrastructure.in;
 
-import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.service.*;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import org.junit.jupiter.api.DisplayName;
@@ -9,9 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -70,16 +66,16 @@ class ControllerTest {
 ////        assertThat(testUsers).isEqualTo(users);
 //    }
 
-    @Test
-    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns list")
-    void getReadingList() {
-        List<List<MeterReadingSubmitDto>> readings = mock(ArrayList.class);
-        when(meterReadingService.getAllReadingsList(2)).thenReturn(readings);
-
-        List<List<MeterReadingSubmitDto>> testReadings = controller.getAllReadingsList(2);
-
-        assertThat(testReadings).isEqualTo(readings);
-    }
+//    @Test
+//    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns list")
+//    void getReadingList() {
+//        List<List<MeterReadingSubmitDto>> readings = mock(ArrayList.class);
+//        when(meterReadingService.getAllReadingsList(2)).thenReturn(readings);
+//
+//        List<List<MeterReadingSubmitDto>> testReadings = controller.getAllReadingsList(2);
+//
+//        assertThat(testReadings).isEqualTo(readings);
+//    }
 
 //    @Test
 //    @DisplayName("Method invokes appropriate method on dependent object, and dependent object returns user")

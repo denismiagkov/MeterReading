@@ -9,6 +9,7 @@ import java.util.Map;
  * Класс реализует логику взаимодействия с базой данных по поводу справочника услуг (типов показаний)
  * */
 public class DictionaryRepositoryImpl implements DictionaryRepository {
+    public static final DictionaryRepositoryImpl INSTANCE = new DictionaryRepositoryImpl();
     /**
      * SQL-запрос на добавление в справочник нового типа услуг
      * */
@@ -23,6 +24,10 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
             SELECT id, utility_type
             FROM meter_service.utilities_dictionary;
             """;
+
+    private DictionaryRepositoryImpl() {
+    }
+
     /**
      * {@inheritDoc}
      * */

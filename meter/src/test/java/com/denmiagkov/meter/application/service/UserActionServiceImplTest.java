@@ -25,7 +25,7 @@ class UserActionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        activityService = new UserActivityServiceImpl(activityRepository);
+        activityService = UserActivityServiceImpl.INSTANCE;
     }
 
 //    @Test

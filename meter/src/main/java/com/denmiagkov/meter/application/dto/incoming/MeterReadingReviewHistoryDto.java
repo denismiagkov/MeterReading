@@ -1,9 +1,9 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 
 
-public class MeterReadingReviewHistoryDto extends IncomingDtoParent{
+public class MeterReadingReviewHistoryDto extends IncomingDto {
      int userId;
      ActionType action;
     public Integer getUserId() {

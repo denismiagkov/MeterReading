@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.utils.ConnectionManager;
 
@@ -15,6 +15,7 @@ import java.util.Map;
  */
 
 public class MeterReadingRepositoryImpl implements MeterReadingRepository {
+    public static final MeterReadingRepositoryImpl INSTANCE = new MeterReadingRepositoryImpl();
     /**
      * SQL-запрос на добавление в базу данных нового показания счетчика
      */
@@ -68,11 +69,14 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
                 AND  extract(month from date) = ?
             """;
 
+    private MeterReadingRepositoryImpl() {
+    }
+
     /***
      * {@inheritDoc}
      */
     @Override
-    public void addNewMeterReading(MeterReadingSubmitDto meterReading) {
+    public MeterReading addNewMeterReading(MeterReadingSubmitDto meterReading) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_NEW_METER_READING)) {
             statement.setInt(1, meterReading.getUserId());
@@ -80,6 +84,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
             statement.setInt(3, meterReading.getUtilityId());
             statement.setDouble(4, meterReading.getValue());
             statement.executeUpdate();
+            return getActualMeterReadingOnExactUtility(meterReading.getUserId(), meterReading.getUtilityId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -185,12 +190,12 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, Map<String, Integer> month) {
+    public List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, int year, int month) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_METER_READINGS_FOR_EXACT_MONTH_BY_USER)) {
             statement.setInt(1, userId);
-            statement.setInt(2, month.get("year"));
-            statement.setInt(3, month.get("month"));
+            statement.setInt(2, year);
+            statement.setInt(3, month);
             ResultSet queryResult = statement.executeQuery();
             List<MeterReading> userMeterReadingsByMonth = new ArrayList<>();
             while (queryResult.next()) {

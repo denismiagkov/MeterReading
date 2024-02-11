@@ -2,11 +2,10 @@ package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.UserActionDto;
 import com.denmiagkov.meter.application.dto.UserActionDtoMapper;
-import com.denmiagkov.meter.application.dto.UserDto;
+import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
-import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.meter.application.repository.ActivityRepositoryImpl;
 import com.denmiagkov.meter.domain.UserAction;
-import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
@@ -16,21 +15,22 @@ import java.util.List;
  */
 
 public class UserActivityServiceImpl implements UserActivityService {
+    public static final UserActivityServiceImpl INSTANCE = new UserActivityServiceImpl();
     /**
      * Репозиторий данных о действиях пользователя
      */
     private final ActivityRepository activityRepository;
 
-    public UserActivityServiceImpl(ActivityRepository activityRepository) {
-        this.activityRepository = activityRepository;
+    private UserActivityServiceImpl() {
+        this.activityRepository = ActivityRepositoryImpl.INSTANCE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void registerUserAction(int userId, ActionType actionType) {
-        UserAction userAction = new UserAction(userId, actionType);
+    public void registerUserAction(IncomingDto incomingDto) {
+        UserAction userAction = new UserAction(incomingDto.getUserId(), incomingDto.getAction());
         activityRepository.addActivity(userAction);
     }
 
@@ -40,7 +40,7 @@ public class UserActivityServiceImpl implements UserActivityService {
     @Override
     public List<List<UserActionDto>> getUserActivitiesList(int pageSize) {
         List<UserAction> userActions = activityRepository.getActivitiesList();
-        List<UserActionDto> userActionDtos = UserActionDtoMapper.INSTANCE.userActionsToUserActionDtos(userActions);
+        List<UserActionDto> userActionDtos = UserActionDtoMapper.USER_ACTION_DTO_MAPPER.userActionsToUserActionDtos(userActions);
         List<List<UserActionDto>> userActionsPaginated = ListUtils.partition(userActionDtos, pageSize);
         return userActionsPaginated;
     }

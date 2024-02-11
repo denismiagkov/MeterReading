@@ -1,6 +1,10 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +20,7 @@ public interface MeterReadingService {
      * @param user    Пользователь
      * @param reading Показание счетчика
      */
-    void submitNewMeterReading(MeterReadingSubmitDto meterReading);
+    MeterReadingDto submitNewMeterReading(MeterReadingSubmitDto meterReading);
 
     /**
      * Метод получения всех показаний счетчиков всех пользователей с учетом параметров пагинации
@@ -24,7 +28,7 @@ public interface MeterReadingService {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметров панинации
      */
-    List<List<MeterReadingSubmitDto>> getAllReadingsList(int pageSize);
+    List<List<MeterReadingDto>> getAllReadingsList(int pageSize);
 
     /**
      * Метод получения актуального (последнего переданного) показания счетчика конкретного пользователя
@@ -33,7 +37,7 @@ public interface MeterReadingService {
      * @param utilityId Тип услуги
      * @return MeterReading Актуальное показание счетчика
      */
-    MeterReadingSubmitDto getActualMeterReadingOnExactUtilityByUser(MeterReadingSubmitDto meterReadingSubmitDto);
+    MeterReadingDto getActualMeterReadingOnExactUtilityByUser(MeterReadingReviewActualDto requestDto);
 
     /**
      * Метод получения всех актуальных (последних переданноых) показаний счетчиков конкретного пользователя
@@ -41,7 +45,7 @@ public interface MeterReadingService {
      * @param user Пользователь
      * @return List<MeterReading> Список актуальных показаний счетчика
      */
-    List<MeterReadingSubmitDto> getActualMeterReadingsOnAllUtilitiesByUser(int userId);
+    List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(MeterReadingReviewActualDto requestDto);
 
     /**
      * Метод просмотра истории подачи показаний конкретным пользователем с учетом параметров пагинации
@@ -50,7 +54,7 @@ public interface MeterReadingService {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Список поданных показаний с учетом параметров пагинации
      */
-    List<List<MeterReadingSubmitDto>> getMeterReadingsHistoryByUser(int userId, int pageSize);
+    List<List<MeterReadingDto>> getMeterReadingsHistoryByUser(MeterReadingReviewHistoryDto requestDto, int pageSize);
 
     /**
      * Метод просмотра показаний счетчиков определенного пользователя за конкретный месяц
@@ -60,5 +64,5 @@ public interface MeterReadingService {
      * @param month Месяц
      * @return List<MeterReading> Список показаний счетчиков
      */
-    List<MeterReadingSubmitDto> getReadingsForMonthByUser(int userID, Map<String, Integer> month);
+    List<MeterReadingDto> getReadingsForMonthByUser(MeterReadingReviewForMonthDto requestDto);
 }

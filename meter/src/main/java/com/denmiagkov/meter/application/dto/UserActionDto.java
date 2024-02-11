@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-public class UserActionDto implements Serializable {
+public class UserActionDto{
     /**
      * Уникальный идентификатор действия
      */

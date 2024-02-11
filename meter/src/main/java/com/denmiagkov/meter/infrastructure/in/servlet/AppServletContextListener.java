@@ -23,17 +23,11 @@ public class AppServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            Controller controller = App.init();
-            sce.getServletContext().setAttribute("controller", controller);
+            App.init();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (LiquibaseException e) {
             throw new RuntimeException(e);
         }
-        UserActivityService activityService = new UserActivityServiceImpl(new ActivityRepositoryImpl());
-        UserService userService = new UserServiceImpl(new UserRepositoryImpl(), activityService);
-        AuthService authService = new AuthService(userService, new JwtProvider(userService));
-
-        sce.getServletContext().setAttribute("authService", authService);
     }
 }

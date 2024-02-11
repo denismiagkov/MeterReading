@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.domain.MeterReading;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface MeterReadingRepository {
      *
      * @param reading новое показание счетчика
      */
-    void addNewMeterReading(MeterReadingSubmitDto reading);
+    MeterReading addNewMeterReading(MeterReadingSubmitDto reading);
 
     /**
      * Метод выборки данных об актуальных показаниях счетчиков определенного пользователя
@@ -60,5 +61,5 @@ public interface MeterReadingRepository {
      * @param month Месяц
      * @return List<MeterReading> Список показаний счетчиков пользователя за указанные год и месяц
      */
-    List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, Map<String, Integer> month);
+    List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, int year, int month);
 }

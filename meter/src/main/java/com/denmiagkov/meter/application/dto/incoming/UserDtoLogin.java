@@ -1,16 +1,10 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
-import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.domain.UserRole;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.Value;
-
-import java.io.Serializable;
 
 
-public class UserLoginDto extends IncomingDtoParent {
+public class UserDtoLogin extends IncomingDto {
     int userId;
     ActionType action;
 
@@ -27,7 +21,7 @@ public class UserLoginDto extends IncomingDtoParent {
      */
     String password;
 
-    public UserLoginDto() {
+    public UserDtoLogin() {
         this.action = ActionType.AUTHENTICATION;
     }
 

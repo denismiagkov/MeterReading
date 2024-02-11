@@ -1,12 +1,11 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 
-import java.time.LocalDateTime;
 
-
-public class MeterReadingReviewActualDto extends IncomingDtoParent {
+public class MeterReadingReviewActualDto extends IncomingDto {
     private int userId;
+    private int utilityId;
     private ActionType action;
 
     @Override
@@ -25,6 +24,14 @@ public class MeterReadingReviewActualDto extends IncomingDtoParent {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getUtilityId() {
+        return utilityId;
+    }
+
+    public void setUtilityId(int utilityId) {
+        this.utilityId = utilityId;
     }
 
     public MeterReadingReviewActualDto() {

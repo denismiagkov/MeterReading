@@ -17,6 +17,7 @@ import java.util.Set;
  */
 
 public class UserRepositoryImpl implements UserRepository {
+    public static final UserRepositoryImpl INSTANCE = new UserRepositoryImpl();
 
     /**
      * SQL-запрос на добавление пользователя в таблицу

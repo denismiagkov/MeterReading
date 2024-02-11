@@ -1,10 +1,12 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingSubmitDto;
-import com.denmiagkov.meter.aspect.annotations.Audit;
+import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.denmiagkov.meter.infrastructure.in.servlet.public_servlet.RegistrationServlet;
+import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.MeterReadingDtoValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,54 +15,57 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
+
 @Loggable
 @WebServlet("/api/user/reading/new")
 public class SubmitMeterReadingServlet extends HttpServlet {
-    ObjectMapper mapper;
-    Controller controller;
-    AuthService authService;
-    MeterReadingDtoValidatorImpl validator;
+    private ObjectMapper jsonMapper;
+    private Controller controller;
+    private AuthService authService;
+    private IncomingDtoBuilder dtoBuilder;
+    public static final Logger log = LoggerFactory.getLogger(RegistrationServlet.class);
+
 
     @Override
     public void init() throws ServletException {
-        controller = (Controller) this.getServletContext().getAttribute("controller");
-        authService = (AuthService) this.getServletContext().getAttribute("authService");
-        validator = new MeterReadingDtoValidatorImpl(controller);
-        mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
+        controller = Controller.INSTANCE;
+        authService = AuthService.INSTANCE;
+        jsonMapper = new ObjectMapper();
+        jsonMapper.findAndRegisterModules();
+        dtoBuilder = new IncomingDtoBuilder(jsonMapper, authService);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try {
-            if (authService.validateAccessToken(token)) {
-                MeterReadingSubmitDto meterReading = createNewMeterReading(req, token);
-                validator.isValid(meterReading);
-                controller.submitNewMeterReading(meterReading);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                mapper.writeValue(resp.getOutputStream(), meterReading);
-            } else {
-                throw new AuthenticationFailedException();
+        try (InputStream inputStream = req.getInputStream();
+             OutputStream outputStream = resp.getOutputStream()) {
+            try {
+                if (authService.validateAccessToken(token)) {
+                    MeterReadingSubmitDto requestMeterReading = dtoBuilder.createNewMeterReadingSubmitDto(inputStream, token);
+                    MeterReadingDto newMeterReading = controller.submitNewMeterReading(requestMeterReading);
+                    resp.setStatus(HttpServletResponse.SC_CREATED);
+                    jsonMapper.writeValue(resp.getOutputStream(), newMeterReading);
+                } else {
+                    throw new AuthenticationFailedException();
+                }
+            } catch (AuthenticationFailedException e) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                jsonMapper.writeValue(outputStream, e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (AuthenticationFailedException e) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
+            log.error(e.getMessage());
         }
-    }
-
-    private MeterReadingSubmitDto createNewMeterReading(HttpServletRequest req, String token) throws IOException {
-        MeterReadingSubmitDto meterReading = mapper.readValue(req.getInputStream(), MeterReadingSubmitDto.class);
-        int userId = authService.getUserIdFromToken(token);
-        meterReading.setUserId(userId);
-        meterReading.setDate(LocalDateTime.now());
-        return meterReading;
     }
 }

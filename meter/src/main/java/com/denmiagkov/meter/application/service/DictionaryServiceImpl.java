@@ -2,6 +2,7 @@ package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.exception.PublicUtilityTypeAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.DictionaryRepository;
+import com.denmiagkov.meter.application.repository.DictionaryRepositoryImpl;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
@@ -10,18 +11,15 @@ import java.util.Map;
  * Класс реализует логику обработки данных о справочнике показаний (типов услуг)
  */
 public class DictionaryServiceImpl implements DictionaryService {
-    /**
-     * Справочник услуг
-     */
-    public static Map<Integer, String> PUBLIC_UTILITIES_LIST;
+public static final DictionaryServiceImpl INSTANCE= new DictionaryServiceImpl();
 
     /**
      * Репозиторий справочника показаний
      */
     DictionaryRepository dictionaryRepository;
 
-    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
-        this.dictionaryRepository = dictionaryRepository;
+    public DictionaryServiceImpl() {
+        this.dictionaryRepository = DictionaryRepositoryImpl.INSTANCE;
     }
 
     /**

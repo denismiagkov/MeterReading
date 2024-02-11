@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 public interface MeterReadingDtoMapper {
 
-    MeterReadingDtoMapper INSTANCE = Mappers.getMapper(MeterReadingDtoMapper.class);
+    MeterReadingDtoMapper METER_READING_DTO_MAPPER = Mappers.getMapper(MeterReadingDtoMapper.class);
 
-    MeterReadingSubmitDto meterReadingToMeterReadingDto(MeterReading meterReading);
+    MeterReadingDto meterReadingToMeterReadingDto(MeterReading meterReading);
 
-    List<MeterReadingSubmitDto> listMeterReadingToListMeterReadingDto(List<MeterReading> meterReadings);
+    List<MeterReadingDto> listMeterReadingToListMeterReadingDto(List<MeterReading> meterReadings);
 }

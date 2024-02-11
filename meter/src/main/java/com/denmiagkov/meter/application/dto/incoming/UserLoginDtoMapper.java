@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.User;
 import org.mapstruct.Mapper;
@@ -6,13 +6,13 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserLoginDtoMapper {
-    UserLoginDtoMapper INSTANCE = Mappers.getMapper(UserLoginDtoMapper.class);
+    UserLoginDtoMapper USER_LOGIN_DTO_MAPPER = Mappers.getMapper(UserLoginDtoMapper.class);
 
-    default UserLoginDto userToUserLoginDto(User user){
+    default UserDtoLogin userToUserLoginDto(User user){
         if (user == null) {
             return null;
         } else {
-            UserLoginDto userLoginDto = new UserLoginDto();
+            UserDtoLogin userLoginDto = new UserDtoLogin();
             userLoginDto.setUserId(user.getId());
             userLoginDto.setRole(user.getRole());
             userLoginDto.setLogin(user.getLogin());
@@ -21,6 +21,6 @@ public interface UserLoginDtoMapper {
         }
     }
 
-    User userLoginDtoToUser(UserLoginDto userLoginDto);
+    User userLoginDtoToUser(UserDtoLogin userLoginDto);
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface UserActionDtoMapper {
-    UserActionDtoMapper INSTANCE = Mappers.getMapper(UserActionDtoMapper.class);
+    UserActionDtoMapper USER_ACTION_DTO_MAPPER = Mappers.getMapper(UserActionDtoMapper.class);
 
     UserActionDto userActionToUserActionDto(UserAction action);
 

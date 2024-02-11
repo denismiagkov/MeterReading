@@ -1,27 +1,26 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.UserDtoLogin;
 import com.denmiagkov.meter.application.service.UserService;
+import com.denmiagkov.meter.application.service.UserServiceImpl;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.NoAccessRightsException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.nio.file.AccessDeniedException;
-
 public class AuthService {
-
+    public static final AuthService INSTANCE = new AuthService();
     private final UserService service;
     private final JwtProvider jwtProvider;
 
-    public AuthService(UserService service, JwtProvider provider) {
-        this.service = service;
-        this.jwtProvider = provider;
+    private AuthService() {
+        this.service = UserServiceImpl.INSTANCE;
+        this.jwtProvider = JwtProvider.INSTANCE;
     }
 
     public JwtResponse login(JwtRequest jwtRequest) {
         try {
-            UserLoginDto loginDto = service.getPasswordByLogin(jwtRequest.getLogin());
+            UserDtoLogin loginDto = service.getPasswordByLogin(jwtRequest.getLogin());
             if (loginDto.getPassword().equals(jwtRequest.getPassword())) {
                 String accessToken = jwtProvider.generateAccessToken(loginDto);
                 String refreshToken = jwtProvider.generateRefreshToken(loginDto);
@@ -38,7 +37,7 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String login = claims.getSubject();
-            UserLoginDto loginDto = service.getPasswordByLogin(login);
+            UserDtoLogin loginDto = service.getPasswordByLogin(login);
             ;
             String accessToken = jwtProvider.generateAccessToken(loginDto);
             return new JwtResponse(accessToken, null);

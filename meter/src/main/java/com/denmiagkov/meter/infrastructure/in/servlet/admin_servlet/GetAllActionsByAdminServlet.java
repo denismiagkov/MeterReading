@@ -4,6 +4,7 @@ import com.denmiagkov.meter.application.dto.UserActionDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.denmiagkov.meter.infrastructure.in.servlet.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -11,13 +12,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 @Loggable
 @WebServlet("/api/admin/actions")
 public class GetAllActionsByAdminServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(GetAllActionsByAdminServlet.class);
     ObjectMapper mapper;
     Controller controller;
     AuthService authService;
@@ -25,32 +31,34 @@ public class GetAllActionsByAdminServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        controller = (Controller) this.getServletContext().getAttribute("controller");
-        authService = (AuthService) this.getServletContext().getAttribute("authService");
+        controller = Controller.INSTANCE;
+        authService = AuthService.INSTANCE;
         mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try {
-            if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
-                List<List<UserActionDto>> allUserActions = controller.getUserActivitiesList(PAGE_SIZE);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                mapper.writeValue(resp.getOutputStream(), allUserActions);
-            } else {
-                throw new AuthenticationFailedException();
+        try (OutputStream outputStream = resp.getOutputStream()) {
+            try {
+                if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
+                    List<List<UserActionDto>> allUserActions = controller.getUserActivitiesList(PAGE_SIZE);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    mapper.writeValue(outputStream, allUserActions);
+                } else {
+                    throw new AuthenticationFailedException();
+                }
+            } catch (AuthenticationFailedException e) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                mapper.writeValue(outputStream, e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                mapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (AuthenticationFailedException e) {
-            e.printStackTrace();
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

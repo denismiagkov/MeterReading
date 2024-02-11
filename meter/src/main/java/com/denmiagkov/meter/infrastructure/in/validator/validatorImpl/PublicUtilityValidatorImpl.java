@@ -9,13 +9,14 @@ import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
  */
 
 public class PublicUtilityValidatorImpl implements DtoValidator<String> {
+    public static final PublicUtilityValidatorImpl INSTANCE = new PublicUtilityValidatorImpl();
     /**
      * Контроллер
      */
     Controller controller;
 
-    public PublicUtilityValidatorImpl(Controller controller) {
-        this.controller = controller;
+    private PublicUtilityValidatorImpl() {
+        this.controller = Controller.INSTANCE;
     }
 
     @Override

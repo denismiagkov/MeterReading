@@ -2,9 +2,12 @@ package com.denmiagkov.meter.application.service;
 
 
 import com.denmiagkov.meter.application.dto.UserDto;
-import com.denmiagkov.meter.application.dto.UserIncomingDto;
-import com.denmiagkov.meter.application.dto.UserLoginDto;
+import com.denmiagkov.meter.application.dto.UserDtoMapper;
+import com.denmiagkov.meter.application.dto.incoming.UserDtoLogin;
+import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDtoMapper;
 import com.denmiagkov.meter.application.exception.AdminNotAuthorizedException;
+import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
@@ -13,27 +16,23 @@ import com.denmiagkov.meter.domain.*;
 
 import java.util.Set;
 
-import static com.denmiagkov.meter.application.dto.UserIncomingDtoMapper.USER_INCOMING_DTO_MAPPER;
-import static com.denmiagkov.meter.application.dto.UserDtoMapper.USER_DTO_MAPPER;
-import static com.denmiagkov.meter.application.dto.UserLoginDtoMapper.INSTANCE;
+import static com.denmiagkov.meter.application.dto.incoming.UserRegisterDtoMapper.USER_INCOMING_DTO_MAPPER;
 
 /**
  * Класс реализует логику обработки данных о пользователях
  */
 
 public class UserServiceImpl implements UserService {
+    public static final UserServiceImpl INSTANCE = new UserServiceImpl();
     /**
      * Репозиторий данных о пользователе
      */
     private final UserRepository userRepository;
-    /**
-     * Сервис данных о действиях пользователя
-     */
     private final UserActivityService activityService;
 
-    public UserServiceImpl(UserRepository userRepository, UserActivityService activityService) {
-        this.userRepository = userRepository;
-        this.activityService = activityService;
+    public UserServiceImpl() {
+        this.userRepository = UserRepositoryImpl.INSTANCE;
+        this.activityService = UserActivityServiceImpl.INSTANCE;
     }
 
 
@@ -41,8 +40,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public UserDto registerUser(UserIncomingDto userInDto) {
-        System.out.println("entered in  registerUser");
+    public UserDto registerUser(UserRegisterDto userInDto) {
         User user = USER_INCOMING_DTO_MAPPER.incomingUserDtoToUser(userInDto);
         setUserRole(userInDto, user);
         return addNewUserToDatabase(user);
@@ -53,9 +51,7 @@ public class UserServiceImpl implements UserService {
             if (!userRepository.isExistLogin(user.getLogin())) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
-             //   activityService.registerUserAction(userDto.getId(), ActionType.REGISTRATION);
-                return userDto;
+                return UserDtoMapper.USER_DTO_MAPPER.userToUserDto(user);
             } else {
                 throw new LoginAlreadyInUseException(user.getLogin());
             }
@@ -64,7 +60,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void setUserRole(UserIncomingDto userDto, User user) {
+    private void setUserRole(UserRegisterDto userDto, User user) {
         if (user.getRole() != null &&
             user.getRole().equals(UserRole.ADMIN) &&
             (userDto.getAdminPassword() == null ||
@@ -75,19 +71,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public UserLoginDto getPasswordByLogin(String login) {
+    public UserDtoLogin getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)
                 .orElseThrow(AuthenticationFailedException::new);
-        UserLoginDto loginDto = INSTANCE.userToUserLoginDto(user);
-        UserDto userDto = USER_DTO_MAPPER.userToUserDto(user);
-        if (!user.getRole().equals(UserRole.ADMIN)) {
-      //      activityService.registerUserAction(userDto.getId(), ActionType.AUTHENTICATION);
-        }
-        return loginDto;
+        return UserLoginDtoMapper.USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
     }
 
     /**
@@ -96,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<UserDto> getAllUsers() {
         Set<User> users = userRepository.getAllUsers();
-        return USER_DTO_MAPPER.usersToUserDtos(users);
+        return UserDtoMapper.USER_DTO_MAPPER.usersToUserDtos(users);
     }
 
     /**

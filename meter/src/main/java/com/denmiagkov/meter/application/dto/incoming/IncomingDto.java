@@ -1,8 +1,8 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 
-public abstract class IncomingDtoParent {
+public abstract class IncomingDto {
 
     public abstract Integer getUserId();
 

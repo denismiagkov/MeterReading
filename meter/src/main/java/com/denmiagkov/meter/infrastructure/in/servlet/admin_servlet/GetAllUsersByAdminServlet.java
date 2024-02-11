@@ -11,21 +11,25 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Set;
 
 @Loggable
 @WebServlet("/api/admin/users")
 public class GetAllUsersByAdminServlet extends HttpServlet {
+    public static final Logger log = LoggerFactory.getLogger(GetAllUsersByAdminServlet.class);
     ObjectMapper mapper;
     Controller controller;
     AuthService authService;
 
     @Override
     public void init() throws ServletException {
-        controller = (Controller) this.getServletContext().getAttribute("controller");
-        authService = (AuthService) this.getServletContext().getAttribute("authService");
+        controller = Controller.INSTANCE;
+        authService = AuthService.INSTANCE;
         mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
     }
@@ -34,22 +38,24 @@ public class GetAllUsersByAdminServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try {
-            if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
-                Set<UserDto> allUsers = controller.getAllUsers();
-                resp.setStatus(HttpServletResponse.SC_OK);
-                mapper.writeValue(resp.getOutputStream(), allUsers);
-            } else {
-                throw new AuthenticationFailedException();
+        try (OutputStream responseOutputStream = resp.getOutputStream()) {
+            try {
+                if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
+                    Set<UserDto> allUsers = controller.getAllUsers();
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    mapper.writeValue(responseOutputStream, allUsers);
+                } else {
+                    throw new AuthenticationFailedException();
+                }
+            } catch (AuthenticationFailedException e) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                mapper.writeValue(responseOutputStream, e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                mapper.writeValue(responseOutputStream, e.getMessage());
             }
-        } catch (AuthenticationFailedException e) {
-            e.printStackTrace();
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getOutputStream(), e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }
