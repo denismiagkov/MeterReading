@@ -5,6 +5,7 @@ import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.denmiagkov.meter.infrastructure.in.servlets.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,12 +14,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 @Loggable
 @WebServlet("/api/user/reading/actual")
 public class GetActualReadingServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(GetActualReadingServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
@@ -37,23 +44,27 @@ public class GetActualReadingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try {
-            if (authService.validateAccessToken(token)) {
-                MeterReadingReviewActualDto requestDto =
-                        dtoBuilder.createMeterReadingReviewOnConcreteUtilityDto(req, token);
-                MeterReadingDto responseMeterReading =
-                        controller.getActualReadingOnExactUtilityByUser(requestDto);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                jsonMapper.writeValue(resp.getOutputStream(), responseMeterReading);
-            } else {
-                throw new AuthenticationFailedException();
+        try (OutputStream responseOutputStream = resp.getOutputStream()) {
+            try {
+                if (authService.validateAccessToken(token)) {
+                    MeterReadingReviewActualDto requestDto =
+                            dtoBuilder.createMeterReadingReviewOnConcreteUtilityDto(req, token);
+                    MeterReadingDto responseMeterReading =
+                            controller.getActualReadingOnExactUtilityByUser(requestDto);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    jsonMapper.writeValue(responseOutputStream, responseMeterReading);
+                } else {
+                    throw new AuthenticationFailedException();
+                }
+            } catch (AuthenticationFailedException e) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                jsonMapper.writeValue(responseOutputStream, e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonMapper.writeValue(responseOutputStream, e.getMessage());
             }
-        } catch (AuthenticationFailedException e) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            jsonMapper.writeValue(resp.getOutputStream(), e.getMessage());
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            jsonMapper.writeValue(resp.getOutputStream(), e.getMessage());
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

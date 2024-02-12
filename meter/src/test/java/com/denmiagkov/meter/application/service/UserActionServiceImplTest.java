@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper.USER_ACTION_DTO_MAPPER;
+import static com.denmiagkov.meter.application.mapper.UserActionMapper.USER_ACTION_DTO_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

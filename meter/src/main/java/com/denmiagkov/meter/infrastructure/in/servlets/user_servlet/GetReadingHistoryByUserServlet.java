@@ -26,6 +26,7 @@ import java.util.List;
 @WebServlet("/api/user/readings")
 public class GetReadingHistoryByUserServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(GetReadingHistoryByUserServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
@@ -64,7 +65,7 @@ public class GetReadingHistoryByUserServlet extends HttpServlet {
                 jsonMapper.writeValue(outputStream, e.getMessage());
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

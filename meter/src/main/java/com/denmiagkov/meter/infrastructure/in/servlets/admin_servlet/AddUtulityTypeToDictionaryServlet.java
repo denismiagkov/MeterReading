@@ -4,6 +4,7 @@ import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.infrastructure.in.servlets.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -23,7 +24,8 @@ import java.util.Map;
 @Loggable
 @WebServlet("/api/admin/dictionary/new")
 public class AddUtulityTypeToDictionaryServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(AddUtulityTypeToDictionaryServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(AddUtulityTypeToDictionaryServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
@@ -61,8 +63,8 @@ public class AddUtulityTypeToDictionaryServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

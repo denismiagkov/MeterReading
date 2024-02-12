@@ -5,6 +5,7 @@ import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.denmiagkov.meter.infrastructure.in.servlets.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,8 @@ import java.util.List;
 @Loggable
 @WebServlet("/api/user/readings/actual")
 public class GetAllActualReadingsByUserServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(GetAllActualReadingsByUserServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(GetAllActualReadingsByUserServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
@@ -54,16 +56,14 @@ public class GetAllActualReadingsByUserServlet extends HttpServlet {
                     throw new AuthenticationFailedException();
                 }
             } catch (AuthenticationFailedException e) {
-                e.printStackTrace();
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 jsonMapper.writeValue(outputStream, e.getMessage());
             } catch (Exception e) {
-                e.printStackTrace();
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

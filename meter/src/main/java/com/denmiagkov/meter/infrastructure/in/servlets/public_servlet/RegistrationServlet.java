@@ -22,10 +22,11 @@ import java.io.OutputStream;
 @WebServlet("/api/registration")
 public class RegistrationServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(RegistrationServlet.class);
-
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     private ObjectMapper jsonMapper;
     private transient IncomingDtoBuilder dtoBuilder;
     private transient Controller controller;
+
 
     @Override
     public void init() throws ServletException {
@@ -48,8 +49,8 @@ public class RegistrationServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

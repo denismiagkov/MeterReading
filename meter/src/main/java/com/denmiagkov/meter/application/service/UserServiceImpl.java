@@ -1,10 +1,10 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
-import com.denmiagkov.meter.application.dto.outgoing.UserDtoMapper;
+import com.denmiagkov.meter.application.mapper.UserLoginMapper;
+import com.denmiagkov.meter.application.mapper.UserMapper;
 import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDtoMapper;
 import com.denmiagkov.meter.application.service.exception.AdminNotAuthorizedException;
 import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
@@ -15,7 +15,7 @@ import com.denmiagkov.meter.domain.*;
 
 import java.util.Set;
 
-import static com.denmiagkov.meter.application.dto.incoming.UserRegisterDtoMapper.USER_INCOMING_DTO_MAPPER;
+import static com.denmiagkov.meter.application.mapper.UserRegisterMapper.USER_INCOMING_DTO_MAPPER;
 
 /**
  * Класс реализует логику обработки данных о пользователях
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             if (!userRepository.isExistLogin(user.getLogin())) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                return UserDtoMapper.USER_OUTGOING_DTO_MAPPER.userToUserDto(user);
+                return UserMapper.USER_OUTGOING_DTO_MAPPER.userToUserDto(user);
             } else {
                 throw new LoginAlreadyInUseException(user.getLogin());
             }
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginDto getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)
                 .orElseThrow(AuthenticationFailedException::new);
-        return UserLoginDtoMapper.USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
+        return UserLoginMapper.USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
     }
 
     /**
@@ -88,6 +88,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<UserDto> getAllUsers() {
         Set<User> users = userRepository.getAllUsers();
-        return UserDtoMapper.USER_OUTGOING_DTO_MAPPER.usersToUserDtos(users);
+        return UserMapper.USER_OUTGOING_DTO_MAPPER.usersToUserDtos(users);
     }
 }

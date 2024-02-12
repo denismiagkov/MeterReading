@@ -1,7 +1,6 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
-import com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.repository.ActivityRepositoryImpl;
@@ -10,7 +9,7 @@ import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
-import static com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper.USER_ACTION_DTO_MAPPER;
+import static com.denmiagkov.meter.application.mapper.UserActionMapper.USER_ACTION_DTO_MAPPER;
 
 /**
  * Сервис, реализующий логику обработки данных о действиях пользователей в системе

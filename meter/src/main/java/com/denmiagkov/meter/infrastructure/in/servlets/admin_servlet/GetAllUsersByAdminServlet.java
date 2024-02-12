@@ -5,6 +5,7 @@ import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.infrastructure.in.servlets.public_servlet.RegistrationServlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,7 +22,8 @@ import java.util.Set;
 @Loggable
 @WebServlet("/api/admin/users")
 public class GetAllUsersByAdminServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(GetAllUsersByAdminServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(GetAllUsersByAdminServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     ObjectMapper mapper;
     Controller controller;
     AuthService authService;
@@ -55,7 +57,7 @@ public class GetAllUsersByAdminServlet extends HttpServlet {
                 mapper.writeValue(responseOutputStream, e.getMessage());
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }

@@ -6,16 +6,18 @@ import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthD
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.repository.*;
+import com.denmiagkov.meter.aspect.annotations.Audit;
 import com.denmiagkov.meter.domain.*;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
-import static com.denmiagkov.meter.application.dto.outgoing.MeterReadingDtoMapper.METER_READING_OUTGOING_DTO_MAPPER;
+import static com.denmiagkov.meter.application.mapper.MeterReadingMapper.METER_READING_OUTGOING_DTO_MAPPER;
 
 /**
  * Сервис подачи показаний
  */
+@Audit
 public class MeterReadingServiceImpl implements MeterReadingService {
 
     public static final MeterReadingServiceImpl INSTANCE = new MeterReadingServiceImpl();
@@ -38,7 +40,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public MeterReadingDto submitNewMeterReading(MeterReadingSubmitDto meterReadingDto) {
-        activityService.registerUserAction(meterReadingDto);
         MeterReading meterReading = meterReadingRepository.addNewMeterReading(meterReadingDto);
         return METER_READING_OUTGOING_DTO_MAPPER.meterReadingToMeterReadingDto(meterReading);
     }
@@ -59,7 +60,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public MeterReadingDto getActualMeterReadingOnExactUtilityByUser(MeterReadingReviewActualDto requestDto) {
-        activityService.registerUserAction(requestDto);
         MeterReading newMeterReading = meterReadingRepository.getActualMeterReadingOnExactUtility(
                 requestDto.getUserId(), requestDto.getUtilityId());
         return METER_READING_OUTGOING_DTO_MAPPER.meterReadingToMeterReadingDto(newMeterReading);
@@ -70,7 +70,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(MeterReadingReviewActualDto requestDto) {
-        activityService.registerUserAction(requestDto);
         List<MeterReading> meterReadings = meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(requestDto.getUserId());
         return METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(meterReadings);
     }
@@ -80,7 +79,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<List<MeterReadingDto>> getMeterReadingsHistoryByUser(MeterReadingReviewHistoryDto requestDto, int pageSize) {
-        activityService.registerUserAction(requestDto);
         List<MeterReading> meterReadingHistory = meterReadingRepository.getMeterReadingsHistory(requestDto.getUserId());
         List<MeterReadingDto> meterReadingHistoryDto =
                 METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(meterReadingHistory);
@@ -92,7 +90,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     @Override
     public List<MeterReadingDto> getReadingsForMonthByUser(MeterReadingReviewForMonthDto requestDto) {
-        activityService.registerUserAction(requestDto);
         List<MeterReading> readingsForMonth = meterReadingRepository.getMeterReadingsForExactMonthByUser(
                 requestDto.getUserId(),
                 requestDto.getYear(),

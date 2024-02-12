@@ -76,7 +76,7 @@ class GetReadingHistoryByUserServletTest {
         when(authService.validateAccessToken(token)).thenReturn(false);
 
         servlet.doPost(request, response);
-        
+
         verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         verify(jsonMapper).writeValue(response.getOutputStream(), exceptionMessage);
     }

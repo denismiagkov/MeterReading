@@ -24,12 +24,12 @@ import java.io.OutputStream;
 @Loggable
 @WebServlet("/api/user/reading/new")
 public class SubmitMeterReadingServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(SubmitMeterReadingServlet.class);
+    private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
     private ObjectMapper jsonMapper;
     private Controller controller;
     private AuthService authService;
     private IncomingDtoBuilder dtoBuilder;
-    public static final Logger log = LoggerFactory.getLogger(RegistrationServlet.class);
-
 
     @Override
     public void init() throws ServletException {
@@ -63,7 +63,7 @@ public class SubmitMeterReadingServlet extends HttpServlet {
                 jsonMapper.writeValue(outputStream, e.getMessage());
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(EXCEPTION_MESSAGE, e);
         }
     }
 }
