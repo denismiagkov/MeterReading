@@ -14,9 +14,8 @@ import java.util.List;
 /**
  * Класс реализовывает логику взаимодействия с базой данных по поводу действий пользователей в приложении
  */
-
-
 public class ActivityRepositoryImpl implements ActivityRepository {
+
     public static final ActivityRepositoryImpl INSTANCE = new ActivityRepositoryImpl();
     /**
      * SQL-запрос на добавление одного пользовательского действия в базу данных

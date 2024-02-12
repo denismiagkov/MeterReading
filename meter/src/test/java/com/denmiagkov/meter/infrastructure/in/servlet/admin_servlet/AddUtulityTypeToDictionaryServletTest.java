@@ -1,10 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
 
-import com.denmiagkov.meter.domain.User;
-import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,6 +78,7 @@ class AddUtulityTypeToDictionaryServletTest {
         String exceptionMessage = "Ошибка авторизации: пользователя с указанными логином и паролем не существует!";
         when(authService.getTokenFromRequest(request)).thenReturn(token);
         when(authService.validateAccessToken(token)).thenReturn(true);
+
         servlet.doPost(request, response);
 
         verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -97,6 +93,7 @@ class AddUtulityTypeToDictionaryServletTest {
         when(authService.getTokenFromRequest(request)).thenReturn(token);
         when(authService.validateAccessToken(token)).thenReturn(true);
         when(authService.isAdmin(token)).thenReturn(false);
+
         servlet.doPost(request, response);
 
         verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);

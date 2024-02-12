@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.exception;
+package com.denmiagkov.meter.application.service.exception;
 
 import com.denmiagkov.meter.domain.User;
 

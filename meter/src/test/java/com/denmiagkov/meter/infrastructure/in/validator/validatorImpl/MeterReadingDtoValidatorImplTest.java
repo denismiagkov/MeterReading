@@ -1,13 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
-import com.denmiagkov.meter.application.service.DictionaryServiceImpl;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.application.service.MeterReadingServiceImpl;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.InvalidDateException;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.UtilityTypeNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

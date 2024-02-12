@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.infrastructure.in.validator.exception;
+package com.denmiagkov.meter.application.service.exception;
 /**
  * Исключение, выбрасываемое при ошибке авторизации пользователя в системе
  * */

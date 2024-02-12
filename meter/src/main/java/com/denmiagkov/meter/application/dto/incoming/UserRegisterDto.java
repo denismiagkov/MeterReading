@@ -3,35 +3,64 @@ package com.denmiagkov.meter.application.dto.incoming;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
 
-
+/**
+ * Входящее ДТО для регистрации пользователя
+ */
 public class UserRegisterDto extends IncomingDto {
+    /**
+     * id пользователя
+     */
     private int userId;
+    /**
+     * ТИп действия пользователя
+     */
     private ActionType action;
     /**
      * Имя пользователя
      */
-    String name;
+    private String name;
     /**
      * Телефон пользователя
      */
-    String phone;
+    private String phone;
     /**
      * Адрес пользователя
      */
-    String address;
+    private String address;
     /**
      * Роль пользователя
      */
-    UserRole role;
+    private UserRole role;
     /**
      * Логин пользователя
      */
-    String login;
+    private String login;
     /**
      * Пароль пользователя
      */
-    String password;
-    String adminPassword;
+    private String password;
+    /**
+     * Регистрационный  пароль администратора
+     */
+    private String adminPassword;
+
+    /**
+     * Конструкторы, геттеры и сеттеры
+     */
+    public UserRegisterDto() {
+        this.action = ActionType.REGISTRATION;
+    }
+
+    public UserRegisterDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
+        this();
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.login = login;
+        this.password = password;
+        this.adminPassword = adminPassword;
+    }
 
     public ActionType getAction() {
         return action;
@@ -47,22 +76,6 @@ public class UserRegisterDto extends IncomingDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-
-    public UserRegisterDto() {
-        this.action = ActionType.REGISTRATION;
-    }
-
-    public UserRegisterDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
-        this();
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
-        this.role = role;
-        this.login = login;
-        this.password = password;
-        this.adminPassword = adminPassword;
     }
 
     public String getName() {

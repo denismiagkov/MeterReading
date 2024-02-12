@@ -7,6 +7,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Класс-аспект, реализующий сквозное логирование работы методов
+ */
 @Aspect
 public class LoggableAspect {
 
@@ -26,5 +29,4 @@ public class LoggableAspect {
                 .formatted(proceedingJoinPoint.getSignature(), end));
         return result;
     }
-
 }

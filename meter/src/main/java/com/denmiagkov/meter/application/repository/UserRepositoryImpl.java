@@ -15,8 +15,8 @@ import java.util.Set;
 /**
  * Класс, отвечающий за реализацию логики взаимодействия с базой данных по поводу сведений о пользователях
  */
-
 public class UserRepositoryImpl implements UserRepository {
+
     public static final UserRepositoryImpl INSTANCE = new UserRepositoryImpl();
 
     /**
@@ -138,25 +138,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return Optional.ofNullable(user);
     }
-//    @Override
-//    public User authenticateUser(String login, String password) {
-//        try (Connection connection = ConnectionManager.open();
-//             PreparedStatement preparedStatementGetUsers = connection.prepareStatement(GET_ALL_USERS);
-//             PreparedStatement preparedStatementFindUser = connection.prepareStatement(AUTHENTICATE_USER)) {
-//            ResultSet queryResult = preparedStatementGetUsers.executeQuery();
-//            while (queryResult.next()) {
-//                String queryLogin = queryResult.getString("login");
-//                String queryPassword = queryResult.getString("password");
-//                if (login.equals(queryLogin) &&
-//                    password.equals(queryPassword)) {
-//                    return getUser(queryResult);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        throw new AuthenticationFailedException();
-//    }
 
     /**
      * {@inheritDoc}
@@ -177,14 +158,15 @@ public class UserRepositoryImpl implements UserRepository {
         return users;
     }
 
-    @Override
     /**
      * Метод возвращает пользователя на основе соответствующей записи в базе данных
      *
      * @param queryResult Запись о пользователе в базе данных
      * @return User Пользователь
      * @throws SQLException
-     */ public User getUser(ResultSet queryResult) throws SQLException {
+     */
+    @Override
+    public User getUser(ResultSet queryResult) throws SQLException {
         int id = queryResult.getInt("id");
         String name = queryResult.getString("name");
         String phone = queryResult.getString("phone");

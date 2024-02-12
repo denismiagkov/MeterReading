@@ -1,7 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-public class AuthException extends RuntimeException{
+/**
+ * Исключение, выбрасываемое при вводе пользователем неверного пароля
+ */
+public class AuthException extends RuntimeException {
     public AuthException() {
-        super("Аутентификация не пройдена! Введены неверные логин и/или пароль пользователя!");
+        super("Аутентификация не пройдена: введены неверные логин и пароль пользователя!");
     }
 }

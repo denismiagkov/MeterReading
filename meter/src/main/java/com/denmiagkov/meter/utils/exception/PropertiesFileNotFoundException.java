@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.exception;
+package com.denmiagkov.meter.utils.exception;
 
 /**
  * Исключение, выбрасываемое в случае невозможности загрузки properties-файла

@@ -1,14 +1,21 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-
+/**
+ * Запрос на создание и выдачу токена
+ */
 public class JwtRequest {
+    /**
+     * Логин пользоваетля
+     */
     private String login;
+    /**
+     * Пароль пользователя
+     */
     private String password;
 
+    /**
+     * Конструктор, геттеры и сеттеры
+     */
     public JwtRequest() {
     }
 

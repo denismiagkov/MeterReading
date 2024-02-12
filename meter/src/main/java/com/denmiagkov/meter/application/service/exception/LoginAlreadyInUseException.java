@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.exception;
+package com.denmiagkov.meter.application.service.exception;
 
 /**
  * Исключение, выбрасываемое при регистрации новой учетной записи пользователя,

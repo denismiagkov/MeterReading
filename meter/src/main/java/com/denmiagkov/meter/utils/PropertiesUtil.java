@@ -1,12 +1,10 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.application.exception.PropertiesFileNotFoundException;
-import lombok.experimental.UtilityClass;
+import com.denmiagkov.meter.utils.exception.PropertiesFileNotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 
 public final class PropertiesUtil {
     private static final Properties PROPERTIES = new Properties();

@@ -1,10 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.outgoing;
 
 import com.denmiagkov.meter.domain.UserRole;
 import lombok.Getter;
@@ -8,8 +8,10 @@ import lombok.Value;
 
 import java.io.Serializable;
 
-
-public class UserDto  {
+/**
+ * Исходящее ДТО пользователя
+ */
+public class UserDto {
     /**
      * id пользователя
      */

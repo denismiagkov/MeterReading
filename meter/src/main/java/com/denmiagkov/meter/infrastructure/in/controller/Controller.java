@@ -1,9 +1,9 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.*;
-import com.denmiagkov.meter.application.dto.UserActionDto;
-import com.denmiagkov.meter.application.dto.UserDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.service.*;
 
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * Контроллер
  */
-
 public class Controller {
     public static final Controller INSTANCE = new Controller();
     /**
@@ -33,6 +32,9 @@ public class Controller {
      */
     private final DictionaryService dictionaryService;
 
+    /**
+     * Конструктор
+     */
     public Controller() {
         this.userService = UserServiceImpl.INSTANCE;
         this.meterReadingService = MeterReadingServiceImpl.INSTANCE;
@@ -42,14 +44,9 @@ public class Controller {
 
     /**
      * Метод регистрации обычного пользователя
-     * //     *
-     * //     * @param name     Имя пользоыателя
-     * //     * @param phone    Телефон пользователя
-     * //     * @param address  Адрес пользователя
-     * //     * @param login    Логин пользователя
-     * //     * @param password Пароль пользователя
      *
-     * @return User
+     * @param userDto Входящее ДТО регистрации пользователя
+     * @return User Зарегистрированный пользователь
      */
     public UserDto registerUser(UserRegisterDto userDto) {
         return userService.registerUser(userDto);
@@ -144,23 +141,5 @@ public class Controller {
      */
     public List<MeterReadingDto> getReadingsForMonthByUser(MeterReadingReviewForMonthDto requestDto) {
         return meterReadingService.getReadingsForMonthByUser(requestDto);
-    }
-
-    /**
-     * Метод фиксирует выход пользователя из приложения
-     *
-     * @param user Пользователь
-     */
-//    public void recordExit(OutcomingUserDto user) {
-//        userService.recordExit(user);
-//    }
-
-    /**
-     * Метод получения справочника показаний
-     *
-     * @return Map<Integer, String> Справочник показаний (типов услуг)
-     */
-    public Map<Integer, String> getUtilitiesDictionary() {
-        return dictionaryService.getUtilitiesDictionary();
     }
 }

@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.UserActionDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 
 import java.util.List;

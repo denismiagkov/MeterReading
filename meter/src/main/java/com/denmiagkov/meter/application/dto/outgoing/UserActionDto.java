@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.outgoing;
 
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
@@ -7,30 +7,26 @@ import lombok.Value;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-
+/**
+ * Исходящее ДТО действия пользователя в приложении
+ * */
 public class UserActionDto{
     /**
      * Уникальный идентификатор действия
      */
-    int id;
+     int id;
     /**
      * Идентификатор пользователя, совершившего действие
      */
-    final int userId;
+     final int userId;
     /**
      * Дата и время совершения действия
      */
-    final LocalDateTime dateTime;
+     final LocalDateTime dateTime;
     /**
      * Тип действия
      */
-    final ActionType action;
-
-//    public UserActionDto(int userId, LocalDateTime dateTime, ActionType action) {
-//        this.userId = userId;
-//        this.dateTime = dateTime;
-//        this.action = action;
-//    }
+     final ActionType action;
 
     public UserActionDto(int id, int userId, LocalDateTime dateTime, ActionType action) {
         this.id = id;

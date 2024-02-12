@@ -11,7 +11,6 @@ import java.util.UUID;
 /**
  * Класс показаний счетчика
  */
-
 public class MeterReading {
     /**
      * Уникальный идентификатор показания

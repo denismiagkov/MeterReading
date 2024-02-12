@@ -1,28 +1,29 @@
-package com.denmiagkov.meter.application.dto;
+package com.denmiagkov.meter.application.dto.outgoing;
 
 import com.denmiagkov.meter.domain.ActionType;
 
 import java.time.LocalDateTime;
 
-
+/**
+ * Исходящее ДТО для маппинга объекта показания счетчика
+ */
 public class MeterReadingDto {
     /**
      * Идентификатор пользователя
      */
-    int userId;
+      int userId;
     /**
      * Дата и время подачи показания
      */
-    LocalDateTime date;
+     LocalDateTime date;
     /**
      * Идентификатор типа услуг
      */
-    private int utilityId;
+     int utilityId;
     /**
      * Значение счетчика
      */
-    private double value;
-
+     double value;
 
     public MeterReadingDto() {
     }

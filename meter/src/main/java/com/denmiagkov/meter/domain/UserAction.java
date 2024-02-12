@@ -1,15 +1,11 @@
 package com.denmiagkov.meter.domain;
 
-import com.denmiagkov.meter.application.dto.UserDto;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  * Класс действия пользователя
  */
-
 public class UserAction {
     /**
      * Уникальный идентификатор действия
@@ -28,7 +24,9 @@ public class UserAction {
      */
     private final ActionType action;
 
-
+    /**
+     * Конструкторы, геттеры, сеттеры
+     */
     public UserAction(int userId, ActionType action) {
         this.userId = userId;
         this.dateTime = LocalDateTime.now();

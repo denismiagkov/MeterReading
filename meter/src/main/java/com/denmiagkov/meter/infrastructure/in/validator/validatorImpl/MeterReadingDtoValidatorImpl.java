@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
@@ -19,12 +19,10 @@ import java.time.LocalDateTime;
 /**
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
-
 public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSubmitDto> {
+
     public static final MeterReadingDtoValidatorImpl INSTANCE = new MeterReadingDtoValidatorImpl();
-    /**
-     * Контроллер
-     */
+
     DictionaryService dictionaryService;
     MeterReadingService meterReadingService;
 
@@ -77,7 +75,13 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
         }
     }
 
-    public MeterReadingReviewActualDto getActualMeterReadingDto(MeterReadingSubmitDto newMeterReading) {
+    /**
+     * Метод создает входящее ДТО для получения актуального показания счетчика пользователя по заданной услуге
+     *
+     * @param newMeterReading новое показание счетчика
+     * @return MeterReadingReviewActualDto ДТО для получения текущего показания счетчика
+     */
+    private MeterReadingReviewActualDto getActualMeterReadingDto(MeterReadingSubmitDto newMeterReading) {
         MeterReadingReviewActualDto requestActualMeterReadingDto = new MeterReadingReviewActualDto();
         requestActualMeterReadingDto.setUserId(newMeterReading.getUserId());
         requestActualMeterReadingDto.setUtilityId(newMeterReading.getUtilityId());
@@ -103,6 +107,12 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
         }
     }
 
+    /**
+     * Метод проверяет корректность указания месяца для предоставления списка запрошенных показаний счечиков
+     *
+     * @param requestDto запрос на предоставление показаний за определенный месяц
+     * @return boolean true в случае успешной проверки, в противном случае - false
+     */
     public boolean isValidMonth(MeterReadingReviewForMonthDto requestDto) {
         if (
                 (requestDto.getMonth() >= LocalDateTime.MIN.getMonthValue())
@@ -117,6 +127,13 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
         }
     }
 
+    /**
+     * Комплексный метод валидации указанных пользователем данных о типа показаний счетчика, дате предоставления
+     * сведений и значении счетчика при подаче нового покащания
+     *
+     * @param meterReading входящее ДТО на подачу новых показаний счетчика
+     * @return boolean true в случае успешной проверки, в противном случае - false
+     */
     @Override
     public boolean isValid(MeterReadingSubmitDto meterReading) {
         return isValidMeterReadingUtilityType(meterReading)

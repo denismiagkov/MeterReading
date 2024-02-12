@@ -7,6 +7,9 @@ import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInput
 import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPasswordException;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPhoneNumberException;
 
+/**
+ * Класс, валидирующий сведения о новом пользователе при его регистрации в приложении
+ */
 public class UserIncomingDtoValidatorImpl implements DtoValidator<UserRegisterDto> {
     public static final UserIncomingDtoValidatorImpl INSTANCE = new UserIncomingDtoValidatorImpl();
 

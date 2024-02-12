@@ -1,13 +1,12 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Интерфейс, объявляющий логику обработки данных о показаниях счетчиков

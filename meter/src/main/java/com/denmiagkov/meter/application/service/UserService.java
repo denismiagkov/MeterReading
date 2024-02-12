@@ -1,18 +1,17 @@
 package com.denmiagkov.meter.application.service;
 
 
-import com.denmiagkov.meter.application.dto.UserDto;
-import com.denmiagkov.meter.application.dto.incoming.UserDtoLogin;
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
-import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
-import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
+import com.denmiagkov.meter.application.service.exception.LoginAlreadyInUseException;
+import com.denmiagkov.meter.application.service.exception.UserAlreadyExistsException;
 
 import java.util.Set;
 
 /**
  * Интерфейс, объявляющий логику обработки данных о пользователе
  */
-
 public interface UserService {
 
     /**
@@ -37,14 +36,7 @@ public interface UserService {
     Set<UserDto> getAllUsers();
 
     /**
-     * Метод фиксирует выход пользователя из приложения
-     *
-     * @param user Пользователь
-     */
-    void recordExit(UserDto userDto);
-
-    /**
      * Метод возвращает пароль пользователя по его логину
      */
-    UserDtoLogin getPasswordByLogin(String login);
+    UserLoginDto getPasswordByLogin(String login);
 }

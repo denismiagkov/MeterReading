@@ -3,28 +3,37 @@ package com.denmiagkov.meter.application.dto.incoming;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
 
-
-public class UserDtoLogin extends IncomingDto {
-    int userId;
-    ActionType action;
-
+/**
+ * Входяще ДТО для аутентификации пользователя
+ */
+public class UserLoginDto extends IncomingDto {
+    /**
+     * id пользователя
+     */
+    private int userId;
+    /**
+     * Тип действия пользоваетеля
+     */
+    private ActionType action;
     /**
      * Роль пользователя
      */
-    UserRole role;
+    private UserRole role;
     /**
      * Логин пользователя
      */
-    String login;
+    private String login;
     /**
      * Пароль пользователя
      */
-    String password;
+    private String password;
 
-    public UserDtoLogin() {
+    /**
+     * Конструктор, геттеры и сеттеры
+     */
+    public UserLoginDto() {
         this.action = ActionType.AUTHENTICATION;
     }
-
 
     public ActionType getAction() {
         return action;

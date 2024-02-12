@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.UserActionDto;
-import com.denmiagkov.meter.application.dto.UserActionDtoMapper;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.repository.ActivityRepositoryImpl;
@@ -10,11 +10,13 @@ import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
+import static com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper.USER_ACTION_DTO_MAPPER;
+
 /**
  * Сервис, реализующий логику обработки данных о действиях пользователей в системе
  */
-
 public class UserActivityServiceImpl implements UserActivityService {
+
     public static final UserActivityServiceImpl INSTANCE = new UserActivityServiceImpl();
     /**
      * Репозиторий данных о действиях пользователя
@@ -40,7 +42,7 @@ public class UserActivityServiceImpl implements UserActivityService {
     @Override
     public List<List<UserActionDto>> getUserActivitiesList(int pageSize) {
         List<UserAction> userActions = activityRepository.getActivitiesList();
-        List<UserActionDto> userActionDtos = UserActionDtoMapper.USER_ACTION_DTO_MAPPER.userActionsToUserActionDtos(userActions);
+        List<UserActionDto> userActionDtos = USER_ACTION_DTO_MAPPER.userActionsToUserActionDtos(userActions);
         List<List<UserActionDto>> userActionsPaginated = ListUtils.partition(userActionDtos, pageSize);
         return userActionsPaginated;
     }

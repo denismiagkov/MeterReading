@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.application.exception.DatabaseConnectionNotEstablishedException;
+import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -8,8 +8,6 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +32,6 @@ public final class LiquibaseManager {
             throw new DatabaseConnectionNotEstablishedException(e.getMessage());
         }
     }
-
 
     public static Liquibase startLiquibase() {
         try (Connection connection = ConnectionManager.open()) {

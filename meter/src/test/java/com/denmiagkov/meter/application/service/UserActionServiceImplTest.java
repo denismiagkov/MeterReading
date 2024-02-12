@@ -1,7 +1,10 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.domain.UserAction;
+import org.apache.commons.collections4.ListUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denmiagkov.meter.application.dto.outgoing.UserActionDtoMapper.USER_ACTION_DTO_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -25,27 +29,34 @@ class UserActionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        activityService = UserActivityServiceImpl.INSTANCE;
     }
 
-//    @Test
-//    @DisplayName("Method invokes appropriate method on dependent object")
-//    void addActivity() {
-//        UserAction userAction = mock(UserAction.class);
-//        activityService.addActivity(userAction);
-//
-//        verify(activityRepository, times(1))
-//                .addActivity(userAction);
-//    }
+    @Test
+    @DisplayName("Method invokes appropriate method on dependent object")
+    void addActivity() {
+        MeterReadingReviewHistoryDto dto = new MeterReadingReviewHistoryDto();
+        dto.setUserId(2);
 
-//    @Test
-//    @DisplayName("Dependent object returns appropriate list")
-//    void getUserActivitiesList() {
-//        List<UserAction> activitiesDummy = mock(ArrayList.class);
-//        when(activityRepository.getActivitiesList()).thenReturn(activitiesDummy);
-//
-//        List<UserAction> activities = activityService.getUserActivitiesList();
-//
-//        assertThat(activities).isEqualTo(activitiesDummy);
-//    }
+        activityService.registerUserAction(dto);
+
+        verify(activityRepository, times(1))
+                .addActivity(any(UserAction.class));
+    }
+
+    @Test
+    @DisplayName("Dependent object returns appropriate list")
+    void getUserActivitiesList() {
+        List<UserAction> activitiesDummy = mock(ArrayList.class);
+        when(activityRepository.getActivitiesList()).thenReturn(activitiesDummy);
+        List<UserActionDto> userActionDtos = mock(ArrayList.class);
+        when(USER_ACTION_DTO_MAPPER.userActionsToUserActionDtos(activitiesDummy))
+                .thenReturn(userActionDtos);
+        List<List<UserActionDto>> userActionsPaginated = mock((ArrayList.class));
+        when(ListUtils.partition(userActionDtos, 2))
+                .thenReturn(userActionsPaginated);
+
+        List<List<UserActionDto>> activities = activityService.getUserActivitiesList(20);
+
+        assertThat(activities).isEqualTo(userActionsPaginated);
+    }
 }

@@ -1,15 +1,24 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserDtoMapper;
 import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
 import com.denmiagkov.meter.domain.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -93,17 +102,11 @@ class UserServiceImplTest {
 //    void getAllUsers() {
 //        Set<User> usersDummy = new HashSet<>();
 //        when(userRepository.getAllUsers()).thenReturn(usersDummy);
+//        Set<UserDto> userDtos = mock(HashSet.class);
+//        when(UserDtoMapper.USER_OUTGOING_DTO_MAPPER.usersToUserDtos(usersDummy))
+//                .thenReturn(userDtos);
+//        Set<UserDto> users = userService.getAllUsers();
 //
-//        Set<User> users = userService.getAllUsers();
-//
-//        assertThat(users).isEqualTo(usersDummy);
-//    }
-
-//    @Test
-//    @DisplayName("Method invokes appropriate method on dependent object")
-//    void recordExit() {
-//        userService.recordExit(user);
-//        verify(activityService, times(1))
-//                .addActivity(any(UserActivity.class));
+//        assertThat(users).isEqualTo(userDtos);
 //    }
 }

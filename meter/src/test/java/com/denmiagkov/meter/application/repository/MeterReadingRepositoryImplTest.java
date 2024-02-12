@@ -1,23 +1,17 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.domain.User;
-import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-//@Testcontainers
+@Testcontainers
 class MeterReadingRepositoryImplTest {
     MeterReadingRepositoryImpl meterReadingRepository;
     UserRepositoryImpl userRepository;

@@ -1,17 +1,14 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.domain.MeterReading;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Интерфейс, объявляющий логику взаимодействия с базой данных по поводу сведений о показаниях счетчиков
  */
 public interface MeterReadingRepository {
-
 
     /**
      * Метод добавления нового показания счетчика в базу данных

@@ -1,13 +1,7 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
-import com.denmiagkov.meter.application.dto.UserDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
-import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.servlet.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputNameException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,22 +67,11 @@ class SubmitMeterReadingServletTest {
         String token = "dummy";
         when(authService.getTokenFromRequest(request)).thenReturn(token);
         when(authService.validateAccessToken(token)).thenReturn(true);
-//        MeterReadingSubmitDto requestDto = mock(MeterReadingSubmitDto.class);
-//        when(dtoBuilder.createNewMeterReadingSubmitDto(inputStream, token)).
-//                thenReturn(requestDto);
-//        MeterReadingDto meterReadingDto = mock(MeterReadingDto.class);
-//        when(controller.submitNewMeterReading(requestDto))
-//                .thenReturn(meterReadingDto);
 
         servlet.doPost(request, response);
 
         verify(authService, times(1)).getTokenFromRequest(request);
         verify(authService, times(1)).validateAccessToken(token);
-       // verify(dtoBuilder, times(1)).createNewMeterReadingSubmitDto(null, token);
-       // verify(controller, times(1)).submitNewMeterReading(requestDto);
-      //  verify(response).setStatus(HttpServletResponse.SC_CREATED);
-       // verify(jsonMapper, times(1)).writeValue(outputStream, meterReadingDto);
-
     }
 
     @Test

@@ -1,8 +1,6 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.application.exception.DatabaseConnectionNotEstablishedException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

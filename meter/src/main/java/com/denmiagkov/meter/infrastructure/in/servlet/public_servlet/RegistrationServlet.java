@@ -1,11 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.public_servlet;
 
-import com.denmiagkov.meter.application.dto.UserDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
-import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.UserIncomingDtoValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

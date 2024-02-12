@@ -1,21 +1,15 @@
 package com.denmiagkov.meter.domain;
 
-import com.denmiagkov.meter.application.exception.AdminNotAuthorizedException;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
-import java.util.Objects;
-import java.util.UUID;
+import com.denmiagkov.meter.application.service.exception.AdminNotAuthorizedException;
 
 /**
  * Класс пользователя. Включает обычного пользователя и администратора
  */
-
 public class User {
     /**
      * Пароль администратора (необходим для регистрации нового администратора)
      */
-    private final String ADMIN_PASSWORD = "123admin";
+    private static final String ADMIN_PASSWORD = "123admin";
     /**
      * Уникальный идентификатор пользователя
      */
@@ -45,23 +39,64 @@ public class User {
      */
     private String password;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(phone, user.phone);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, phone);
-    }
-
     public User() {
     }
 
-    public String getADMIN_PASSWORD() {
+    /**
+     * Конструктор обычного пользователя
+     */
+    public User(String name, String phone, String address, String login, String password) {
+        createUser(name, phone, address, login, password);
+        this.role = UserRole.USER;
+    }
+
+    /**
+     * Конструктор администратора
+     *
+     * @throws AdminNotAuthorizedException в случае ввода некорректного пароля
+     */
+    public User(String name, String phone, String address, String login, String password,
+                String isAdmin, String adminPassword) {
+        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN)) &&
+            adminPassword.equals(ADMIN_PASSWORD)) {
+            createUser(name, phone, address, login, password);
+            this.role = UserRole.ADMIN;
+        } else {
+            throw new AdminNotAuthorizedException();
+        }
+    }
+
+    /**
+     * Метод создания пользователя без учета роли user / admin
+     *
+     * @param name     Имя
+     * @param phone    Телефон
+     * @param address  Адрес
+     * @param login    Логин
+     * @param password Пароль
+     */
+    private void createUser(String name, String phone, String address, String login, String password) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.login = login;
+        this.password = password;
+    }
+
+    public User(int id, String name, String phone, String address, UserRole role, String login, String password) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.login = login;
+        this.password = password;
+    }
+
+    /**
+     * Геттеры, сеттеры, методы equals, hashcode
+     * */
+    public String getAdminPassword() {
         return ADMIN_PASSWORD;
     }
 
@@ -121,55 +156,4 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String name, String phone, String address, UserRole role, String login, String password) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
-        this.role = role;
-        this.login = login;
-        this.password = password;
-    }
-
-    /**
-     * Конструктор обычного пользователя
-     */
-
-    public User(String name, String phone, String address, String login, String password) {
-        createUser(name, phone, address, login, password);
-        this.role = UserRole.USER;
-    }
-
-    /**
-     * Конструктор администратора
-     *
-     * @throws AdminNotAuthorizedException в случае ввода некорректного пароля
-     */
-
-    public User(String name, String phone, String address, String login, String password,
-                String isAdmin, String adminPassword) {
-        if (isAdmin.equalsIgnoreCase(String.valueOf(UserRole.ADMIN)) &&
-            adminPassword.equals(ADMIN_PASSWORD)) {
-            createUser(name, phone, address, login, password);
-            this.role = UserRole.ADMIN;
-        } else {
-            throw new AdminNotAuthorizedException();
-        }
-    }
-
-    /**
-     * Метод создания пользователя без учета роли user / admin
-     * @param name Имя
-     * @param phone Телефон
-     * @param address Адрес
-     * @param login Логин
-     * @param password Пароль
-     */
-    private void createUser(String name, String phone, String address, String login, String password) {
-        this.name = name;
-        this.phone = phone;
-        this.address = address;
-        this.login = login;
-        this.password = password;
-    }
 }

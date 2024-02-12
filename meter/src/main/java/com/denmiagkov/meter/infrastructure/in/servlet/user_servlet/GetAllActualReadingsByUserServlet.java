@@ -1,14 +1,12 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.servlet.public_servlet.RegistrationServlet;
 import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 

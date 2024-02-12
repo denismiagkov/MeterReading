@@ -15,6 +15,7 @@ import java.util.Map;
  */
 
 public class MeterReadingRepositoryImpl implements MeterReadingRepository {
+
     public static final MeterReadingRepositoryImpl INSTANCE = new MeterReadingRepositoryImpl();
     /**
      * SQL-запрос на добавление в базу данных нового показания счетчика

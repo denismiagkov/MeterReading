@@ -1,8 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
 
-import com.denmiagkov.meter.application.dto.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
@@ -23,10 +21,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,9 +68,6 @@ class GetAllActualReadingsByUserServletTest {
         when(authService.getTokenFromRequest(request)).thenReturn(token);
         MeterReadingReviewActualDto requestDto = mock(MeterReadingReviewActualDto.class);
        when(dtoBuilder.createMeterReadingReviewAllActualsDto(token)).thenReturn(requestDto);
-//        List<MeterReadingDto> allActualReadings = mock(ArrayList.class);
-//        when(controller.getActualMeterReadingsOnAllUtilitiesByUser(requestDto))
-//                .thenReturn(allActualReadings);
 
         servlet.doPost(request, response);
 
@@ -83,8 +75,6 @@ class GetAllActualReadingsByUserServletTest {
         verify(authService, times(1)).validateAccessToken(token);
         verify(dtoBuilder, times(1))
                 .createMeterReadingReviewAllActualsDto(token);
-
-
     }
 
     @Test
