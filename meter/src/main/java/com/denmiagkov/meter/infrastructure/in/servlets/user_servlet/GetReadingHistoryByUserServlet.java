@@ -1,11 +1,12 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.user_servlet;
 
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
+import com.denmiagkov.meter.infrastructure.in.servlets.public_servlet.RegistrationServlet;
+import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -13,13 +14,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 @Loggable
 @WebServlet("/api/user/readings")
 public class GetReadingHistoryByUserServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(GetReadingHistoryByUserServlet.class);
     ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
@@ -39,22 +45,26 @@ public class GetReadingHistoryByUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try {
-            if (authService.validateAccessToken(token)) {
-                MeterReadingReviewHistoryDto requestDto = dtoBuilder.createMeterReadingReviewHistoryDto(token);
-                List<List<MeterReadingDto>> readingsHistory =
-                        controller.getMeterReadingsHistoryByUser(requestDto, PAGE_SIZE);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                jsonMapper.writeValue(resp.getOutputStream(), readingsHistory);
-            } else {
-                throw new AuthenticationFailedException();
+        try (OutputStream outputStream = resp.getOutputStream()) {
+            try {
+                if (authService.validateAccessToken(token)) {
+                    MeterReadingReviewHistoryDto requestDto = dtoBuilder.createMeterReadingReviewHistoryDto(token);
+                    List<List<MeterReadingDto>> readingsHistory =
+                            controller.getMeterReadingsHistoryByUser(requestDto, PAGE_SIZE);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    jsonMapper.writeValue(outputStream, readingsHistory);
+                } else {
+                    throw new AuthenticationFailedException();
+                }
+            } catch (AuthenticationFailedException e) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                jsonMapper.writeValue(outputStream, e.getMessage());
+            } catch (Exception e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (AuthenticationFailedException e) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            jsonMapper.writeValue(resp.getOutputStream(), e.getMessage());
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            jsonMapper.writeValue(resp.getOutputStream(), e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

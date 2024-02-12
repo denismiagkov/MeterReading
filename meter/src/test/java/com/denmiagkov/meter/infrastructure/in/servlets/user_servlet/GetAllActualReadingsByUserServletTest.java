@@ -1,8 +1,9 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.user_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.user_servlet;
 
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
-import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
+import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputNameException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -21,11 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SubmitMeterReadingServletTest {
+class GetAllActualReadingsByUserServletTest {
     @Mock
     Logger log;
     @Mock
@@ -38,7 +38,9 @@ class SubmitMeterReadingServletTest {
     Controller controller;
     @InjectMocks
     GetAllActualReadingsByUserServlet servlet;
+    @Mock
     HttpServletRequest request;
+    @Mock
     HttpServletResponse response;
     InputStream inputStream;
     OutputStream outputStream;
@@ -46,8 +48,6 @@ class SubmitMeterReadingServletTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
         inputStream = request.getInputStream();
         outputStream = response.getOutputStream();
     }
@@ -66,20 +66,20 @@ class SubmitMeterReadingServletTest {
     void doPost_RightWork() throws IOException, ServletException {
         String token = "dummy";
         when(authService.getTokenFromRequest(request)).thenReturn(token);
-        when(authService.validateAccessToken(token)).thenReturn(true);
+        MeterReadingReviewActualDto requestDto = mock(MeterReadingReviewActualDto.class);
+       when(dtoBuilder.createMeterReadingReviewAllActualsDto(token)).thenReturn(requestDto);
 
         servlet.doPost(request, response);
 
         verify(authService, times(1)).getTokenFromRequest(request);
         verify(authService, times(1)).validateAccessToken(token);
+        verify(dtoBuilder, times(1))
+                .createMeterReadingReviewAllActualsDto(token);
     }
 
     @Test
     @DisplayName("Method handles IncorrectInputNameException and set response status 400")
     void doPost_ihui() throws IOException, ServletException {
-        String token = "dummy";
-        when(authService.getTokenFromRequest(request)).thenReturn(token);
-        when(authService.validateAccessToken(token)).thenReturn(true);
         when(dtoBuilder.createUserRegisterDto(inputStream))
                 .thenThrow(IncorrectInputNameException.class);
 

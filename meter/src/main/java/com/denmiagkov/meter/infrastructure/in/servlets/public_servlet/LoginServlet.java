@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.public_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.public_servlet;
 
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;

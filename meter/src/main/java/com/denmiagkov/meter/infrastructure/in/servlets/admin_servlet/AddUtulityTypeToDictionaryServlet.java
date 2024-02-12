@@ -1,10 +1,10 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.admin_servlet;
 
-import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,46 +15,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Loggable
-@WebServlet("/api/admin/users")
-public class GetAllUsersByAdminServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(GetAllUsersByAdminServlet.class);
-    ObjectMapper mapper;
+@WebServlet("/api/admin/dictionary/new")
+public class AddUtulityTypeToDictionaryServlet extends HttpServlet {
+    public static final Logger log = LoggerFactory.getLogger(AddUtulityTypeToDictionaryServlet.class);
+    ObjectMapper jsonMapper;
     Controller controller;
     AuthService authService;
+    PublicUtilityValidatorImpl validator;
+    public static final String KEY = "utility";
 
     @Override
     public void init() throws ServletException {
         controller = Controller.INSTANCE;
         authService = AuthService.INSTANCE;
-        mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
+        jsonMapper = new ObjectMapper();
+        validator = PublicUtilityValidatorImpl.INSTANCE;
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String token = authService.getTokenFromRequest(req);
-        try (OutputStream responseOutputStream = resp.getOutputStream()) {
+        try (InputStream inputStream = req.getInputStream();
+             OutputStream outputStream = resp.getOutputStream()) {
             try {
                 if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
-                    Set<UserDto> allUsers = controller.getAllUsers();
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    mapper.writeValue(responseOutputStream, allUsers);
+                    Map<String, String> newUtilityName = jsonMapper.readValue(inputStream, HashMap.class);
+                    validator.isValid(newUtilityName.get(KEY));
+                    Map<Integer, String> dictionary = controller.addUtilityTypeToDictionary(newUtilityName.get(KEY));
+                    resp.setStatus(HttpServletResponse.SC_CREATED);
+                    jsonMapper.writeValue(outputStream, dictionary);
                 } else {
                     throw new AuthenticationFailedException();
                 }
             } catch (AuthenticationFailedException e) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                mapper.writeValue(responseOutputStream, e.getMessage());
+                jsonMapper.writeValue(outputStream, e.getMessage());
             } catch (Exception e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                mapper.writeValue(responseOutputStream, e.getMessage());
+                jsonMapper.writeValue(outputStream, e.getMessage());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e.getMessage());
         }
     }

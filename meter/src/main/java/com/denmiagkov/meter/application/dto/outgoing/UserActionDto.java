@@ -14,19 +14,19 @@ public class UserActionDto{
     /**
      * Уникальный идентификатор действия
      */
-     int id;
+    private int id;
     /**
      * Идентификатор пользователя, совершившего действие
      */
-     final int userId;
+    private final int userId;
     /**
      * Дата и время совершения действия
      */
-     final LocalDateTime dateTime;
+    private final LocalDateTime dateTime;
     /**
      * Тип действия
      */
-     final ActionType action;
+    private final ActionType action;
 
     public UserActionDto(int id, int userId, LocalDateTime dateTime, ActionType action) {
         this.id = id;

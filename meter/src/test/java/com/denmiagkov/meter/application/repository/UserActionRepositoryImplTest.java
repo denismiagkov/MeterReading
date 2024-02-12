@@ -9,6 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,26 +44,24 @@ class UserActionRepositoryImplTest {
         connection.close();
     }
 
-//    @Test
-//    @DisplayName("Returns true if given activity is added to database")
-//    void addActivity() {
-//        UserAction userAction = UserAction.builder()
-//                .userId(1)
-//                .dateTime(LocalDateTime.of(2024, 2, 4, 15, 48))
-//                .action(ActionType.REVIEW_READINGS_FOR_MONTH)
-//                .build();
-//
-//        boolean result = activityRepository.addActivity(userAction);
-//        List<UserAction> activities = activityRepository.getActivitiesList();
-//        UserAction testUserAction = activities.get(activities.size() - 1);
-//
-//        assertAll(
-//                () -> assertThat(result).isTrue(),
-//                () -> assertThat(testUserAction.getUserId()).isEqualTo(userAction.getUserId()),
-//                () -> assertThat(testUserAction.getDateTime()).isEqualTo(userAction.getDateTime()),
-//                () -> assertThat(testUserAction.getAction()).isEqualTo(userAction.getAction())
-//        );
-//    }
+    @Test
+    @DisplayName("Returns true if given activity is added to database")
+    void addActivity() {
+        UserAction userAction = new UserAction(35, 1,
+                LocalDateTime.of(2024, 2, 4, 15, 48),
+        ActionType.REVIEW_READINGS_FOR_MONTH);
+
+        boolean result = activityRepository.addActivity(userAction);
+        List<UserAction> activities = activityRepository.getActivitiesList();
+        UserAction testUserAction = activities.get(activities.size() - 1);
+
+        assertAll(
+                () -> assertThat(result).isTrue(),
+                () -> assertThat(testUserAction.getUserId()).isEqualTo(userAction.getUserId()),
+                () -> assertThat(testUserAction.getDateTime()).isEqualTo(userAction.getDateTime()),
+                () -> assertThat(testUserAction.getAction()).isEqualTo(userAction.getAction())
+        );
+    }
 
     @Test
     @DisplayName("Returns activities list and verifies its elements")

@@ -1,10 +1,10 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.public_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.public_servlet;
 
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
-import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
+import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,7 +21,7 @@ import java.io.OutputStream;
 @Loggable
 @WebServlet("/api/registration")
 public class RegistrationServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(RegistrationServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(RegistrationServlet.class);
 
     private ObjectMapper jsonMapper;
     private transient IncomingDtoBuilder dtoBuilder;

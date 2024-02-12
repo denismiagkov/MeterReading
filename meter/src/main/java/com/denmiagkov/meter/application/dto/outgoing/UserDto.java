@@ -15,27 +15,27 @@ public class UserDto {
     /**
      * id пользователя
      */
-    int id;
+    private int id;
     /**
      * Имя пользователя
      */
-    String name;
+    private String name;
     /**
      * Телефон пользователя
      */
-    String phone;
+    private String phone;
     /**
      * Адрес пользователя
      */
-    String address;
+    private String address;
     /**
      * Роль пользователя
      */
-    UserRole role;
+    private UserRole role;
     /**
      * Логин пользователя
      */
-    String login;
+    private String login;
 
     public UserDto(int id, String name, String phone, String address, UserRole role, String login) {
         this.id = id;

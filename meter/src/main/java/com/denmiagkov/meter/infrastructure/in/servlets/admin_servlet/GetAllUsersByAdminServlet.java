@@ -1,6 +1,6 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.admin_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.admin_servlet;
 
-import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
@@ -16,16 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Set;
 
 @Loggable
-@WebServlet("/api/admin/readings")
-public class GetAllReadingsByAdminServlet extends HttpServlet {
-    public static final Logger log = LoggerFactory.getLogger(GetAllReadingsByAdminServlet.class);
+@WebServlet("/api/admin/users")
+public class GetAllUsersByAdminServlet extends HttpServlet {
+    public static final Logger log = LoggerFactory.getLogger(GetAllUsersByAdminServlet.class);
     ObjectMapper mapper;
     Controller controller;
     AuthService authService;
-    private static final int PAGE_SIZE = 50;
 
     @Override
     public void init() throws ServletException {
@@ -42,9 +41,9 @@ public class GetAllReadingsByAdminServlet extends HttpServlet {
         try (OutputStream responseOutputStream = resp.getOutputStream()) {
             try {
                 if (authService.validateAccessToken(token) && authService.isAdmin(token)) {
-                    List<List<MeterReadingDto>> allMeterReadings = controller.getAllReadingsList(PAGE_SIZE);
+                    Set<UserDto> allUsers = controller.getAllUsers();
                     resp.setStatus(HttpServletResponse.SC_OK);
-                    mapper.writeValue(responseOutputStream, allMeterReadings);
+                    mapper.writeValue(responseOutputStream, allUsers);
                 } else {
                     throw new AuthenticationFailedException();
                 }

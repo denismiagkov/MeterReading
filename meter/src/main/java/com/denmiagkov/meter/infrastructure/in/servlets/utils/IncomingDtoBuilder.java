@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.utils;
+package com.denmiagkov.meter.infrastructure.in.servlets.utils;
 
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;

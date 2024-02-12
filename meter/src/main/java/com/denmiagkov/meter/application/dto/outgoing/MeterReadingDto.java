@@ -11,19 +11,19 @@ public class MeterReadingDto {
     /**
      * Идентификатор пользователя
      */
-      int userId;
+    private int userId;
     /**
      * Дата и время подачи показания
      */
-     LocalDateTime date;
+    private LocalDateTime date;
     /**
      * Идентификатор типа услуг
      */
-     int utilityId;
+    private int utilityId;
     /**
      * Значение счетчика
      */
-     double value;
+    private double value;
 
     public MeterReadingDto() {
     }

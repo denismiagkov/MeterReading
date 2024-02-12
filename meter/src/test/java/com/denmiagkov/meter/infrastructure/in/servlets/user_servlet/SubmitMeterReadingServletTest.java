@@ -1,9 +1,8 @@
-package com.denmiagkov.meter.infrastructure.in.servlet.public_servlet;
+package com.denmiagkov.meter.infrastructure.in.servlets.user_servlet;
 
-import com.denmiagkov.meter.application.dto.outgoing.UserDto;
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
 import com.denmiagkov.meter.infrastructure.in.controller.Controller;
-import com.denmiagkov.meter.infrastructure.in.servlet.utils.IncomingDtoBuilder;
+import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.denmiagkov.meter.infrastructure.in.servlets.utils.IncomingDtoBuilder;
 import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputNameException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -23,22 +22,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RegistrationServletTest {
-
+class SubmitMeterReadingServletTest {
     @Mock
     Logger log;
     @Mock
     ObjectMapper jsonMapper;
     @Mock
+    AuthService authService;
+    @Mock
     IncomingDtoBuilder dtoBuilder;
     @Mock
     Controller controller;
     @InjectMocks
-    RegistrationServlet servlet;
+    GetAllActualReadingsByUserServlet servlet;
     HttpServletRequest request;
     HttpServletResponse response;
     InputStream inputStream;
@@ -54,27 +53,33 @@ class RegistrationServletTest {
     }
 
     @Test
+    @DisplayName("Method invokes appropriate method on dependent object authService")
+    void doPost_AuthServiceReturnsToken() throws IOException, ServletException {
+        servlet.doPost(request, response);
+
+        verify(authService, times(1)).getTokenFromRequest(request);
+    }
+
+    @Test
     @DisplayName("Method invokes appropriate methods on dependent objects (dtoBuilder, controller, jsonMapper)" +
                  "and successfully ends")
     void doPost_RightWork() throws IOException, ServletException {
-        UserRegisterDto requestDto = mock(UserRegisterDto.class);
-        when(dtoBuilder.createUserRegisterDto(inputStream)).
-                thenReturn(requestDto);
-        UserDto userDto = mock(UserDto.class);
-        when(controller.registerUser(requestDto))
-                .thenReturn(userDto);
+        String token = "dummy";
+        when(authService.getTokenFromRequest(request)).thenReturn(token);
+        when(authService.validateAccessToken(token)).thenReturn(true);
 
         servlet.doPost(request, response);
 
-        verify(dtoBuilder, times(1)).createUserRegisterDto(inputStream);
-        verify(controller, times(1)).registerUser(requestDto);
-        verify(jsonMapper, times(1)).writeValue(outputStream, userDto);
-        verify(response).setStatus(HttpServletResponse.SC_CREATED);
+        verify(authService, times(1)).getTokenFromRequest(request);
+        verify(authService, times(1)).validateAccessToken(token);
     }
 
     @Test
     @DisplayName("Method handles IncorrectInputNameException and set response status 400")
     void doPost_ihui() throws IOException, ServletException {
+        String token = "dummy";
+        when(authService.getTokenFromRequest(request)).thenReturn(token);
+        when(authService.validateAccessToken(token)).thenReturn(true);
         when(dtoBuilder.createUserRegisterDto(inputStream))
                 .thenThrow(IncorrectInputNameException.class);
 

@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
         User user = USER_INCOMING_DTO_MAPPER.incomingUserDtoToUser(userIncomingDto);
         setUserRole(userIncomingDto, user);
         UserDto userOutgoingDto = addNewUserToDatabase(user);
+        userIncomingDto.setUserId(user.getId());
         activityService.registerUserAction(userIncomingDto);
         return userOutgoingDto;
     }
