@@ -1,9 +1,14 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Входящее ДТО для просмотра текущих показаний счетчиков
  */
+@Getter
+@Setter
 public class MeterReadingReviewActualDto extends IncomingDto {
     /**
      * id пользователя
@@ -17,9 +22,7 @@ public class MeterReadingReviewActualDto extends IncomingDto {
      * тип действия пользователя
      */
     private ActionType action;
-    /**
-     * Конструктор, геттеры и сеттеры
-     */
+
     public MeterReadingReviewActualDto() {
         this.action = ActionType.REVIEW_ACTUAL_READING;
     }
@@ -29,24 +32,8 @@ public class MeterReadingReviewActualDto extends IncomingDto {
         return action;
     }
 
-    public void setAction(ActionType action) {
-        this.action = action;
-    }
-
     @Override
     public Integer getUserId() {
         return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getUtilityId() {
-        return utilityId;
-    }
-
-    public void setUtilityId(int utilityId) {
-        this.utilityId = utilityId;
     }
 }

@@ -4,6 +4,7 @@ import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.utils.ConnectionManager;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,6 +16,7 @@ import java.util.List;
  * Класс реализовывает логику взаимодействия с базой данных по поводу действий пользователей в приложении
  */
 @Repository
+@NoArgsConstructor
 public class ActivityRepositoryImpl implements ActivityRepository {
     /**
      * SQL-запрос на добавление одного пользовательского действия в базу данных

@@ -8,6 +8,7 @@ import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.Set;
 /**
  * Контроллер
  */
+@Loggable
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
@@ -74,7 +76,7 @@ public class AdminController {
     /**
      * Метод получения всех показаний всех пользователей с учетом параметров пагинации
      *
-     * @param pageSize Параметр пагинации (размер страницы)
+     * @param paginationParam Параметры пагинации
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
     @PostMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)

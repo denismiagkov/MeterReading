@@ -1,12 +1,17 @@
 package com.denmiagkov.meter.application.dto.outgoing;
 
-import com.denmiagkov.meter.domain.ActionType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 /**
  * Исходящее ДТО для маппинга объекта показания счетчика
  */
+@NoArgsConstructor
+@Getter
+@Setter
 public class MeterReadingDto {
     /**
      * Идентификатор пользователя
@@ -24,39 +29,4 @@ public class MeterReadingDto {
      * Значение счетчика
      */
     private double value;
-
-    public MeterReadingDto() {
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public int getUtilityId() {
-        return utilityId;
-    }
-
-    public void setUtilityId(int utilityId) {
-        this.utilityId = utilityId;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
 }

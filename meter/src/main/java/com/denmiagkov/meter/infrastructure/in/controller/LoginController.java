@@ -3,6 +3,7 @@ package com.denmiagkov.meter.infrastructure.in.controller;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.service.*;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Контроллер регистрации и входа в приложение
  */
+@Loggable
 @RestController
 @RequestMapping("/api/v1")
 public class LoginController {

@@ -3,6 +3,7 @@ package com.denmiagkov.meter.infrastructure.in.controller;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
+import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Контроллер
  */
+@Loggable
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

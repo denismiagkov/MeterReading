@@ -2,10 +2,14 @@ package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Входящее ДТО для регистрации пользователя
  */
+@Getter
+@Setter
 public class UserRegisterDto extends IncomingDto {
     private int userId;
     private ActionType action;
@@ -32,50 +36,13 @@ public class UserRegisterDto extends IncomingDto {
         this.adminPassword = adminPassword;
     }
 
+    @Override
     public ActionType getAction() {
         return action;
     }
 
-    public void setAction(ActionType action) {
-        this.action = action;
-    }
-
+    @Override
     public Integer getUserId() {
         return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getAdminPassword() {
-        return adminPassword;
-    }
-
-    public void setRole(UserRole userRole) {
     }
 }

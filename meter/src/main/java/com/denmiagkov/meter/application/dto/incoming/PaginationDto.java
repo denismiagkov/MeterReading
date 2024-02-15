@@ -1,5 +1,10 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PaginationDto {
 
     /**
@@ -11,21 +16,5 @@ public class PaginationDto {
      * Параметр пагинации: номер страницы
      */
     private int page;
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPage() {
-        return page * pageSize;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
 
 }

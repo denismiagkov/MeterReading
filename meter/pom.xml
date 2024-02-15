@@ -20,7 +20,6 @@
         <objenesis.version>3.3</objenesis.version>
         <testcontainers.postgresql.version>1.19.4</testcontainers.postgresql.version>
         <junit.jupiter.testcontainers.version>1.19.4</junit.jupiter.testcontainers.version>
-        <commons.collections4.version>4.4</commons.collections4.version>
         <postgresql.version>42.7.1</postgresql.version>
         <liquibase.core.version>4.25.1</liquibase.core.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
@@ -43,7 +42,6 @@
         <war.plugin.version>3.3.1</war.plugin.version>
         <javax.annotation.api>1.3.2</javax.annotation.api>
     </properties>
-
 
     <dependencies>
         <dependency>
@@ -103,11 +101,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.testcontainers.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons.collections4.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -192,10 +185,6 @@
             <artifactId>javax.annotation-api</artifactId>
             <version>${javax.annotation.api}</version>
         </dependency>
-
-
-
-
     </dependencies>
 
     <build>
@@ -239,12 +228,46 @@
                     <verbose>true</verbose>
                     <Xlint>ignore</Xlint>
                     <encoding>UTF-8</encoding>
+                    <!-- IMPORTANT-->
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                    <forceAjcCompile>true</forceAjcCompile>
+                    <sources/>
+                    <!-- IMPORTANT-->
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjrt</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>default-compile</id>
+                        <phase>process-classes</phase>
                         <goals>
+                            <!-- use this goal to weave all your main classes -->
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <weaveDirectories>
+                                <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+                            </weaveDirectories>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <!-- use this goal to weave all your test classes -->
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <weaveDirectories>
+                                <weaveDirectory>${project.build.directory}/test-classes</weaveDirectory>
+                            </weaveDirectories>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

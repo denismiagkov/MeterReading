@@ -1,10 +1,14 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Класс входящего ДТО для просмотра пользователем истории подачи показаний
  */
+@Getter
+@Setter
 public class MeterReadingReviewHistoryDto extends IncomingDto {
     /**
      * id пользователя
@@ -25,42 +29,17 @@ public class MeterReadingReviewHistoryDto extends IncomingDto {
      */
     private int page;
 
-    /**
-     * Конструктор, геттерф и сеттеры
-     */
     public MeterReadingReviewHistoryDto() {
         this.action = ActionType.REVIEW_READINGS_HISTORY;
     }
 
+    @Override
     public Integer getUserId() {
         return userId;
     }
 
+    @Override
     public ActionType getAction() {
         return action;
-    }
-
-    public void setAction(ActionType action) {
-        this.action = action;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPage() {
-        return page * pageSize;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
     }
 }
