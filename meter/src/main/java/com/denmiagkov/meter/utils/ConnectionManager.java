@@ -1,18 +1,31 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.application.exception.DatabaseConnectionNotEstablishedException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+
 public final class ConnectionManager {
     private static final String URL_KEY = "datasource.url";
     private static final String USERNAME_KEY = "datasource.username";
     private static final String PASSWORD_KEY = "datasource.password";
+
+    private ConnectionManager() {
+    }
+
+    static {
+        loadDriver();
+    }
+
+    private static void loadDriver() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Connection open() {
         try {
@@ -22,6 +35,7 @@ public final class ConnectionManager {
                     PropertiesUtil.get(PASSWORD_KEY)
             );
         } catch (SQLException e) {
+            System.out.println("POINT 5: " + e.getMessage());
             throw new DatabaseConnectionNotEstablishedException(e.getMessage());
         }
     }

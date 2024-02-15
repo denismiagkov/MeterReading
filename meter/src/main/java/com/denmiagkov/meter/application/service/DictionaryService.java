@@ -12,7 +12,7 @@ public interface DictionaryService {
      * @param utilityName новый тип подаваемых показаний
      * @return boolean возвращает true в случае успешного добавления записи в справочник
      */
-    boolean addUtilityTypeToDictionary(String utilityName);
+    Map<Integer, String> addUtilityTypeToDictionary(String utilityName);
     /**
      * Метод возвращает справочник типов услуг (типов показаний счетчиков)
      *

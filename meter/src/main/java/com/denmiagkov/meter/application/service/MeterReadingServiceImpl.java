@@ -1,19 +1,26 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
+import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.repository.*;
+import com.denmiagkov.meter.aspect.annotations.Audit;
 import com.denmiagkov.meter.domain.*;
-import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static com.denmiagkov.meter.application.mapper.MeterReadingMapper.METER_READING_OUTGOING_DTO_MAPPER;
 
 /**
  * Сервис подачи показаний
  */
-@AllArgsConstructor
+@Audit
 public class MeterReadingServiceImpl implements MeterReadingService {
+
+    public static final MeterReadingServiceImpl INSTANCE = new MeterReadingServiceImpl();
     /**
      * Репозиторий данных о показаниях счетчика
      */
@@ -23,67 +30,71 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      */
     private final UserActivityService activityService;
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void submitNewReading(User user, MeterReading reading) {
-        meterReadingRepository.addNewMeterReading(reading);
-        Activity activity = new Activity(user, ActivityType.SUBMIT_NEW_READING);
-        activityService.addActivity(activity);
+    public MeterReadingServiceImpl() {
+        this.meterReadingRepository = MeterReadingRepositoryImpl.INSTANCE;
+        this.activityService = UserActivityServiceImpl.INSTANCE;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<List<MeterReading>> getAllReadingsList(int pageSize) {
+    public MeterReadingDto submitNewMeterReading(MeterReadingSubmitDto meterReadingDto) {
+        MeterReading meterReading = meterReadingRepository.addNewMeterReading(meterReadingDto);
+        return METER_READING_OUTGOING_DTO_MAPPER.meterReadingToMeterReadingDto(meterReading);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<List<MeterReadingDto>> getAllReadingsList(int pageSize) {
         List<MeterReading> meterReadingList = meterReadingRepository.getAllMeterReadings();
-        List<List<MeterReading>> meterReadingPages = ListUtils.partition(meterReadingList, pageSize);
-        return meterReadingPages;
+        List<MeterReadingDto> meterReadingDtoList =
+                METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(meterReadingList);
+        return ListUtils.partition(meterReadingDtoList, pageSize);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public MeterReading getActualMeterReadingOnExactUtilityByUser(User user, int utilityId) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_ACTUAL_READING);
-        activityService.addActivity(activity);
-        return meterReadingRepository.getActualMeterReadingOnExactUtility(user, utilityId);
+    public MeterReadingDto getActualMeterReadingOnExactUtilityByUser(MeterReadingReviewActualDto requestDto) {
+        MeterReading newMeterReading = meterReadingRepository.getActualMeterReadingOnExactUtility(
+                requestDto.getUserId(), requestDto.getUtilityId());
+        return METER_READING_OUTGOING_DTO_MAPPER.meterReadingToMeterReadingDto(newMeterReading);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(User user) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_ACTUAL_READING);
-        activityService.addActivity(activity);
-        return meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(user);
+    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(MeterReadingReviewActualDto requestDto) {
+        List<MeterReading> meterReadings = meterReadingRepository.getActualMeterReadingsOnAllUtilitiesByUser(requestDto.getUserId());
+        return METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(meterReadings);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<List<MeterReading>> getMeterReadingsHistoryByUser(User user, int pageSize) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_CONVEYING_READINGS_HISTORY);
-        activityService.addActivity(activity);
-        List<MeterReading> meterReadingHistoryByList = meterReadingRepository.getMeterReadingsHistory(user);
-        List<List<MeterReading>> meterReadingHistoryByPages =
-                ListUtils.partition(meterReadingHistoryByList, pageSize);
-        return meterReadingHistoryByPages;
+    public List<List<MeterReadingDto>> getMeterReadingsHistoryByUser(MeterReadingReviewHistoryDto requestDto, int pageSize) {
+        List<MeterReading> meterReadingHistory = meterReadingRepository.getMeterReadingsHistory(requestDto.getUserId());
+        List<MeterReadingDto> meterReadingHistoryDto =
+                METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(meterReadingHistory);
+        return ListUtils.partition(meterReadingHistoryDto, pageSize);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> getReadingsForMonthByUser(User user, int year, int month) {
-        Activity activity = new Activity(user, ActivityType.REVIEW_READINGS_FOR_MONTH);
-        activityService.addActivity(activity);
-        return meterReadingRepository.getMeterReadingsForExactMonthByUser(user, year, month);
+    public List<MeterReadingDto> getReadingsForMonthByUser(MeterReadingReviewForMonthDto requestDto) {
+        List<MeterReading> readingsForMonth = meterReadingRepository.getMeterReadingsForExactMonthByUser(
+                requestDto.getUserId(),
+                requestDto.getYear(),
+                requestDto.getMonth()
+        );
+        return METER_READING_OUTGOING_DTO_MAPPER.listMeterReadingToListMeterReadingDto(readingsForMonth);
     }
 }

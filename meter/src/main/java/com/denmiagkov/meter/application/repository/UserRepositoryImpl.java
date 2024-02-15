@@ -1,26 +1,27 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.domain.UserRole;
+import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * Класс, отвечающий за реализацию логики взаимодействия с базой данных по поводу сведений о пользователях
  */
-@Getter
-@NoArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
+
+    public static final UserRepositoryImpl INSTANCE = new UserRepositoryImpl();
 
     /**
      * SQL-запрос на добавление пользователя в таблицу
-     * */
+     */
     private static final String ADD_USER = """
             INSERT INTO meter_service.users(name, phone, address, role, login, password)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -28,34 +29,36 @@ public class UserRepositoryImpl implements UserRepository {
 
     /**
      * SQL-запрос на проверку, содержится ли в таблице запись о соответствующем пользователе
-     * */
+     */
     private static final String IS_EXIST_USER = """
-            SELECT * FROM meter_service.users
+            SELECT id, name, phone, address, role, login, password
+            FROM meter_service.users
             WHERE name = ? AND phone = ?;
             """;
 
     /**
      * SQL-запрос на проверку, содержится ли в таблице запись о пользователе с соответствующим логином
-     * */
+     */
     private static final String IS_EXIST_LOGIN = """
-            SELECT * FROM meter_service.users
+            SELECT id, name, phone, address, role, login, password
+            FROM meter_service.users
             WHERE login = ?;
             """;
 
     /**
      * SQL-запрос на получение записи о пользователе, владеющем указанными логином и паролем
-     * */
-    private static final String AUTHENTICATE_USER = """
-            SELECT * 
+     */
+    private static final String GET_USER_BY_LOGIN = """
+            SELECT id, name, phone, address, role, login, password
             FROM meter_service.users
-            WHERE login = ? AND password = ?;
+            WHERE login = ?;
             """;
 
     /**
      * SQL-запрос на выборку из таблицы всех записей о пользователях
-     * */
+     */
     private static final String GET_ALL_USERS = """
-            SELECT *
+            SELECT id, name, phone, address, role, login, password
             FROM meter_service.users;
             """;
 
@@ -120,23 +123,20 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public User authenticateUser(String login, String password) {
+    public Optional<User> findUserByLogin(String login) {
+        User user = null;
         try (Connection connection = ConnectionManager.open();
-             PreparedStatement preparedStatementGetUsers = connection.prepareStatement(GET_ALL_USERS);
-             PreparedStatement preparedStatementFindUser = connection.prepareStatement(AUTHENTICATE_USER)) {
-            ResultSet queryResult = preparedStatementGetUsers.executeQuery();
-            while (queryResult.next()) {
-                String queryLogin = queryResult.getString("login");
-                String queryPassword = queryResult.getString("password");
-                if (login.equals(queryLogin) &&
-                    password.equals(queryPassword)) {
-                    return getUser(queryResult);
-                }
+             PreparedStatement statementFindUserByLoginAndPassword =
+                     connection.prepareStatement(GET_USER_BY_LOGIN)) {
+            statementFindUserByLoginAndPassword.setString(1, login);
+            ResultSet queryResult = statementFindUserByLoginAndPassword.executeQuery();
+            if (queryResult.next()) {
+                user = getUser(queryResult);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        throw new AuthenticationFailedException();
+        return Optional.ofNullable(user);
     }
 
     /**
@@ -165,15 +165,15 @@ public class UserRepositoryImpl implements UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */
-    private User getUser(ResultSet queryResult) throws SQLException {
-        return User.builder()
-                .id(queryResult.getInt("id"))
-                .name(queryResult.getString("name"))
-                .phone(queryResult.getString("phone"))
-                .address(queryResult.getString("address"))
-                .role(UserRole.valueOf(queryResult.getString("role")))
-                .login(queryResult.getString("login"))
-                .password(queryResult.getString("password"))
-                .build();
+    @Override
+    public User getUser(ResultSet queryResult) throws SQLException {
+        int id = queryResult.getInt("id");
+        String name = queryResult.getString("name");
+        String phone = queryResult.getString("phone");
+        String address = queryResult.getString("address");
+        UserRole role = UserRole.valueOf(queryResult.getString("role"));
+        String login = queryResult.getString("login");
+        String password = queryResult.getString("password");
+        return new User(id, name, phone, address, role, login, password);
     }
 }

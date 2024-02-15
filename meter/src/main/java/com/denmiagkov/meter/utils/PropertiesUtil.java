@@ -1,16 +1,15 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.application.exception.PropertiesFileNotFoundException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.denmiagkov.meter.utils.exception.PropertiesFileNotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PropertiesUtil {
     private static final Properties PROPERTIES = new Properties();
+    private PropertiesUtil(){
+    }
 
     static {
         loadProperties();

@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.domain.Activity;
+import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
+import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 
 import java.util.List;
 
@@ -12,15 +13,14 @@ public interface UserActivityService {
     /**
      * Метод добавляет действие пользователя в базу данных
      *
-     * @param activity действие пользователя в приложении
      * @return boolean true - в случае успешного добавления,в противном случае - false
      */
-    boolean addActivity(Activity activity);
+    void registerUserAction(IncomingDto incomingDto);
 
     /**
      * Метод возвращает список всех действий, совершенных пользователями в приложении
      *
      * @return List<Activity> Список всех действий пользователей в приложении
      */
-    List<Activity> getUserActivitiesList();
+    List<List<UserActionDto>> getUserActivitiesList(int pageSize);
 }

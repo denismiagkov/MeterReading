@@ -1,102 +1,93 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.exception.LoginAlreadyInUseException;
-import com.denmiagkov.meter.application.exception.UserAlreadyExistsException;
+import com.denmiagkov.meter.application.dto.outgoing.UserDto;
+import com.denmiagkov.meter.application.mapper.UserLoginMapper;
+import com.denmiagkov.meter.application.mapper.UserMapper;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.service.exception.AdminNotAuthorizedException;
 import com.denmiagkov.meter.application.repository.UserRepositoryImpl;
+import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.application.service.exception.LoginAlreadyInUseException;
+import com.denmiagkov.meter.application.service.exception.UserAlreadyExistsException;
+import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.*;
-import lombok.AllArgsConstructor;
 
 import java.util.Set;
+
+import static com.denmiagkov.meter.application.mapper.UserRegisterMapper.USER_INCOMING_DTO_MAPPER;
 
 /**
  * Класс реализует логику обработки данных о пользователях
  */
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    public static final UserServiceImpl INSTANCE = new UserServiceImpl();
     /**
      * Репозиторий данных о пользователе
      */
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
     /**
-     * Сервис данных о действиях пользователя
+     * Сервис обработки пользовательских действий в приложении
      */
     private final UserActivityService activityService;
 
+    public UserServiceImpl() {
+        this.userRepository = UserRepositoryImpl.INSTANCE;
+        this.activityService = UserActivityServiceImpl.INSTANCE;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public User registerUser(String inputName, String inputPhone, String inputAddress,
-                             String inputLogin, String inputPassword) {
-        User user = User.builder()
-                .name(inputName)
-                .phone(inputPhone)
-                .address(inputAddress)
-                .role(UserRole.USER)
-                .login(inputLogin)
-                .password(inputPassword)
-                .build();
+    public UserDto registerUser(UserRegisterDto userIncomingDto) {
+        User user = USER_INCOMING_DTO_MAPPER.incomingUserDtoToUser(userIncomingDto);
+        setUserRole(userIncomingDto, user);
+        UserDto userOutgoingDto = addNewUserToDatabase(user);
+        userIncomingDto.setUserId(user.getId());
+        activityService.registerUserAction(userIncomingDto);
+        return userOutgoingDto;
+    }
+
+    private UserDto addNewUserToDatabase(User user) {
         if (!userRepository.isExistUser(user)) {
-            if (!userRepository.isExistLogin(inputLogin)) {
+            if (!userRepository.isExistLogin(user.getLogin())) {
                 int userId = userRepository.addUser(user);
                 user.setId(userId);
-                Activity activity = new Activity(user, ActivityType.REGISTRATION);
-                activityService.addActivity(activity);
-                return user;
+                return UserMapper.USER_OUTGOING_DTO_MAPPER.userToUserDto(user);
             } else {
-                throw new LoginAlreadyInUseException(inputLogin);
+                throw new LoginAlreadyInUseException(user.getLogin());
             }
         } else {
             throw new UserAlreadyExistsException(user);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public User registerUser(String name, String phone, String address, String login, String password,
-                             String inputIsAdmin, String adminPassword) {
-        User user = new User(name, phone, address, login, password, inputIsAdmin, adminPassword);
-        if (!userRepository.isExistUser(user)) {
-            if (!userRepository.isExistLogin(login)) {
-                userRepository.addUser(user);
-                return user;
-            } else {
-                throw new LoginAlreadyInUseException(login);
-            }
-        } else {
-            throw new UserAlreadyExistsException(user);
+    private void setUserRole(UserRegisterDto userDto, User user) {
+        if (user.getRole() != null &&
+            user.getRole().equals(UserRole.ADMIN) &&
+            (userDto.getAdminPassword() == null ||
+             !userDto.getAdminPassword().equals(user.getAdminPassword()))) {
+            throw new AdminNotAuthorizedException();
+        } else if (user.getRole() == null) {
+            user.setRole(UserRole.USER);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public User authenticateUser(String login, String password) {
-        User user = userRepository.authenticateUser(login, password);
-        if (!user.getRole().equals(UserRole.ADMIN)) {
-            Activity activity = new Activity(user, ActivityType.AUTHENTICATION);
-            activityService.addActivity(activity);
-        }
-        return user;
+    public UserLoginDto getPasswordByLogin(String login) {
+        User user = userRepository.findUserByLogin(login)
+                .orElseThrow(AuthenticationFailedException::new);
+        return UserLoginMapper.USER_LOGIN_DTO_MAPPER.userToUserLoginDto(user);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Set<User> getAllUsers() {
-        return userRepository.getAllUsers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recordExit(User user) {
-        Activity activity = new Activity(user, ActivityType.EXIT);
-        activityService.addActivity(activity);
+    public Set<UserDto> getAllUsers() {
+        Set<User> users = userRepository.getAllUsers();
+        return UserMapper.USER_OUTGOING_DTO_MAPPER.usersToUserDtos(users);
     }
 }
