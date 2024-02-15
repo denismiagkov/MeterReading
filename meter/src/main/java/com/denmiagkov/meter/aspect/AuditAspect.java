@@ -11,8 +11,11 @@ import org.slf4j.LoggerFactory;
 public class AuditAspect {
     private static final Logger log = LoggerFactory.getLogger(AuditAspect.class);
     private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
-    private  UserActivityService activityService;
+    private UserActivityService activityService;
 
+    void setActivityService(UserActivityService activityService) {
+        this.activityService = activityService;
+    }
 
     @Pointcut("within(@com.denmiagkov.meter.aspect.annotations.Audit *) && execution(* * (..))")
     private void annotatedByAudit() {

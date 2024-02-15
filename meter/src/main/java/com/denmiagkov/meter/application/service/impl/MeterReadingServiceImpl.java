@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Сервис подачи показаний
  */
+@Audit
 @Service
 public class MeterReadingServiceImpl implements MeterReadingService {
     /**
