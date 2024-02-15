@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface UserLoginMapper {
-    UserLoginMapper USER_LOGIN_DTO_MAPPER = Mappers.getMapper(UserLoginMapper.class);
+    UserLoginMapper INSTANCE = Mappers.getMapper(UserLoginMapper.class);
 
     @Mapping(source = "id", target = "userId")
     @Mapping(source = "role", target = "role")

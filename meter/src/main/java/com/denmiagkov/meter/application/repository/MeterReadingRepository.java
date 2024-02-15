@@ -23,7 +23,7 @@ public interface MeterReadingRepository {
      * @param user Пользователь
      * @return List<MeterReading> Список актуальных показаний пользователя
      */
-    List<MeterReading> getActualMeterReadingsOnAllUtilitiesByUser(int userId);
+    List<MeterReading> findActualMeterReadingsOnAllUtilitiesByUser(int userId);
 
     /**
      * Метод просмотра актуального (последнего переданного) показания счетчика конкретного пользователя
@@ -33,14 +33,14 @@ public interface MeterReadingRepository {
      * @param utilityId Тип показаний (услуг)
      * @return MeterReading последние переданные показания счетчиков
      */
-    MeterReading getActualMeterReadingOnExactUtility(int userId, int utilityId);
+    MeterReading findActualMeterReadingOnExactUtility(int userId, int utilityId);
 
     /**
      * Метод выборки всех показаний счетчиков, переданных всеми пользоваетелями
      *
      * @return List<MeterReading> Список всех переданных показаний
      */
-    List<MeterReading> getAllMeterReadings();
+    List<MeterReading> findAllMeterReadings(int pageSize, int page);
 
     /**
      * Метод получения истории передачи показаний конкретным пользователем
@@ -48,7 +48,7 @@ public interface MeterReadingRepository {
      * @param user Пользователь
      * @return List<MeterReading> Список показаний, переданных указанным пользователем
      */
-    List<MeterReading> getMeterReadingsHistory(int userId);
+    List<MeterReading> findMeterReadingsHistory(int userId, int pageSize, int page);
 
     /**
      * Метод получения всех показаний, переданных указанным пользователем за определенный месяц
@@ -58,5 +58,5 @@ public interface MeterReadingRepository {
      * @param month Месяц
      * @return List<MeterReading> Список показаний счетчиков пользователя за указанные год и месяц
      */
-    List<MeterReading> getMeterReadingsForExactMonthByUser(int userId, int year, int month);
+    List<MeterReading> findMeterReadingsForExactMonthByUser(int userId, int year, int month);
 }

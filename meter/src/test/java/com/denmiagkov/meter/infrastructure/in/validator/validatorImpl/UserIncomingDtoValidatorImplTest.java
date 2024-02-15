@@ -1,21 +1,18 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
-import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputLoginException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputNameException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPasswordException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPhoneNumberException;
-import org.junit.jupiter.api.BeforeEach;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputLoginException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputPasswordException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputPhoneNumberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserIncomingDtoValidatorImplTest {
-    UserIncomingDtoValidatorImpl validator = UserIncomingDtoValidatorImpl.INSTANCE;
+    UserIncomingDtoValidatorImpl validator = new UserIncomingDtoValidatorImpl();
 
     @Test
     @DisplayName("Throws exception when name contains not only of letters")

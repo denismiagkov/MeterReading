@@ -5,30 +5,30 @@ import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
-import com.denmiagkov.meter.application.service.DictionaryServiceImpl;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.application.service.MeterReadingServiceImpl;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.NewMeterValueIsLessThenPreviousException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.NewMeterValueIsLessThenPreviousException;
 import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.InvalidDateException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.SubmitReadingOnTheSameMonthException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.UtilityTypeNotFoundException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitReadingOnTheSameMonthException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 /**
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
+@Component
 public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSubmitDto> {
-
-    public static final MeterReadingDtoValidatorImpl INSTANCE = new MeterReadingDtoValidatorImpl();
 
     DictionaryService dictionaryService;
     MeterReadingService meterReadingService;
 
-    private MeterReadingDtoValidatorImpl() {
-        dictionaryService = DictionaryServiceImpl.INSTANCE;
-        meterReadingService = MeterReadingServiceImpl.INSTANCE;
+    @Autowired
+    public MeterReadingDtoValidatorImpl(DictionaryService dictionaryService, MeterReadingService meterReadingService) {
+        this.dictionaryService = dictionaryService;
+        this.meterReadingService = meterReadingService;
     }
 
     /**

@@ -1,12 +1,14 @@
 package com.denmiagkov.meter.utils;
 
 import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
+@Component
 public final class ConnectionManager {
     private static final String URL_KEY = "datasource.url";
     private static final String USERNAME_KEY = "datasource.username";

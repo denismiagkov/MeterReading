@@ -1,8 +1,10 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
+import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
+import com.denmiagkov.meter.application.service.impl.UserActivityServiceImpl;
 import com.denmiagkov.meter.domain.UserAction;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.denmiagkov.meter.application.mapper.UserActionMapper.USER_ACTION_DTO_MAPPER;
+import static com.denmiagkov.meter.application.mapper.UserActionMapper.INSTANCE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -40,22 +42,22 @@ class UserActionServiceImplTest {
         activityService.registerUserAction(dto);
 
         verify(activityRepository, times(1))
-                .addActivity(any(UserAction.class));
+                .addUserAction(any(UserAction.class));
     }
 
     @Test
     @DisplayName("Dependent object returns appropriate list")
     void getUserActivitiesList() {
         List<UserAction> activitiesDummy = mock(ArrayList.class);
-        when(activityRepository.getActivitiesList()).thenReturn(activitiesDummy);
+        when(activityRepository.findAllUsersActions(anyInt(), anyInt())).thenReturn(activitiesDummy);
         List<UserActionDto> userActionDtos = mock(ArrayList.class);
-        when(USER_ACTION_DTO_MAPPER.userActionsToUserActionDtos(activitiesDummy))
+        when(INSTANCE.userActionsToUserActionDtos(activitiesDummy))
                 .thenReturn(userActionDtos);
         List<List<UserActionDto>> userActionsPaginated = mock((ArrayList.class));
         when(ListUtils.partition(userActionDtos, 2))
                 .thenReturn(userActionsPaginated);
 
-        List<List<UserActionDto>> activities = activityService.getUserActivitiesList(20);
+        List<UserActionDto> activities = activityService.getUserActivitiesList(new PaginationDto());
 
         assertThat(activities).isEqualTo(userActionsPaginated);
     }

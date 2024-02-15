@@ -8,11 +8,14 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+@Component
 public final class LiquibaseManager {
     private static final String SERVICE_SCHEMA_NAME_KEY = "liquibase.service_schema_name";
     private static final String DEFAULT_SCHEMA_NAME_KEY = "liquibase.default_schema_name";
@@ -33,6 +36,7 @@ public final class LiquibaseManager {
         }
     }
 
+    @PostConstruct
     public static Liquibase startLiquibase() {
         try (Connection connection = ConnectionManager.open()) {
             Database database = DatabaseFactory.getInstance()

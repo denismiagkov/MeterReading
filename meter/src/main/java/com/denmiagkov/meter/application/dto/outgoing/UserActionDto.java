@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * Исходящее ДТО действия пользователя в приложении
  * */
 public class UserActionDto{
+
     /**
      * Уникальный идентификатор действия
      */

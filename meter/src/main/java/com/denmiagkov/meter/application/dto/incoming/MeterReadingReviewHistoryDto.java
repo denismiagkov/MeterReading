@@ -16,6 +16,16 @@ public class MeterReadingReviewHistoryDto extends IncomingDto {
     private ActionType action;
 
     /**
+     * Параметр пагинации: размер страницы
+     */
+    private int pageSize;
+
+    /**
+     * Параметр пагинации: номер страницы
+     */
+    private int page;
+
+    /**
      * Конструктор, геттерф и сеттеры
      */
     public MeterReadingReviewHistoryDto() {
@@ -36,5 +46,21 @@ public class MeterReadingReviewHistoryDto extends IncomingDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPage() {
+        return page * pageSize;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 }

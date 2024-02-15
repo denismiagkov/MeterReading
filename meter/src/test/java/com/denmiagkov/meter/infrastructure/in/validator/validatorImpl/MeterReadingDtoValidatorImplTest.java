@@ -5,8 +5,8 @@ import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthD
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.InvalidDateException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.UtilityTypeNotFoundException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

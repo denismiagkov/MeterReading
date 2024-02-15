@@ -2,19 +2,17 @@ package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
 import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputLoginException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputNameException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPasswordException;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.IncorrectInputPhoneNumberException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputLoginException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputPasswordException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputPhoneNumberException;
+import org.springframework.stereotype.Component;
 
 /**
  * Класс, валидирующий сведения о новом пользователе при его регистрации в приложении
  */
+@Component
 public class UserIncomingDtoValidatorImpl implements DtoValidator<UserRegisterDto> {
-    public static final UserIncomingDtoValidatorImpl INSTANCE = new UserIncomingDtoValidatorImpl();
-
-    private UserIncomingDtoValidatorImpl() {
-    }
 
     private boolean isValidName(String name) {
         return name != null &&

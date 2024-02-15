@@ -6,11 +6,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Класс-аспект, реализующий сквозное логирование работы методов
  */
 @Aspect
+@Component
 public class LoggableAspect {
 
     private static final Logger log = LoggerFactory.getLogger(LoggableAspect.class);
@@ -24,9 +26,9 @@ public class LoggableAspect {
         log.info("Calling method " + proceedingJoinPoint.getSignature());
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
-        Long end = System.currentTimeMillis() - start;
+        Long executionTime = System.currentTimeMillis() - start;
         log.info("Execution of method %s finished. Execution time is %d ms."
-                .formatted(proceedingJoinPoint.getSignature(), end));
+                .formatted(proceedingJoinPoint.getSignature(), executionTime));
         return result;
     }
 }

@@ -15,12 +15,12 @@ public interface ActivityRepository {
      * @param userAction Новое действие пользователя
      * @return boolean true - в случае успешного добавления,в противном случае - false
      */
-    boolean addActivity(UserAction userAction);
+    boolean addUserAction(UserAction userAction);
 
     /**
      * Метод получения всех записей о действиях, совершенных пользователями в системе
      *
      * @return List<Activity> Список действий пользователей
      */
-    List<UserAction> getActivitiesList();
+    List<UserAction> findAllUsersActions(int pageSize, int page);
 }

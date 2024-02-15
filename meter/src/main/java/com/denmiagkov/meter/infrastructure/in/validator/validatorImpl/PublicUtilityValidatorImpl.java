@@ -1,21 +1,21 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
 import com.denmiagkov.meter.application.service.DictionaryService;
-import com.denmiagkov.meter.application.service.DictionaryServiceImpl;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.PublicUtilityTypeAlreadyExistsException;
-import com.denmiagkov.meter.infrastructure.in.controller.Controller;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
 import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Класс, валидирующий данные о новом типе услуг (показаний счетчиков), добавляемых  в справочник
  */
+@Component
 public class PublicUtilityValidatorImpl implements DtoValidator<String> {
+    private final DictionaryService dictionaryService;
 
-    public static final PublicUtilityValidatorImpl INSTANCE = new PublicUtilityValidatorImpl();
-
-    private static final DictionaryService dictionaryService = DictionaryServiceImpl.INSTANCE;
-
-    private PublicUtilityValidatorImpl() {
+    @Autowired
+    public PublicUtilityValidatorImpl(DictionaryService dictionaryService) {
+        this.dictionaryService = dictionaryService;
     }
 
     /**

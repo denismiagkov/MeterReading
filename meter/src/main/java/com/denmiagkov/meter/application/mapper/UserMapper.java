@@ -13,7 +13,7 @@ import java.util.Set;
  */
 @Mapper
 public interface UserMapper {
-    UserMapper USER_OUTGOING_DTO_MAPPER = Mappers.getMapper(UserMapper.class);
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")

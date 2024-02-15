@@ -12,7 +12,7 @@ import java.util.List;
  * */
 @Mapper
 public interface UserActionMapper {
-    UserActionMapper USER_ACTION_DTO_MAPPER = Mappers.getMapper(UserActionMapper.class);
+    UserActionMapper INSTANCE = Mappers.getMapper(UserActionMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "userId", target = "userId")

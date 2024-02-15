@@ -53,7 +53,7 @@ public interface UserRepository {
      *
      * @return Set<User> Множество зарегистрованных пользователей
      */
-    Set<User> getAllUsers();
+    Set<User> findAllUsers(int pageSize, int page);
 
     /**
      * Метод возвращает пользователя на основе соответствующей записи в базе данных
@@ -62,5 +62,5 @@ public interface UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */
-    User getUser(ResultSet queryResult) throws SQLException;
+    User findUser(ResultSet queryResult) throws SQLException;
 }

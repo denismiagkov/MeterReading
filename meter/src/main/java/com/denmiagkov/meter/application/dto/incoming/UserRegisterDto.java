@@ -7,46 +7,16 @@ import com.denmiagkov.meter.domain.UserRole;
  * Входящее ДТО для регистрации пользователя
  */
 public class UserRegisterDto extends IncomingDto {
-    /**
-     * id пользователя
-     */
     private int userId;
-    /**
-     * ТИп действия пользователя
-     */
     private ActionType action;
-    /**
-     * Имя пользователя
-     */
     private String name;
-    /**
-     * Телефон пользователя
-     */
     private String phone;
-    /**
-     * Адрес пользователя
-     */
     private String address;
-    /**
-     * Роль пользователя
-     */
     private UserRole role;
-    /**
-     * Логин пользователя
-     */
     private String login;
-    /**
-     * Пароль пользователя
-     */
     private String password;
-    /**
-     * Регистрационный  пароль администратора
-     */
     private String adminPassword;
 
-    /**
-     * Конструкторы, геттеры и сеттеры
-     */
     public UserRegisterDto() {
         this.action = ActionType.REGISTRATION;
     }
