@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 public class AuditAspect {
     private static final Logger log = LoggerFactory.getLogger(AuditAspect.class);
     private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
+    public static final String INCOMING_DTO_PARENT_CLASS = "com.denmiagkov.meter.application.dto.incoming.IncomingDto";
     private UserActivityService activityService;
 
     void setActivityService(UserActivityService activityService) {
@@ -26,7 +27,7 @@ public class AuditAspect {
         Object result = joinPoint.proceed();
         try {
             Object[] args = joinPoint.getArgs();
-            Class<?> clazz = Class.forName("com.denmiagkov.meter.application.dto.incoming.IncomingDto");
+            Class<?> clazz = Class.forName(INCOMING_DTO_PARENT_CLASS);
             for (Object arg : args) {
                 if (clazz.isInstance(arg)) {
                     IncomingDto dto = (IncomingDto) arg;

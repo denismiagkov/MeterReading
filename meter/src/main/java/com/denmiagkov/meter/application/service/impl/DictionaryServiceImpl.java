@@ -29,13 +29,8 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public Map<Integer, String> addUtilityTypeToDictionary(String utilityName) {
-        Map<Integer, String> utilitiesDictionary = dictionaryRepository.getAllUtilitiesTypes();
-        if (!utilitiesDictionary.containsValue(utilityName)) {
-            dictionaryRepository.addUtilityTypeToDictionary(utilityName.toUpperCase());
-            return getUtilitiesDictionary();
-        } else {
-            throw new PublicUtilityTypeAlreadyExistsException(utilityName);
-        }
+        dictionaryRepository.addUtilityTypeToDictionary(utilityName.toUpperCase());
+        return getUtilitiesDictionary();
     }
 
     /**
@@ -45,4 +40,5 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Map<Integer, String> getUtilitiesDictionary() {
         return dictionaryRepository.getAllUtilitiesTypes();
     }
+
 }

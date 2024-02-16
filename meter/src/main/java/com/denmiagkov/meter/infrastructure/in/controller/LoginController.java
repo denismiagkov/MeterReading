@@ -8,14 +8,22 @@ import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
 import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 /**
  * Контроллер регистрации и входа в приложение
  */
+@Api(tags = "Login")
 @Loggable
 @RestController
 @RequestMapping("/api/v1")
@@ -39,12 +47,6 @@ public class LoginController {
         this.dtoHandler = dtoHandler;
     }
 
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Hello From Spring");
-    }
-
-
     /**
      * Метод регистрации пользователя
      *
@@ -52,19 +54,50 @@ public class LoginController {
      * @return User Зарегистрированный пользователь
      */
 
+    @Operation(
+            summary = "Registration of new user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created - User successfully registered",
+                            content = @Content(
+                                    schema = @Schema(implementation = UserDto.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "BadRequest - User already has been registered " +
+                                          "or there are mistakes in input data")
+            })
     @PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto registerUser(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<UserDto> registerUser(
+            @RequestBody @Parameter(description = "user registration data") UserRegisterDto userRegisterDto) {
         dtoHandler.verifyUserRegisterDto(userRegisterDto);
-        return userService.registerUser(userRegisterDto);
+        UserDto newUser = userService.registerUser(userRegisterDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(newUser);
     }
 
     /**
      * Метод входа пользователя в приложение
      */
+    @Operation(
+            summary = "User login",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "ОК - Login successful",
+                            content = @Content(
+                                    schema = @Schema(implementation = JwtResponse.class))),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized - User entered invalid login or password")
+            })
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public JwtResponse login(@RequestBody JwtRequest jwtRequest) {
-        return authService.login(jwtRequest);
+    public ResponseEntity<JwtResponse> login(
+            @RequestBody @Parameter(description = "User login and password") JwtRequest jwtRequest) {
+        JwtResponse accessToken = authService.login(jwtRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accessToken);
     }
 }

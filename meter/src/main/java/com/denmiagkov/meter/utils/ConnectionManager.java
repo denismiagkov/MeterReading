@@ -37,7 +37,6 @@ public final class ConnectionManager {
                     PropertiesUtil.get(PASSWORD_KEY)
             );
         } catch (SQLException e) {
-            System.out.println("POINT 5: " + e.getMessage());
             throw new DatabaseConnectionNotEstablishedException(e.getMessage());
         }
     }

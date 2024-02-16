@@ -6,16 +6,25 @@ import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * Контроллер
+ * Контроллер, обрабатывающий обращения пользователя
  */
+@Api(tags = "User")
 @Loggable
 @RestController
 @RequestMapping("/api/v1/user")
@@ -47,13 +56,28 @@ public class UserController {
      *
      * @param requestDto Входящее ДТО передачи нового показания счетчика
      */
+    @Operation(
+            summary = "Submit new meter reading",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK - Meter reading submitted successfully",
+                            content = @Content(
+                                    schema = @Schema(implementation = MeterReadingDto.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "BadRequest - User entered invalid data")
+            })
     @PostMapping(value = "/reading/new", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public MeterReadingDto submitNewMeterReading(@RequestHeader("Authorization") String header,
-                                                 @RequestBody MeterReadingSubmitDto requestDto) {
+    public ResponseEntity<MeterReadingDto> submitNewMeterReading(
+            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header,
+            @RequestBody @Parameter(description = "user input data") MeterReadingSubmitDto requestDto) {
         String token = authService.verifyUser(header);
         dtoHandler.updateNewMeterReadingSubmitDto(requestDto, token);
-        return meterReadingService.submitNewMeterReading(requestDto);
+        MeterReadingDto newSubmittedMeterReading = meterReadingService.submitNewMeterReading(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(newSubmittedMeterReading);
     }
 
     /**
@@ -62,12 +86,27 @@ public class UserController {
      * @param requestDto Входящее ДТО просмотра текущих показаний счетчика
      * @return Reading Актуальное показание счетчика
      */
-    @PostMapping("/reading/actual")
-    public MeterReadingDto getActualReadingOnExactUtilityByUser(@RequestHeader("Authorization") String header,
-                                                                @RequestBody MeterReadingReviewActualDto requestDto) {
+    @Operation(
+            summary = "Shows actual meter reading on single utility selected by user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200", description = "OK - Actual meter reading retrieved",
+                            content = @Content(
+                                    schema = @Schema(implementation = MeterReadingDto.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "BadRequest - User entered wrong utility type")
+            })
+    @PostMapping(value = "/reading/actual", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MeterReadingDto> getActualReadingOnExactUtilityByUser(
+            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header,
+            @RequestBody @Parameter(description = "includes utility type (id)") MeterReadingReviewActualDto requestDto) {
         String token = authService.verifyUser(header);
         dtoHandler.updateMeterReadingReviewOnConcreteUtilityDto(requestDto, token);
-        return meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestDto);
+        MeterReadingDto actualMeterReading = meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(actualMeterReading);
     }
 
     /**
@@ -76,11 +115,26 @@ public class UserController {
      * @param requestDto Входящее ДТО просмотра текущих показаний счетчика
      * @return List<MeterReadingDto> Список актуальных показаний счетчика
      */
-    @PostMapping("/readings/actual")
-    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(@RequestHeader("Authorization") String header) {
+
+    @Operation(
+            summary = "Shows actual meter readings on all utilities, submitted by user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK - List of actual meter readings retrieved",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = MeterReadingDto.class))))
+            })
+    @PostMapping(value = "/readings/actual", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MeterReadingDto>> getActualMeterReadingsOnAllUtilitiesByUser(
+            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header) {
         String token = authService.verifyUser(header);
         MeterReadingReviewActualDto requestDto = dtoHandler.createMeterReadingReviewAllActualDto(token);
-        return meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(requestDto);
+        List<MeterReadingDto> listActualMeterReadings = meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(listActualMeterReadings);
     }
 
     /**
@@ -90,13 +144,26 @@ public class UserController {
      * @param pageSize   Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметра пагинации
      */
+    @Operation(
+            summary = "Shows history of submitting meter readings by user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK - List of all user's meter readings retrieved",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = MeterReadingDto.class))))
+            })
     @PostMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public List<MeterReadingDto> getMeterReadingsHistoryByUser(@RequestHeader("Authorization") String header,
-                                                               @RequestBody MeterReadingReviewHistoryDto requestDto) {
+    public ResponseEntity<List<MeterReadingDto>> getMeterReadingsHistoryByUser(
+            @RequestHeader("Authorization") @Parameter(description = "http-header") String header,
+            @RequestBody @Parameter(description = "includes parameters of pagination") MeterReadingReviewHistoryDto requestDto) {
         String token = authService.verifyUser(header);
         dtoHandler.createMeterReadingReviewHistoryDto(requestDto, token);
-        return meterReadingService.getMeterReadingsHistoryByUser(requestDto);
+        List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(historySubmittingMeterReadingsByUser);
     }
 
     /**
@@ -105,11 +172,28 @@ public class UserController {
      * @param requestDto Входящее ДТО просмотра показаний счетчика за выбранный месяц
      * @return List<MeterReading> Список показаний счетчиков
      */
-    @PostMapping("/readings/month")
-    public List<MeterReadingDto> getReadingsForMonthByUser(@RequestHeader("Authorization") String header,
-                                                           @RequestBody MeterReadingReviewForMonthDto requestDto) {
+    @Operation(
+            summary = "Shows meter readings, submitted by user on selected month",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK - List of user's meter readings on selected month retrieved",
+                            content = @Content(
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = MeterReadingDto.class)))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "BadRequest - User entered wrong input data")
+            })
+    @PostMapping(value = "/readings/month", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MeterReadingDto>> getReadingsForMonthByUser(
+            @RequestHeader("Authorization") @Parameter(description = "http-header") String header,
+            @RequestBody @Parameter(description = "includes month, selected by user") MeterReadingReviewForMonthDto requestDto) {
         String token = authService.verifyUser(header);
         dtoHandler.updateMeterReadingReviewForMonthDto(requestDto, token);
-        return meterReadingService.getReadingsForMonthByUser(requestDto);
+        List<MeterReadingDto> listMeterReadingsOnSelectedMonthByUser = meterReadingService.getReadingsForMonthByUser(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(listMeterReadingsOnSelectedMonthByUser);
     }
 }
