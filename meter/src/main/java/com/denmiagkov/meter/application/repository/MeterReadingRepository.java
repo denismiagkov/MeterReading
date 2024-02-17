@@ -40,7 +40,7 @@ public interface MeterReadingRepository {
      *
      * @return List<MeterReading> Список всех переданных показаний
      */
-    List<MeterReading> findAllMeterReadings(int pageSize, int page);
+    List<MeterReading> findAllMeterReadings(int page, int pageSize);
 
     /**
      * Метод получения истории передачи показаний конкретным пользователем

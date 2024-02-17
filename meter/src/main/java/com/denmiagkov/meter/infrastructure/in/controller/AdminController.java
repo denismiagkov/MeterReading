@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
@@ -9,7 +8,6 @@ import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
-import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,7 +33,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-    public static final String HTTP_HEADER = "Authorization";
     /**
      * Сервис пользователя
      */
@@ -52,7 +49,6 @@ public class AdminController {
      * Сервис справочника показаний (типов услуг)
      */
     private final DictionaryService dictionaryService;
-    private final AuthService authService;
 
     /**
      * Конструктор
@@ -61,13 +57,11 @@ public class AdminController {
     public AdminController(UserService userService,
                            MeterReadingService meterReadingService,
                            UserActivityService activityService,
-                           DictionaryService dictionaryService,
-                           AuthService authService) {
+                           DictionaryService dictionaryService) {
         this.userService = userService;
         this.meterReadingService = meterReadingService;
         this.activityService = activityService;
         this.dictionaryService = dictionaryService;
-        this.authService = authService;
     }
 
     /**
@@ -88,15 +82,13 @@ public class AdminController {
                             responseCode = "403",
                             description = "Forbidden - User has no admin rights for access to requested data")
             })
-    @PostMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<UserDto>> getAllUsers(
-            @RequestHeader(HTTP_HEADER) @Parameter(description = "http=header") String header,
-            @RequestBody @Parameter(description = "parameters of pagination") PaginationDto paginationDto) {
-        authService.verifyAdmin(header);
-        Set<UserDto> allUsers = userService.getAllUsers(paginationDto);
+            @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
+            @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(allUsers);
+                .body(userService.getAllUsers(page, size));
     }
 
     /**
@@ -118,15 +110,13 @@ public class AdminController {
                             responseCode = "403",
                             description = "Forbidden - User has no admin rights for access to requested data")
             })
-    @PostMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getAllMeterReadingsList(
-            @RequestHeader(HTTP_HEADER) @Parameter(description = "http=header") String header,
-            @RequestBody @Parameter(description = "parameters of pagination") PaginationDto paginationParam) {
-        authService.verifyAdmin(header);
-        List<MeterReadingDto> allMeterReadings = meterReadingService.getAllReadingsList(paginationParam);
+            @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
+            @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(allMeterReadings);
+                .body(meterReadingService.getAllMeterReadingsList(page, size));
     }
 
     /**
@@ -147,15 +137,13 @@ public class AdminController {
                             responseCode = "403",
                             description = "Forbidden - User has no admin rights for access to requested data")
             })
-    @PostMapping(value = "/actions", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserActionDto>> getUserActivitiesList(
-            @RequestHeader(HTTP_HEADER) @Parameter(description = "http=header") String header,
-            @RequestBody @Parameter(description = "parameters of pagination") PaginationDto paginationParam) {
-        authService.verifyAdmin(header);
-        List<UserActionDto> overallUsersActivityList = activityService.getUserActivitiesList(paginationParam);
+    @GetMapping(value = "/actions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserActionDto>> getAllUsersActions(
+            @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
+            @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(overallUsersActivityList);
+                .body(activityService.getUserActivitiesList(page, size));
     }
 
     /**
@@ -181,9 +169,7 @@ public class AdminController {
             })
     @PostMapping(value = "/dictionary/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, String>> addUtilityTypeToDictionary(
-            @RequestHeader(HTTP_HEADER) @Parameter(description = "http=header") String header,
             @RequestBody @Parameter(description = "new utility name") Map<String, String> utility) {
-        authService.verifyAdmin(header);
         Map<Integer, String> utilitiesDictionary = dictionaryService.addUtilityTypeToDictionary(utility.get("name"));
         return ResponseEntity
                 .status(HttpStatus.OK)

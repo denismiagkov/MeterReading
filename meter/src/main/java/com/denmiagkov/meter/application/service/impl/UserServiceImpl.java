@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.application.service.impl;
 
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.mapper.UserLoginMapper;
 import com.denmiagkov.meter.application.mapper.UserMapper;
@@ -92,8 +91,8 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Set<UserDto> getAllUsers(PaginationDto pagination) {
-        Set<User> users = userRepository.findAllUsers(pagination.getPageSize(), pagination.getPage());
+    public Set<UserDto> getAllUsers(int page, int pageSize) {
+        Set<User> users = userRepository.findAllUsers(page, pageSize);
         return outgoingDtoMapper.usersToUserDtos(users);
     }
 }

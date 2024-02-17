@@ -54,12 +54,12 @@ public class ActivityRepositoryImpl implements ActivityRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<UserAction> findAllUsersActions(int pageSize, int page) {
+    public List<UserAction> findAllUsersActions(int page, int pageSize) {
         List<UserAction> userActivitiesList = new ArrayList<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS_ACTIONS)) {
             statement.setInt(1, pageSize);
-            statement.setInt(2, page);
+            statement.setInt(2, (page * pageSize));
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {
                 UserAction userAction = getActivity(queryResult);

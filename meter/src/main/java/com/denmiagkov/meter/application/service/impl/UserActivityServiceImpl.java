@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.application.service.impl;
 
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.mapper.UserActionMapper;
@@ -41,11 +40,8 @@ public class UserActivityServiceImpl implements UserActivityService {
      * {@inheritDoc}
      */
     @Override
-    public List<UserActionDto> getUserActivitiesList(PaginationDto paginationParam) {
-        List<UserAction> userActions = activityRepository.findAllUsersActions(
-                paginationParam.getPageSize(),
-                paginationParam.getPage()
-        );
+    public List<UserActionDto> getUserActivitiesList(int page, int pageSize) {
+        List<UserAction> userActions = activityRepository.findAllUsersActions(page, pageSize);
         return mapper.userActionsToUserActionDtos(userActions);
     }
 }

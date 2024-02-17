@@ -24,7 +24,7 @@ public interface MeterReadingService {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметров панинации
      */
-    List<MeterReadingDto> getAllReadingsList(PaginationDto paginationParam);
+    List<MeterReadingDto> getAllMeterReadingsList(int page, int pageSize);
 
     /**
      * Метод получения актуального (последнего переданного) показания счетчика конкретного пользователя

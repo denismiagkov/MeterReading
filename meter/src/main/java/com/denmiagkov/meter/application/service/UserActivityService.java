@@ -1,6 +1,5 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 
@@ -23,5 +22,5 @@ public interface UserActivityService {
      *
      * @return List<Activity> Список всех действий пользователей в приложении
      */
-    List<UserActionDto> getUserActivitiesList(PaginationDto paginationParam);
+    List<UserActionDto> getUserActivitiesList(int page, int pageSize);
 }

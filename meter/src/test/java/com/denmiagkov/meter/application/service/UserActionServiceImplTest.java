@@ -1,7 +1,6 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.impl.UserActivityServiceImpl;
@@ -57,7 +56,7 @@ class UserActionServiceImplTest {
         when(ListUtils.partition(userActionDtos, 2))
                 .thenReturn(userActionsPaginated);
 
-        List<UserActionDto> activities = activityService.getUserActivitiesList(new PaginationDto());
+        List<UserActionDto> activities = activityService.getUserActivitiesList(0, 10);
 
         assertThat(activities).isEqualTo(userActionsPaginated);
     }

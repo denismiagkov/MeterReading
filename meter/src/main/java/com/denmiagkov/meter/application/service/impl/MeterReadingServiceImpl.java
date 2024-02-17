@@ -42,11 +42,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getAllReadingsList(PaginationDto paginationParam) {
-        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(
-                paginationParam.getPageSize(),
-                paginationParam.getPage()
-        );
+    public List<MeterReadingDto> getAllMeterReadingsList(int page, int pageSize) {
+        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(page, pageSize);
         return mapper.listMeterReadingToListMeterReadingDto(meterReadingList);
     }
 

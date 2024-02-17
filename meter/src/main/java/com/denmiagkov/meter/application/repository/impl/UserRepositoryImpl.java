@@ -142,12 +142,12 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public Set<User> findAllUsers(int pageSize, int page) {
+    public Set<User> findAllUsers(int page, int pageSize) {
         Set<User> users = new HashSet<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_USERS)) {
             preparedStatement.setInt(1, pageSize);
-            preparedStatement.setInt(2, page);
+            preparedStatement.setInt(2, (page * pageSize));
             ResultSet queryResult = preparedStatement.executeQuery();
             while (queryResult.next()) {
                 User user = findUser(queryResult);

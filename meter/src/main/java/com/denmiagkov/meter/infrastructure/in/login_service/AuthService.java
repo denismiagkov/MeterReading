@@ -101,7 +101,7 @@ public class AuthService {
      * @param request HttpServletRequest
      * @return String токен
      */
-    private String getTokenFromHeader(String header) {
+    public String getTokenFromHeader(String header) {
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7);
         }

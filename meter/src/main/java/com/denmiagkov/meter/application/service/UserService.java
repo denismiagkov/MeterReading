@@ -1,7 +1,5 @@
 package com.denmiagkov.meter.application.service;
 
-
-import com.denmiagkov.meter.application.dto.incoming.PaginationDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
@@ -34,7 +32,7 @@ public interface UserService {
      *
      * @return Set<User> Множество всех зарегистрированных пользователей
      */
-    Set<UserDto> getAllUsers(PaginationDto paginationDto);
+    Set<UserDto> getAllUsers(int page, int pageSize);
 
     /**
      * Метод возвращает пароль пользователя по его логину

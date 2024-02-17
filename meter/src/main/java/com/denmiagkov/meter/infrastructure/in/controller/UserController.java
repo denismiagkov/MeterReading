@@ -4,7 +4,6 @@ import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
-import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,14 +28,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
+    public static final String TOKEN_ATTRIBUTE_NAME = "token";
     /**
      * Сервис подачи показаний
      */
     private final MeterReadingService meterReadingService;
-    /**
-     * Сервис аутентификации
-     */
-    private final AuthService authService;
     /**
      * Создатель входящих ДТО
      */
@@ -44,10 +40,8 @@ public class UserController {
 
     @Autowired
     public UserController(MeterReadingService meterReadingService,
-                          AuthService authService,
                           IncomingDtoHandler dtoHandler) {
         this.meterReadingService = meterReadingService;
-        this.authService = authService;
         this.dtoHandler = dtoHandler;
     }
 
@@ -70,9 +64,8 @@ public class UserController {
             })
     @PostMapping(value = "/reading/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MeterReadingDto> submitNewMeterReading(
-            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header,
+            @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestBody @Parameter(description = "user input data") MeterReadingSubmitDto requestDto) {
-        String token = authService.verifyUser(header);
         dtoHandler.updateNewMeterReadingSubmitDto(requestDto, token);
         MeterReadingDto newSubmittedMeterReading = meterReadingService.submitNewMeterReading(requestDto);
         return ResponseEntity
@@ -99,9 +92,8 @@ public class UserController {
             })
     @PostMapping(value = "/reading/actual", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MeterReadingDto> getActualReadingOnExactUtilityByUser(
-            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header,
+            @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestBody @Parameter(description = "includes utility type (id)") MeterReadingReviewActualDto requestDto) {
-        String token = authService.verifyUser(header);
         dtoHandler.updateMeterReadingReviewOnConcreteUtilityDto(requestDto, token);
         MeterReadingDto actualMeterReading = meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestDto);
         return ResponseEntity
@@ -128,8 +120,7 @@ public class UserController {
             })
     @PostMapping(value = "/readings/actual", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getActualMeterReadingsOnAllUtilitiesByUser(
-            @RequestHeader("Authorization") @Parameter(description = "HTTP-header") String header) {
-        String token = authService.verifyUser(header);
+            @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token) {
         MeterReadingReviewActualDto requestDto = dtoHandler.createMeterReadingReviewAllActualDto(token);
         List<MeterReadingDto> listActualMeterReadings = meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(requestDto);
         return ResponseEntity
@@ -156,9 +147,8 @@ public class UserController {
             })
     @PostMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getMeterReadingsHistoryByUser(
-            @RequestHeader("Authorization") @Parameter(description = "http-header") String header,
+            @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestBody @Parameter(description = "includes parameters of pagination") MeterReadingReviewHistoryDto requestDto) {
-        String token = authService.verifyUser(header);
         dtoHandler.createMeterReadingReviewHistoryDto(requestDto, token);
         List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto);
         return ResponseEntity
@@ -187,9 +177,8 @@ public class UserController {
             })
     @PostMapping(value = "/readings/month", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getReadingsForMonthByUser(
-            @RequestHeader("Authorization") @Parameter(description = "http-header") String header,
+            @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestBody @Parameter(description = "includes month, selected by user") MeterReadingReviewForMonthDto requestDto) {
-        String token = authService.verifyUser(header);
         dtoHandler.updateMeterReadingReviewForMonthDto(requestDto, token);
         List<MeterReadingDto> listMeterReadingsOnSelectedMonthByUser = meterReadingService.getReadingsForMonthByUser(requestDto);
         return ResponseEntity

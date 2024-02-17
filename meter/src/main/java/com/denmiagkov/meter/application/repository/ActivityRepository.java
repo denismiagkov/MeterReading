@@ -22,5 +22,5 @@ public interface ActivityRepository {
      *
      * @return List<Activity> Список действий пользователей
      */
-    List<UserAction> findAllUsersActions(int pageSize, int page);
+    List<UserAction> findAllUsersActions(int page, int pageSize);
 }

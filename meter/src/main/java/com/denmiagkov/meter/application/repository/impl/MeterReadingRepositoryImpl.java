@@ -151,11 +151,11 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> findAllMeterReadings(int pageSize, int page) {
+    public List<MeterReading> findAllMeterReadings(int page, int pageSize) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_METER_READINGS_BY_ALL_USERS)) {
             statement.setInt(1, pageSize);
-            statement.setInt(2, page);
+            statement.setInt(2, (page * pageSize));
             ResultSet queryResult = statement.executeQuery();
             List<MeterReading> userMeterReadingsByMonth = new ArrayList<>();
             while (queryResult.next()) {

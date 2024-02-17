@@ -53,7 +53,7 @@ public interface UserRepository {
      *
      * @return Set<User> Множество зарегистрованных пользователей
      */
-    Set<User> findAllUsers(int pageSize, int page);
+    Set<User> findAllUsers(int page, int pageSize);
 
     /**
      * Метод возвращает пользователя на основе соответствующей записи в базе данных
