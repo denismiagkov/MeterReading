@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.utils;
 
 import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
+import com.denmiagkov.meter.utils.yaml.YamlUtil;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -10,9 +11,6 @@ import java.sql.SQLException;
 
 @Component
 public final class ConnectionManager {
-    private static final String URL_KEY = "datasource.url";
-    private static final String USERNAME_KEY = "datasource.username";
-    private static final String PASSWORD_KEY = "datasource.password";
 
     private ConnectionManager() {
     }
@@ -32,9 +30,9 @@ public final class ConnectionManager {
     public static Connection open() {
         try {
             return DriverManager.getConnection(
-                    PropertiesUtil.get(URL_KEY),
-                    PropertiesUtil.get(USERNAME_KEY),
-                    PropertiesUtil.get(PASSWORD_KEY)
+                    YamlUtil.getYaml().getDatasource().getUrl(),
+                    YamlUtil.getYaml().getDatasource().getUsername(),
+                    YamlUtil.getYaml().getDatasource().getPassword()
             );
         } catch (SQLException e) {
             throw new DatabaseConnectionNotEstablishedException(e.getMessage());

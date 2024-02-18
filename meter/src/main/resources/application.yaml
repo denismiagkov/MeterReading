@@ -1,0 +1,13 @@
+datasource:
+  url: jdbc:postgresql://localhost:5431/meter
+  username: meter
+  password: 123
+
+liquibase:
+  serviceSchemaName: migration
+  defaultSchemaName: meter_service
+  changelogFile: db/changelog/changelog.xml
+
+authentication:
+  valueOfJwtAccessSecretKey: Nb3YCWOp7kghAjoQkiNze2PTiLjQPQYdegcPM9oC77UkpUyJIuobhbeWRN+OI8PjXyGrITKxJWhYvrBlgH4JFA==
+  valueOfJwtRefreshSecretKey: tSlh5T96KurUBOsKV0Ja/AIVGKpakIvDpejeRBxukbL9xJrQ1XoCodsoQhH6gmWiUevBe/Gw1FRiHn9HzExyCQ==

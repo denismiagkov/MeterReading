@@ -1,7 +1,11 @@
 package com.denmiagkov.meter.infrastructure.in.filter;
 
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -13,6 +17,8 @@ import java.io.IOException;
 @Component
 public class AdminFilterWrapper {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    public static final Logger LOG = LoggerFactory.getLogger(AdminFilterWrapper.class);
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static AuthService authService;
 
     @Autowired
@@ -21,16 +27,25 @@ public class AdminFilterWrapper {
     }
 
     @WebFilter("/api/v1/admin/*")
-    public static class UserFilter implements Filter {
+    public static class AdminFilter implements Filter {
         @Override
-        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-            String header = ((HttpServletRequest) request).getHeader(AUTHORIZATION_HEADER_NAME);
-            if (header != null) {
+        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            try {
+                String header = ((HttpServletRequest) servletRequest).getHeader(AUTHORIZATION_HEADER_NAME);
                 authService.verifyAdmin(header);
-                chain.doFilter(request, response);
-            } else {
-                ((HttpServletResponse) response).sendRedirect("/api/v1/login");
+                filterChain.doFilter(servletRequest, servletResponse);
+            } catch (Exception e) {
+                handleException(response, e);
             }
         }
+    }
+
+    private static void handleException(HttpServletResponse response, Exception e) throws IOException {
+        LOG.error("EXCEPTION OCCURRED: ", e);
+        String errorMessage = MAPPER.writeValueAsString(e.getMessage());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.getWriter().write(errorMessage);
     }
 }

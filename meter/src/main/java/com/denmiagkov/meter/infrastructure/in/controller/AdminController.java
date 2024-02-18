@@ -8,6 +8,7 @@ import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.aspect.annotations.Loggable;
+import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,6 +50,7 @@ public class AdminController {
      * Сервис справочника показаний (типов услуг)
      */
     private final DictionaryService dictionaryService;
+    private final PublicUtilityValidatorImpl utilityValidator;
 
     /**
      * Конструктор
@@ -57,11 +59,13 @@ public class AdminController {
     public AdminController(UserService userService,
                            MeterReadingService meterReadingService,
                            UserActivityService activityService,
-                           DictionaryService dictionaryService) {
+                           DictionaryService dictionaryService,
+                           PublicUtilityValidatorImpl utilityValidator) {
         this.userService = userService;
         this.meterReadingService = meterReadingService;
         this.activityService = activityService;
         this.dictionaryService = dictionaryService;
+        this.utilityValidator = utilityValidator;
     }
 
     /**
@@ -170,7 +174,9 @@ public class AdminController {
     @PostMapping(value = "/dictionary/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, String>> addUtilityTypeToDictionary(
             @RequestBody @Parameter(description = "new utility name") Map<String, String> utility) {
-        Map<Integer, String> utilitiesDictionary = dictionaryService.addUtilityTypeToDictionary(utility.get("name"));
+        String newUtility = utility.get("name");
+        utilityValidator.isValid(newUtility);
+        Map<Integer, String> utilitiesDictionary = dictionaryService.addUtilityTypeToDictionary(newUtility);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(utilitiesDictionary);

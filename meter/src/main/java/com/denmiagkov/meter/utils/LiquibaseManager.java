@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.utils;
 
 import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
+import com.denmiagkov.meter.utils.yaml.YamlUtil;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -17,12 +18,9 @@ import java.sql.SQLException;
 
 @Component
 public final class LiquibaseManager {
-    private static final String SERVICE_SCHEMA_NAME_KEY = "liquibase.service_schema_name";
-    private static final String DEFAULT_SCHEMA_NAME_KEY = "liquibase.default_schema_name";
-    private static final String CHANGELOG_FILE_KEY = "liquibase.changelog_file";
     private static final String QUERY_CREATE_MIGRATION_SCHEMA = String.join(" ",
             "CREATE SCHEMA IF NOT EXISTS",
-            PropertiesUtil.get(SERVICE_SCHEMA_NAME_KEY));
+            YamlUtil.getYaml().getLiquibase().getServiceSchemaName());
 
     private LiquibaseManager() {
     }
@@ -41,9 +39,9 @@ public final class LiquibaseManager {
         try (Connection connection = ConnectionManager.open()) {
             Database database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            database.setLiquibaseSchemaName(PropertiesUtil.get(SERVICE_SCHEMA_NAME_KEY));
-            database.setDefaultSchemaName(PropertiesUtil.get(DEFAULT_SCHEMA_NAME_KEY));
-            Liquibase liquibase = new Liquibase(PropertiesUtil.get(CHANGELOG_FILE_KEY),
+            database.setLiquibaseSchemaName(YamlUtil.getYaml().getLiquibase().getServiceSchemaName());
+            database.setDefaultSchemaName(YamlUtil.getYaml().getLiquibase().getDefaultSchemaName());
+            Liquibase liquibase = new Liquibase(YamlUtil.getYaml().getLiquibase().getChangelogFile(),
                     new ClassLoaderResourceAccessor(), database);
             liquibase.update();
             return liquibase;

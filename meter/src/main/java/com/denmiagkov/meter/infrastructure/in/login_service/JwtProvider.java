@@ -3,7 +3,7 @@ package com.denmiagkov.meter.infrastructure.in.login_service;
 import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.utils.PropertiesUtil;
+import com.denmiagkov.meter.utils.yaml.YamlUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -22,14 +22,6 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     /**
-     * Ссылка на значение секретного ключа для создания и валидации access токена в формате BASE64
-     */
-    private static final String VALUE_OF_JWT_ACCESS_SECRET_KEY = "authentication.valueOfJwtAccessSecretKey";
-    /**
-     * Ссылка на значение секретного ключа для создания и валидации refresh токена в формате BASE64
-     */
-    private static final String VALUE_OF_JWT_REFRESH_SECRET_KEY = "authentication.valueOfJwtRefreshSecretKey";
-    /**
      * Секретный ключ для генерации и валидации access токена
      */
     private final SecretKey JWT_ACCESS_SECRET_KEY;
@@ -47,8 +39,8 @@ public class JwtProvider {
     public static final String USER_ROLE = "role";
 
     public JwtProvider() {
-        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_ACCESS_SECRET_KEY)));
-        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_REFRESH_SECRET_KEY)));
+        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtAccessSecretKey()));
+        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtRefreshSecretKey()));
     }
 
     /**

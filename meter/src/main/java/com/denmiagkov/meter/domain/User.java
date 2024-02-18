@@ -86,6 +86,7 @@ public class User {
         this.password = password;
     }
 
+    @Builder
     public User(int id, String name, String phone, String address, UserRole role, String login, String password) {
         this.id = id;
         this.name = name;
