@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.aspect;
+package com.denmiagkov.meter.aspects;
 
 import com.denmiagkov.meter.application.service.UserActivityService;
 import org.aspectj.lang.Aspects;

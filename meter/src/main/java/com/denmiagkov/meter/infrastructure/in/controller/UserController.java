@@ -3,8 +3,8 @@ package com.denmiagkov.meter.infrastructure.in.controller;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.aspect.annotations.Loggable;
-import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
+import com.denmiagkov.meter.aspects.annotations.Loggable;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,11 +36,11 @@ public class UserController {
     /**
      * Создатель входящих ДТО
      */
-    private final IncomingDtoHandler dtoHandler;
+    private final IncomingDtoBuilder dtoHandler;
 
     @Autowired
     public UserController(MeterReadingService meterReadingService,
-                          IncomingDtoHandler dtoHandler) {
+                          IncomingDtoBuilder dtoHandler) {
         this.meterReadingService = meterReadingService;
         this.dtoHandler = dtoHandler;
     }

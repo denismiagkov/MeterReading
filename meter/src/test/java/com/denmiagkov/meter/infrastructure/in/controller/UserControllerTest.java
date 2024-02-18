@@ -4,17 +4,12 @@ import com.denmiagkov.meter.application.dto.incoming.ReviewActualMeterReadingDto
 import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
-import com.denmiagkov.meter.application.mapper.MeterReadingMapper;
-import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.application.service.UserActivityService;
-import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
-import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
-import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitReadingOnTheSameMonthException;
-import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
-import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitMeterReadingOnTheSameMonthException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.handlers.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,7 +43,7 @@ class UserControllerTest {
     @Mock
     private MeterReadingService meterReadingService;
     @Mock
-    private IncomingDtoHandler dtoHandler;
+    private IncomingDtoBuilder dtoHandler;
     @InjectMocks
     UserController userController;
     ObjectMapper mapper = new ObjectMapper();
@@ -58,7 +54,7 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(userController).setControllerAdvice(GlobalExceptionHandler.class).build();
         meterReading1 = new MeterReadingDto();
         meterReading1.setUserId(1);
         meterReading1.setDate(LocalDateTime.now().minusDays(7));
@@ -95,6 +91,29 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Method receives request for submitting meter reading second time on the same month and throws exception")
+    void submitNewMeterReading_ThrowsException() throws Exception {
+        SubmitNewMeterReadingDto requestDto = new SubmitNewMeterReadingDto();
+        requestDto.setUtilityId(3);
+        requestDto.setValue(1034.00);
+        String requestJson = mapper.writeValueAsString(requestDto);
+        doThrow(SubmitMeterReadingOnTheSameMonthException.class)
+                .when(dtoHandler).updateSubmitNewMeterReadingDto(
+                        any(SubmitNewMeterReadingDto.class), eq(token));
+
+        mockMvc.perform(post("/api/v1/user/reading/new")
+                        .requestAttr("token", token)
+                        .content(requestJson)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpectAll(
+                        status().isBadRequest(),
+                        result -> assertTrue(result.getResolvedException() instanceof SubmitMeterReadingOnTheSameMonthException)
+                );
+    }
+
+    @Test
     @DisplayName("Method receives correct utility id and returns actual meter reading on appropriate utility")
     void getActualReadingOnExactUtilityByUser() throws Exception {
         ReviewActualMeterReadingDto requestDto = mock(ReviewActualMeterReadingDto.class);
@@ -118,6 +137,24 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Method receives incorrect utility id and throws exception")
+    void getActualReadingOnExactUtilityByUser_ThrowsException() throws Exception {
+        ReviewActualMeterReadingDto requestDto = mock(ReviewActualMeterReadingDto.class);
+        when(dtoHandler.createReviewMeterReadingOnConcreteUtilityDto(anyInt(), anyString()))
+                .thenThrow(UtilityTypeNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1/user/reading/actual")
+                        .requestAttr("token", token)
+                        .param("utilityId", "200"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isBadRequest(),
+                        result -> assertTrue(result.getResolvedException() instanceof UtilityTypeNotFoundException)
+                );
+    }
+
+    @Test
+    @DisplayName("Method receives request and sends response with actual meter readings of the user successfully")
     void getActualMeterReadingsOnAllUtilitiesByUser() throws Exception {
         ReviewActualMeterReadingDto requestDto = mock(ReviewActualMeterReadingDto.class);
         when(dtoHandler.createReviewAllActualMeterReadingsDto(anyString()))
@@ -137,10 +174,6 @@ class UserControllerTest {
                         jsonPath("$[0].utilityId").value(meterReading1.getUtilityId()),
                         jsonPath("$[0].userId").value(meterReading1.getUserId())
                 );
-    }
-
-    @Test
-    void getMeterReadingsHistoryByUser() {
     }
 
     @Test
@@ -168,7 +201,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Method receives correct month and year and returns meter readings list for this period successfully")
+    @DisplayName("Method receives year in future (invalid data) and throws exception")
     void getReadingsForMonthByUser_ThrowsException() throws Exception {
         when(dtoHandler.createReviewMeterReadingsForMonthDto(anyInt(), anyInt(), eq(token)))
                 .thenThrow(InvalidDateException.class);
@@ -177,7 +210,6 @@ class UserControllerTest {
                         .requestAttr("token", token)
                         .param("month", "2")
                         .param("year", "2025"))
-                .andDo(print())
                 .andExpectAll(
                         status().isBadRequest(),
                         result -> assertTrue(result.getResolvedException() instanceof InvalidDateException)

@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.repository;
 
 import com.denmiagkov.meter.application.repository.impl.UserRepositoryImpl;
-import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.utils.LiquibaseManager;

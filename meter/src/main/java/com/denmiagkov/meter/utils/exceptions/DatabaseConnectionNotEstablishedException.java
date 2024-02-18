@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.utils.exception;
+package com.denmiagkov.meter.utils.exceptions;
 
 /**
  * Исключение, выбрасываемое в случае ошибки при попытке подключения к базе данных

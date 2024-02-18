@@ -3,8 +3,8 @@ package com.denmiagkov.meter.application.service;
 import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
-import com.denmiagkov.meter.application.service.exception.LoginAlreadyInUseException;
-import com.denmiagkov.meter.application.service.exception.UserAlreadyExistsException;
+import com.denmiagkov.meter.application.service.exceptions.LoginAlreadyInUseException;
+import com.denmiagkov.meter.application.service.exceptions.UserAlreadyExistsException;
 
 import java.util.Set;
 

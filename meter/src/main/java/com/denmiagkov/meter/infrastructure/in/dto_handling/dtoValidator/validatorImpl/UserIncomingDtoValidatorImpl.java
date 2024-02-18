@@ -1,7 +1,7 @@
-package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
+package com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
-import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.DtoValidator;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputLoginException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputPasswordException;

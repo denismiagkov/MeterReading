@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Фильтр, реализующий аутентификацию пользователя
+ */
 @Component
 public class UserFilterWrapper {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";

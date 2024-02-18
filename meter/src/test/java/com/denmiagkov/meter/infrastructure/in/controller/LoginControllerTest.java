@@ -7,10 +7,11 @@ import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.handlers.GlobalExceptionHandler;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
-import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +42,7 @@ class LoginControllerTest {
     @Mock
     AuthService authService;
     @Mock
-    IncomingDtoHandler dtoHandler;
+    IncomingDtoBuilder dtoHandler;
     @InjectMocks
     LoginController loginController;
     ObjectMapper mapper = new ObjectMapper();
@@ -48,11 +50,11 @@ class LoginControllerTest {
 
     @BeforeEach
     void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(loginController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(loginController).setControllerAdvice(GlobalExceptionHandler.class).build();
     }
 
     @Test
-    @DisplayName("Method receives post-request and receives user dto in json format")
+    @DisplayName("Method receives post-request and sends response with user dto in json format")
     void registerUser() throws Exception {
         RegisterUserDto registerDto = new RegisterUserDto("Ivan", "+7112233", "Moscow", UserRole.USER,
                 "user", "123", null);
@@ -81,16 +83,14 @@ class LoginControllerTest {
     void registerUser_ThrowsException() throws Exception {
         RegisterUserDto registerDto = new RegisterUserDto("Ivan100", "+7112233", "Moscow", UserRole.USER,
                 "user", "123", null);
-        User user = new User(1, "Ivan", "+7112233", "Moscow", UserRole.USER,
-                "user", "123");
-        UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
         String requestJson = mapper.writeValueAsString(registerDto);
+        doThrow(IncorrectInputNameException.class)
+                .when(dtoHandler).verifyRegisterUserDto(any(RegisterUserDto.class));
 
         mockMvc.perform(post("/api/v1/registration")
                         .content(requestJson)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpectAll(
                         status().isBadRequest(),
                         result -> assertTrue(result.getResolvedException() instanceof IncorrectInputNameException)

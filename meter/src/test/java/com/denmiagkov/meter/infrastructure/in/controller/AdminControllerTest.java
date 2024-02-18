@@ -12,7 +12,8 @@ import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.domain.*;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
-import com.denmiagkov.meter.infrastructure.in.validator.validatorImpl.PublicUtilityValidatorImpl;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.PublicUtilityValidatorImpl;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.handlers.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -62,7 +64,7 @@ class AdminControllerTest {
 
     @BeforeEach
     void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(adminController).setControllerAdvice(GlobalExceptionHandler.class).build();
         page = 0;
         size = 50;
     }
@@ -104,6 +106,7 @@ class AdminControllerTest {
     }
 
     @Test
+    @DisplayName("Method returns list of all meter readings successfully")
     void getAllMeterReadingsList() throws Exception {
         MeterReading meterReading1 = new MeterReading(1, 1, LocalDateTime.now().minusDays(3), 2, 75.00);
         MeterReading meterReading2 = new MeterReading(2, 1, LocalDateTime.now(), 2, 231.4);
@@ -126,6 +129,7 @@ class AdminControllerTest {
     }
 
     @Test
+    @DisplayName("Method returns list of all users successfully")
     void getAllUsersActions() throws Exception {
         UserAction userAction1 = new UserAction(1, 1, LocalDateTime.now().minusDays(3), ActionType.REGISTRATION);
         UserAction userAction2 = new UserAction(2, 1, LocalDateTime.now(), ActionType.REGISTRATION);
@@ -169,7 +173,7 @@ class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("Method receives name of new utility and adds it to dictionary successfully")
+    @DisplayName("Method receives name of utility already registered in dictionary and throws exception")
     void addUtilityTypeToDictionary_ThrowsException() throws Exception {
         String newUtility = "ELECTRICITY";
         Map<String, String> requestMap = new HashMap<>();
@@ -188,5 +192,4 @@ class AdminControllerTest {
                         result -> assertTrue(result.getResolvedException() instanceof PublicUtilityTypeAlreadyExistsException)
                 );
     }
-
 }

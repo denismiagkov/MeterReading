@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.aspect;
+package com.denmiagkov.meter.aspects;
 
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.service.UserActivityService;
@@ -18,7 +18,7 @@ public class AuditAspect {
         this.activityService = activityService;
     }
 
-    @Pointcut("within(@com.denmiagkov.meter.aspect.annotations.Audit *) && execution(* * (..))")
+    @Pointcut("within(@com.denmiagkov.meter.aspects.annotations.Audit *) && execution(* * (..))")
     private void annotatedByAudit() {
     }
 

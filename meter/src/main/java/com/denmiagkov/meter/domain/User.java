@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.domain;
 
-import com.denmiagkov.meter.application.service.exception.AdminNotAuthorizedException;
+import com.denmiagkov.meter.application.service.exceptions.AdminNotAuthorizedException;
 import lombok.*;
 
 /**

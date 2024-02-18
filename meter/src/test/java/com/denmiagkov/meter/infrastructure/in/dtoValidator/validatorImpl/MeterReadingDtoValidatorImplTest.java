@@ -1,10 +1,10 @@
-package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
+package com.denmiagkov.meter.infrastructure.in.dtoValidator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.incoming.ReviewActualMeterReadingDto;
-import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.MeterReadingDtoValidatorImpl;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

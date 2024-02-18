@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.application.service.exception;
+package com.denmiagkov.meter.application.service.exceptions;
 /**
  * Исключение, выбрасываемое при вводе невалидного единого пароля администратора при регистрации нового администратора
  * */

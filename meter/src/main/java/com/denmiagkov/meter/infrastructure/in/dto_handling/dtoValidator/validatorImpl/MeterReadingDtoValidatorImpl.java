@@ -1,15 +1,14 @@
-package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
+package com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.incoming.ReviewActualMeterReadingDto;
-import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingForMonthDto;
 import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.NewMeterValueIsLessThenPreviousException;
-import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.DtoValidator;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
-import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitReadingOnTheSameMonthException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitMeterReadingOnTheSameMonthException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,14 +64,19 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<SubmitNewMeter
         ReviewActualMeterReadingDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
         MeterReadingDto actualMeterReading =
                 meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestActualMeterReading);
-        LocalDateTime now = newMeterReading.getDate();
-        if (actualMeterReading == null
-            || (actualMeterReading.getDate().getMonthValue() != now.getMonthValue()
-                || actualMeterReading.getDate().getYear() != now.getYear())) {
+        if (!isPreviousMeterReadingSubmitOnTheSameMonth(actualMeterReading, newMeterReading)) {
             return true;
         } else {
-            throw new SubmitReadingOnTheSameMonthException();
+            throw new SubmitMeterReadingOnTheSameMonthException();
         }
+    }
+
+    private static boolean isPreviousMeterReadingSubmitOnTheSameMonth(
+            MeterReadingDto previousMeterReading, SubmitNewMeterReadingDto newMeterReading) {
+        LocalDateTime now = newMeterReading.getDate();
+        return previousMeterReading != null
+               && (previousMeterReading.getDate().getMonthValue() == now.getMonthValue()
+                   || previousMeterReading.getDate().getYear() == now.getYear());
     }
 
     /**
@@ -96,15 +100,17 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<SubmitNewMeter
      */
     public boolean isValidMeterValue(SubmitNewMeterReadingDto newMeterReading) {
         ReviewActualMeterReadingDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
-        MeterReadingDto actualMeterReading =
-                meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestActualMeterReading);
-        if (actualMeterReading == null
-            || (actualMeterReading.getValue() <= newMeterReading.getValue()
-            )) {
+        MeterReadingDto actualMeterReading = meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestActualMeterReading);
+        if (isPreviousMeterReadingNotBiggerThanNew(newMeterReading, actualMeterReading)) {
             return true;
         } else {
             throw new NewMeterValueIsLessThenPreviousException();
         }
+    }
+
+    private static boolean isPreviousMeterReadingNotBiggerThanNew(SubmitNewMeterReadingDto newMeterReading, MeterReadingDto actualMeterReading) {
+        return actualMeterReading == null
+               || (actualMeterReading.getValue() <= newMeterReading.getValue());
     }
 
     /**
@@ -114,17 +120,23 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<SubmitNewMeter
      * @return boolean true в случае успешной проверки, в противном случае - false
      */
     public boolean isValidMonth(int month, int year) {
-        if (
-                (month >= LocalDateTime.MIN.getMonthValue())
-                && (month <= LocalDateTime.MAX.getMonthValue())
-                && ((year < LocalDateTime.now().getYear())
-                    || month <= LocalDateTime.now().getMonthValue()
-                       && year == LocalDateTime.now().getYear())
-        ) {
+        if (isMonthNumberBetweenOneAndTwelve(month)
+            && isPeriodNotLaterThanNow(month, year)) {
             return true;
         } else {
             throw new InvalidDateException();
         }
+    }
+
+    private static boolean isPeriodNotLaterThanNow(int month, int year) {
+        return (year < LocalDateTime.now().getYear())
+               || month <= LocalDateTime.now().getMonthValue()
+                  && year == LocalDateTime.now().getYear();
+    }
+
+    private static boolean isMonthNumberBetweenOneAndTwelve(int month) {
+        return (month >= LocalDateTime.MIN.getMonthValue())
+               && (month <= LocalDateTime.MAX.getMonthValue());
     }
 
     /**

@@ -3,11 +3,11 @@ package com.denmiagkov.meter.infrastructure.in.controller;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.service.*;
-import com.denmiagkov.meter.aspect.annotations.Loggable;
+import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
-import com.denmiagkov.meter.infrastructure.in.utils.IncomingDtoHandler;
+import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +33,7 @@ public class LoginController {
      */
     private final UserService userService;
     private final AuthService authService;
-    private final IncomingDtoHandler dtoHandler;
+    private final IncomingDtoBuilder dtoHandler;
 
     /**
      * Конструктор
@@ -41,7 +41,7 @@ public class LoginController {
     @Autowired
     public LoginController(UserService userService,
                            AuthService authService,
-                           IncomingDtoHandler dtoHandler) {
+                           IncomingDtoBuilder dtoHandler) {
         this.userService = userService;
         this.authService = authService;
         this.dtoHandler = dtoHandler;

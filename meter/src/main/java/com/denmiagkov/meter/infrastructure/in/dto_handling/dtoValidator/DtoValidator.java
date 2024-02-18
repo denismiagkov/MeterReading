@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.infrastructure.in.validator;
+package com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator;
 
 /**
  * Интерфейс классов-валидаторов входящих ДТО

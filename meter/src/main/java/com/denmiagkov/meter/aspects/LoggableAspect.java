@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.aspect;
+package com.denmiagkov.meter.aspects;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,7 +17,7 @@ public class LoggableAspect {
 
     private static final Logger log = LoggerFactory.getLogger(LoggableAspect.class);
 
-    @Pointcut("within(@com.denmiagkov.meter.aspect.annotations.Loggable *) && execution(* * (..))")
+    @Pointcut("within(@com.denmiagkov.meter.aspects.annotations.Loggable *) && execution(* * (..))")
     public void annotatedByLoggable() {
     }
 

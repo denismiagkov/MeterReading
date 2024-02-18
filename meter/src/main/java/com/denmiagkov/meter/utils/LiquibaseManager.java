@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.utils;
 
-import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
+import com.denmiagkov.meter.utils.exceptions.DatabaseConnectionNotEstablishedException;
 import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import liquibase.Liquibase;
 import liquibase.database.Database;

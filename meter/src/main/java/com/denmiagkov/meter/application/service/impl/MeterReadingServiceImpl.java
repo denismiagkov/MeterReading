@@ -5,7 +5,7 @@ import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.mapper.MeterReadingMapper;
 import com.denmiagkov.meter.application.repository.*;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.aspect.annotations.Audit;
+import com.denmiagkov.meter.aspects.annotations.Audit;
 import com.denmiagkov.meter.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

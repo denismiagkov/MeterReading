@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.utils.yaml_config;
 
-import com.denmiagkov.meter.utils.exception.PropertiesFileNotFoundException;
+import com.denmiagkov.meter.utils.exceptions.PropertiesFileNotFoundException;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -8,6 +8,9 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Парсер конфигурационного файла .yaml
+ */
 public class YamlUtil {
     private static final String YAML_FILE = "application.yaml";
     private static final Yaml YAML = new Yaml(new Constructor(YamlConfig.class, new LoaderOptions()));

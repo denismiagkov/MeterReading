@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.aspect.annotations;
+package com.denmiagkov.meter.aspects.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
