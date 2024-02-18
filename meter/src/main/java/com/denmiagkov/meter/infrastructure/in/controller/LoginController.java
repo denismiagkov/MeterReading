@@ -50,7 +50,7 @@ public class LoginController {
     /**
      * Метод регистрации пользователя
      *
-     * @param userRegisterDto Входящее ДТО регистрации пользователя
+     * @param registerUserDto Входящее ДТО регистрации пользователя
      * @return User Зарегистрированный пользователь
      */
 
@@ -69,9 +69,9 @@ public class LoginController {
             })
     @PostMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> registerUser(
-            @RequestBody @Parameter(description = "user registration data") UserRegisterDto userRegisterDto) {
-        dtoHandler.verifyUserRegisterDto(userRegisterDto);
-        UserDto newUser = userService.registerUser(userRegisterDto);
+            @RequestBody @Parameter(description = "user registration data") RegisterUserDto registerUserDto) {
+        dtoHandler.verifyRegisterUserDto(registerUserDto);
+        UserDto newUser = userService.registerUser(registerUserDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(newUser);

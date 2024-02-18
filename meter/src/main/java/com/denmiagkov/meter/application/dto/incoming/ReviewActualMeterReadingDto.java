@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class MeterReadingReviewActualDto extends IncomingDto {
+public class ReviewActualMeterReadingDto extends IncomingDto {
     /**
      * id пользователя
      */
@@ -23,7 +23,7 @@ public class MeterReadingReviewActualDto extends IncomingDto {
      */
     private ActionType action;
 
-    public MeterReadingReviewActualDto() {
+    public ReviewActualMeterReadingDto() {
         this.action = ActionType.REVIEW_ACTUAL_READING;
     }
 

@@ -26,38 +26,49 @@ public class IncomingDtoHandler {
         this.authService = authService;
     }
 
-    public void updateNewMeterReadingSubmitDto(MeterReadingSubmitDto meterReading, String token) {
+    public void updateSubmitNewMeterReadingDto(SubmitNewMeterReadingDto meterReading, String token) {
         int userId = authService.getUserIdFromToken(token);
         meterReading.setUserId(userId);
         meterReading.setDate(LocalDateTime.now());
         meterReadingValidator.isValid(meterReading);
     }
 
-    public void updateMeterReadingReviewForMonthDto(MeterReadingReviewForMonthDto requestDto, String token) {
-        meterReadingValidator.isValidMonth(requestDto);
+    public ReviewMeterReadingForMonthDto createReviewMeterReadingsForMonthDto(int month, int year, String token) {
+        meterReadingValidator.isValidMonth(month, year);
+        ReviewMeterReadingForMonthDto requestDto = new ReviewMeterReadingForMonthDto();
         int userId = authService.getUserIdFromToken(token);
         requestDto.setUserId(userId);
+        requestDto.setMonth(month);
+        requestDto.setYear(year);
+        return requestDto;
     }
 
-    public void createMeterReadingReviewHistoryDto(MeterReadingReviewHistoryDto requestDto, String token) {
+    public ReviewMeterReadingHistoryDto createMeterReadingReviewHistoryDto(int page, int pageSize, String token) {
+        ReviewMeterReadingHistoryDto requestDto = new ReviewMeterReadingHistoryDto();
         int userId = authService.getUserIdFromToken(token);
         requestDto.setUserId(userId);
+        requestDto.setPage(page);
+        requestDto.setPageSize(pageSize);
+        return requestDto;
     }
 
-    public MeterReadingReviewActualDto createMeterReadingReviewAllActualDto(String token) {
+    public ReviewActualMeterReadingDto createReviewAllActualMeterReadingsDto(String token) {
         int userId = authService.getUserIdFromToken(token);
-        MeterReadingReviewActualDto requestDto = new MeterReadingReviewActualDto();
+        ReviewActualMeterReadingDto requestDto = new ReviewActualMeterReadingDto();
         requestDto.setUserId(userId);
         return requestDto;
     }
 
-    public void updateMeterReadingReviewOnConcreteUtilityDto(MeterReadingReviewActualDto requestDto, String token) {
+    public ReviewActualMeterReadingDto createReviewMeterReadingOnConcreteUtilityDto(int utilityId, String token) {
+        ReviewActualMeterReadingDto requestDto = new ReviewActualMeterReadingDto();
+        requestDto.setUtilityId(utilityId);
         meterReadingValidator.isValidMeterReadingUtilityType(requestDto);
         int userId = authService.getUserIdFromToken(token);
         requestDto.setUserId(userId);
+        return requestDto;
     }
 
-    public void verifyUserRegisterDto(UserRegisterDto userIncomingDto) {
+    public void verifyRegisterUserDto(RegisterUserDto userIncomingDto) {
         userIncomingDtoValidator.isValid(userIncomingDto);
     }
 }

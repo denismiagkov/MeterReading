@@ -33,7 +33,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public MeterReadingDto submitNewMeterReading(MeterReadingSubmitDto meterReadingDto) {
+    public MeterReadingDto submitNewMeterReading(SubmitNewMeterReadingDto meterReadingDto) {
         MeterReading meterReading = meterReadingRepository.addNewMeterReading(meterReadingDto);
         return mapper.meterReadingToMeterReadingDto(meterReading);
     }
@@ -51,7 +51,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public MeterReadingDto getActualMeterReadingOnExactUtilityByUser(MeterReadingReviewActualDto requestDto) {
+    public MeterReadingDto getActualMeterReadingOnExactUtilityByUser(ReviewActualMeterReadingDto requestDto) {
         MeterReading newMeterReading = meterReadingRepository.findActualMeterReadingOnExactUtility(
                 requestDto.getUserId(), requestDto.getUtilityId());
         return mapper.meterReadingToMeterReadingDto(newMeterReading);
@@ -61,7 +61,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(MeterReadingReviewActualDto requestDto) {
+    public List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(ReviewActualMeterReadingDto requestDto) {
         List<MeterReading> meterReadings = meterReadingRepository.findActualMeterReadingsOnAllUtilitiesByUser(requestDto.getUserId());
         return mapper.listMeterReadingToListMeterReadingDto(meterReadings);
     }
@@ -70,7 +70,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getMeterReadingsHistoryByUser(MeterReadingReviewHistoryDto requestDto) {
+    public List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto) {
         List<MeterReading> meterReadingHistory = meterReadingRepository.findMeterReadingsHistory(
                 requestDto.getUserId(),
                 requestDto.getPageSize(),
@@ -82,7 +82,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getReadingsForMonthByUser(MeterReadingReviewForMonthDto requestDto) {
+    public List<MeterReadingDto> getReadingsForMonthByUser(ReviewMeterReadingForMonthDto requestDto) {
         List<MeterReading> readingsForMonth = meterReadingRepository.findMeterReadingsForExactMonthByUser(
                 requestDto.getUserId(),
                 requestDto.getYear(),

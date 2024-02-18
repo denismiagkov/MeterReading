@@ -65,8 +65,8 @@ public class UserController {
     @PostMapping(value = "/reading/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MeterReadingDto> submitNewMeterReading(
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
-            @RequestBody @Parameter(description = "user input data") MeterReadingSubmitDto requestDto) {
-        dtoHandler.updateNewMeterReadingSubmitDto(requestDto, token);
+            @RequestBody @Parameter(description = "user input data") SubmitNewMeterReadingDto requestDto) {
+        dtoHandler.updateSubmitNewMeterReadingDto(requestDto, token);
         MeterReadingDto newSubmittedMeterReading = meterReadingService.submitNewMeterReading(requestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -90,11 +90,11 @@ public class UserController {
                             responseCode = "400",
                             description = "BadRequest - User entered wrong utility type")
             })
-    @PostMapping(value = "/reading/actual", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reading/actual", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MeterReadingDto> getActualReadingOnExactUtilityByUser(
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
-            @RequestBody @Parameter(description = "includes utility type (id)") MeterReadingReviewActualDto requestDto) {
-        dtoHandler.updateMeterReadingReviewOnConcreteUtilityDto(requestDto, token);
+            @RequestParam(name = "utilityId") @Parameter(description = "includes utility type (id)") int utilityId) {
+        ReviewActualMeterReadingDto requestDto = dtoHandler.createReviewMeterReadingOnConcreteUtilityDto(utilityId, token);
         MeterReadingDto actualMeterReading = meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -118,10 +118,10 @@ public class UserController {
                                     array = @ArraySchema(
                                             schema = @Schema(implementation = MeterReadingDto.class))))
             })
-    @PostMapping(value = "/readings/actual", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/readings/actual", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getActualMeterReadingsOnAllUtilitiesByUser(
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token) {
-        MeterReadingReviewActualDto requestDto = dtoHandler.createMeterReadingReviewAllActualDto(token);
+        ReviewActualMeterReadingDto requestDto = dtoHandler.createReviewAllActualMeterReadingsDto(token);
         List<MeterReadingDto> listActualMeterReadings = meterReadingService.getActualMeterReadingsOnAllUtilitiesByUser(requestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -145,11 +145,12 @@ public class UserController {
                                     array = @ArraySchema(
                                             schema = @Schema(implementation = MeterReadingDto.class))))
             })
-    @PostMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/readings", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getMeterReadingsHistoryByUser(
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
-            @RequestBody @Parameter(description = "includes parameters of pagination") MeterReadingReviewHistoryDto requestDto) {
-        dtoHandler.createMeterReadingReviewHistoryDto(requestDto, token);
+            @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
+            @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
+        ReviewMeterReadingHistoryDto requestDto = dtoHandler.createMeterReadingReviewHistoryDto(page, size, token);
         List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -175,11 +176,12 @@ public class UserController {
                             responseCode = "400",
                             description = "BadRequest - User entered wrong input data")
             })
-    @PostMapping(value = "/readings/month", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/readings/month", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MeterReadingDto>> getReadingsForMonthByUser(
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
-            @RequestBody @Parameter(description = "includes month, selected by user") MeterReadingReviewForMonthDto requestDto) {
-        dtoHandler.updateMeterReadingReviewForMonthDto(requestDto, token);
+            @RequestParam(name = "month") @Parameter(description = "month") int month,
+            @RequestParam(name = "year") @Parameter(description = "year") int year) {
+        ReviewMeterReadingForMonthDto requestDto = dtoHandler.createReviewMeterReadingsForMonthDto(month, year, token);
         List<MeterReadingDto> listMeterReadingsOnSelectedMonthByUser = meterReadingService.getReadingsForMonthByUser(requestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -1,13 +1,12 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.mapper.UserMapper;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
-import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
@@ -29,12 +28,10 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.servlet.function.RequestPredicates.accept;
 
 @ExtendWith(MockitoExtension.class)
 class LoginControllerTest {
@@ -57,13 +54,13 @@ class LoginControllerTest {
     @Test
     @DisplayName("Method receives post-request and receives user dto in json format")
     void registerUser() throws Exception {
-        UserRegisterDto registerDto = new UserRegisterDto("Ivan", "+7112233", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Ivan", "+7112233", "Moscow", UserRole.USER,
                 "user", "123", null);
         User user = new User(1, "Ivan", "+7112233", "Moscow", UserRole.USER,
                 "user", "123");
         UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
         String requestJson = mapper.writeValueAsString(registerDto);
-        when(userService.registerUser(any(UserRegisterDto.class))).thenReturn(userDto);
+        when(userService.registerUser(any(RegisterUserDto.class))).thenReturn(userDto);
 
         mockMvc.perform(post("/api/v1/registration")
                         .content(requestJson)
@@ -82,14 +79,12 @@ class LoginControllerTest {
     @Test
     @DisplayName("Method throws exception when user enters invalid data (incorrect name)")
     void registerUser_ThrowsException() throws Exception {
-        UserRegisterDto registerDto = new UserRegisterDto("Ivan100", "+7112233", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Ivan100", "+7112233", "Moscow", UserRole.USER,
                 "user", "123", null);
         User user = new User(1, "Ivan", "+7112233", "Moscow", UserRole.USER,
                 "user", "123");
         UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
         String requestJson = mapper.writeValueAsString(registerDto);
-//        when(dtoHandler.verifyUserRegisterDto(registerDto)
-//                .thenThrow(IncorrectInputNameException.class);
 
         mockMvc.perform(post("/api/v1/registration")
                         .content(requestJson)

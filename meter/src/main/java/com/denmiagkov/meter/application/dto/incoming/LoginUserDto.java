@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserLoginDto extends IncomingDto {
+public class LoginUserDto extends IncomingDto {
     /**
      * id пользователя
      */
@@ -32,7 +32,7 @@ public class UserLoginDto extends IncomingDto {
      */
     private String password;
 
-    public UserLoginDto() {
+    public LoginUserDto() {
         this.action = ActionType.AUTHENTICATION;
     }
 

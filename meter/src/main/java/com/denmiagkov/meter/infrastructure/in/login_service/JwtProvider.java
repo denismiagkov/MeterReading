@@ -1,9 +1,9 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.utils.yaml.YamlUtil;
+import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -48,7 +48,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateAccessToken(UserLoginDto loginDto) {
+    public String generateAccessToken(LoginUserDto loginDto) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
@@ -66,7 +66,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateRefreshToken(UserLoginDto loginDto) {
+    public String generateRefreshToken(LoginUserDto loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);

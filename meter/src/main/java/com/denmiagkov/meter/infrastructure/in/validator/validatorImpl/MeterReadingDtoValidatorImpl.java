@@ -1,9 +1,9 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.ReviewActualMeterReadingDto;
+import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingForMonthDto;
+import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.NewMeterValueIsLessThenPreviousException;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
 @Component
-public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSubmitDto> {
+public class MeterReadingDtoValidatorImpl implements DtoValidator<SubmitNewMeterReadingDto> {
 
     DictionaryService dictionaryService;
     MeterReadingService meterReadingService;
@@ -37,7 +37,7 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @param newMeterReading Новое показание счетчика
      * @return boolean возвращает true - если условие выполняется, false - если нет
      */
-    public boolean isValidMeterReadingUtilityType(MeterReadingSubmitDto newMeterReading) {
+    public boolean isValidMeterReadingUtilityType(SubmitNewMeterReadingDto newMeterReading) {
         int utilityCount = dictionaryService.getUtilitiesDictionary().size();
         if (newMeterReading.getUtilityId() <= utilityCount) {
             return true;
@@ -46,7 +46,7 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
         }
     }
 
-    public boolean isValidMeterReadingUtilityType(MeterReadingReviewActualDto newMeterReading) {
+    public boolean isValidMeterReadingUtilityType(ReviewActualMeterReadingDto newMeterReading) {
         int utilityCount = dictionaryService.getUtilitiesDictionary().size();
         if (newMeterReading.getUtilityId() <= utilityCount) {
             return true;
@@ -61,8 +61,8 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @param newMeterReading Новое показание счетчика
      * @return boolean возвращает true - если условие выполняется, false - если нет
      */
-    public boolean isValidDate(MeterReadingSubmitDto newMeterReading) {
-        MeterReadingReviewActualDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
+    public boolean isValidDate(SubmitNewMeterReadingDto newMeterReading) {
+        ReviewActualMeterReadingDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
         MeterReadingDto actualMeterReading =
                 meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestActualMeterReading);
         LocalDateTime now = newMeterReading.getDate();
@@ -81,8 +81,8 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @param newMeterReading новое показание счетчика
      * @return MeterReadingReviewActualDto ДТО для получения текущего показания счетчика
      */
-    private MeterReadingReviewActualDto getActualMeterReadingDto(MeterReadingSubmitDto newMeterReading) {
-        MeterReadingReviewActualDto requestActualMeterReadingDto = new MeterReadingReviewActualDto();
+    private ReviewActualMeterReadingDto getActualMeterReadingDto(SubmitNewMeterReadingDto newMeterReading) {
+        ReviewActualMeterReadingDto requestActualMeterReadingDto = new ReviewActualMeterReadingDto();
         requestActualMeterReadingDto.setUserId(newMeterReading.getUserId());
         requestActualMeterReadingDto.setUtilityId(newMeterReading.getUtilityId());
         return requestActualMeterReadingDto;
@@ -94,8 +94,8 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @param newMeterReading Новое показание счетчика
      * @return boolean возвращает true - если условие выполняется, false - если нет
      */
-    public boolean isValidMeterValue(MeterReadingSubmitDto newMeterReading) {
-        MeterReadingReviewActualDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
+    public boolean isValidMeterValue(SubmitNewMeterReadingDto newMeterReading) {
+        ReviewActualMeterReadingDto requestActualMeterReading = getActualMeterReadingDto(newMeterReading);
         MeterReadingDto actualMeterReading =
                 meterReadingService.getActualMeterReadingOnExactUtilityByUser(requestActualMeterReading);
         if (actualMeterReading == null
@@ -113,13 +113,13 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @param requestDto запрос на предоставление показаний за определенный месяц
      * @return boolean true в случае успешной проверки, в противном случае - false
      */
-    public boolean isValidMonth(MeterReadingReviewForMonthDto requestDto) {
+    public boolean isValidMonth(int month, int year) {
         if (
-                (requestDto.getMonth() >= LocalDateTime.MIN.getMonthValue())
-                && (requestDto.getMonth() <= LocalDateTime.MAX.getMonthValue())
-                && ((requestDto.getYear() < LocalDateTime.now().getYear())
-                    || requestDto.getMonth() <= LocalDateTime.now().getMonthValue()
-                       && requestDto.getYear() == LocalDateTime.now().getYear())
+                (month >= LocalDateTime.MIN.getMonthValue())
+                && (month <= LocalDateTime.MAX.getMonthValue())
+                && ((year < LocalDateTime.now().getYear())
+                    || month <= LocalDateTime.now().getMonthValue()
+                       && year == LocalDateTime.now().getYear())
         ) {
             return true;
         } else {
@@ -135,7 +135,7 @@ public class MeterReadingDtoValidatorImpl implements DtoValidator<MeterReadingSu
      * @return boolean true в случае успешной проверки, в противном случае - false
      */
     @Override
-    public boolean isValid(MeterReadingSubmitDto meterReading) {
+    public boolean isValid(SubmitNewMeterReadingDto meterReading) {
         return isValidMeterReadingUtilityType(meterReading)
                && isValidDate(meterReading)
                && isValidMeterValue(meterReading);

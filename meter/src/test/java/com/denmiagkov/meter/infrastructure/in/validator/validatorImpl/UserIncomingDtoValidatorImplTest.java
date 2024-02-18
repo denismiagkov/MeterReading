@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputLoginException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
@@ -17,7 +17,7 @@ class UserIncomingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws exception when name contains not only of letters")
     void isValid_IncorrectName() {
-        UserRegisterDto registerDto = new UserRegisterDto("Alex2", "+7123456789", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Alex2", "+7123456789", "Moscow", UserRole.USER,
                 "user", "123456789", null);
 
         assertThatThrownBy(() -> validator.isValid(registerDto))
@@ -27,7 +27,7 @@ class UserIncomingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws exception when name contains not only of letters")
     void isValid_IncorrectPhone() {
-        UserRegisterDto registerDto = new UserRegisterDto("Alex", "-7123456789", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Alex", "-7123456789", "Moscow", UserRole.USER,
                 "user", "123456789", null);
 
         assertThatThrownBy(() -> validator.isValid(registerDto))
@@ -37,7 +37,7 @@ class UserIncomingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws exception when login is blank")
     void isValid_IncorrectPhone_InvalidLogin() {
-        UserRegisterDto registerDto = new UserRegisterDto("Alex", "+7123456789", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Alex", "+7123456789", "Moscow", UserRole.USER,
                 "", "123", null);
 
         assertThatThrownBy(() -> validator.isValid(registerDto))
@@ -47,7 +47,7 @@ class UserIncomingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws exception when password is too short")
     void isValid_IncorrectPhone_InvalidPassword() {
-        UserRegisterDto registerDto = new UserRegisterDto("Alex", "+7123456789", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Alex", "+7123456789", "Moscow", UserRole.USER,
                 "user", "123", null);
 
         assertThatThrownBy(() -> validator.isValid(registerDto))

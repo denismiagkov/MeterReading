@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.domain.MeterReading;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface MeterReadingRepository {
      *
      * @param reading новое показание счетчика
      */
-    MeterReading addNewMeterReading(MeterReadingSubmitDto reading);
+    MeterReading addNewMeterReading(SubmitNewMeterReadingDto reading);
 
     /**
      * Метод выборки данных об актуальных показаниях счетчиков определенного пользователя

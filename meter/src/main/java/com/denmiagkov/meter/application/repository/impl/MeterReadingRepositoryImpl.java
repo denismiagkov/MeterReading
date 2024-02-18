@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository.impl;
 
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.repository.MeterReadingRepository;
 import com.denmiagkov.meter.domain.MeterReading;
 import com.denmiagkov.meter.utils.ConnectionManager;
@@ -76,7 +76,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public MeterReading addNewMeterReading(MeterReadingSubmitDto meterReading) {
+    public MeterReading addNewMeterReading(SubmitNewMeterReadingDto meterReading) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_NEW_METER_READING)) {
             statement.setInt(1, meterReading.getUserId());

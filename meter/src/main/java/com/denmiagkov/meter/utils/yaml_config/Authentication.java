@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.utils.yaml;
+package com.denmiagkov.meter.utils.yaml_config;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

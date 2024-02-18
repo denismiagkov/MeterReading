@@ -4,14 +4,12 @@ import com.denmiagkov.meter.domain.ActionType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 /**
- * Класс входящего ДТО для передачи нового показания счетчика
+ * Входящее ДТО для обзора показаний счетчиков за определенный месяц
  */
 @Getter
 @Setter
-public class MeterReadingSubmitDto extends IncomingDto {
+public class ReviewMeterReadingForMonthDto extends IncomingDto {
     /**
      * id пользователя
      */
@@ -21,20 +19,16 @@ public class MeterReadingSubmitDto extends IncomingDto {
      */
     private ActionType action;
     /**
-     * Дата и время подачи показания
+     * Год подачи показаний
      */
-    private LocalDateTime date;
+    private int year;
     /**
-     * id типа услуг
+     * Месяц подачи показаний
      */
-    private int utilityId;
-    /**
-     * Значение счетчика
-     */
-    private double value;
+    private int month;
 
-    public MeterReadingSubmitDto() {
-        this.action = ActionType.SUBMIT_NEW_READING;
+    public ReviewMeterReadingForMonthDto() {
+        this.action = ActionType.REVIEW_READINGS_FOR_MONTH;
     }
 
     @Override

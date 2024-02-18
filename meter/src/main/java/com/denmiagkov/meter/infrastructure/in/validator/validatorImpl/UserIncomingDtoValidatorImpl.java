@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.infrastructure.in.validator.DtoValidator;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputLoginException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.IncorrectInputNameException;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Класс, валидирующий сведения о новом пользователе при его регистрации в приложении
  */
 @Component
-public class UserIncomingDtoValidatorImpl implements DtoValidator<UserRegisterDto> {
+public class UserIncomingDtoValidatorImpl implements DtoValidator<RegisterUserDto> {
 
     private boolean isValidName(String name) {
         return name != null &&
@@ -37,7 +37,7 @@ public class UserIncomingDtoValidatorImpl implements DtoValidator<UserRegisterDt
     }
 
     @Override
-    public boolean isValid(UserRegisterDto userDto) {
+    public boolean isValid(RegisterUserDto userDto) {
         if (!isValidName(userDto.getName())) {
             throw new IncorrectInputNameException();
         } else if (!isValidPhone(userDto.getPhone())) {

@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewHistoryDto;
+import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingHistoryDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.impl.UserActivityServiceImpl;
@@ -35,7 +35,7 @@ class UserActionServiceImplTest {
     @Test
     @DisplayName("Method invokes appropriate method on dependent object")
     void addActivity() {
-        MeterReadingReviewHistoryDto dto = new MeterReadingReviewHistoryDto();
+        ReviewMeterReadingHistoryDto dto = new ReviewMeterReadingHistoryDto();
         dto.setUserId(2);
 
         activityService.registerUserAction(dto);

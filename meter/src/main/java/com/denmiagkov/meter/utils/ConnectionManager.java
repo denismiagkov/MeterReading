@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.utils;
 
 import com.denmiagkov.meter.utils.exception.DatabaseConnectionNotEstablishedException;
-import com.denmiagkov.meter.utils.yaml.YamlUtil;
+import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;

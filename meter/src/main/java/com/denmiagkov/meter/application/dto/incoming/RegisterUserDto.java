@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserRegisterDto extends IncomingDto {
+public class RegisterUserDto extends IncomingDto {
     private int userId;
     private ActionType action;
     private String name;
@@ -21,11 +21,11 @@ public class UserRegisterDto extends IncomingDto {
     private String password;
     private String adminPassword;
 
-    public UserRegisterDto() {
+    public RegisterUserDto() {
         this.action = ActionType.REGISTRATION;
     }
 
-    public UserRegisterDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
+    public RegisterUserDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
         this();
         this.name = name;
         this.phone = phone;

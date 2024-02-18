@@ -1,10 +1,10 @@
 package com.denmiagkov.meter.application.service.impl;
 
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.mapper.UserLoginMapper;
 import com.denmiagkov.meter.application.mapper.UserMapper;
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.mapper.UserRegisterMapper;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public UserDto registerUser(UserRegisterDto userIncomingDto) {
+    public UserDto registerUser(RegisterUserDto userIncomingDto) {
         User user = incomingDtoMapper.incomingUserDtoToUser(userIncomingDto);
         setUserRole(userIncomingDto, user);
         UserDto userOutgoingDto = addNewUserToDatabase(user);
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void setUserRole(UserRegisterDto userDto, User user) {
+    private void setUserRole(RegisterUserDto userDto, User user) {
         if (user.getRole() != null &&
             user.getRole().equals(UserRole.ADMIN) &&
             (userDto.getAdminPassword() == null ||
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserLoginDto getPasswordByLogin(String login) {
+    public LoginUserDto getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)
                 .orElseThrow(AuthenticationFailedException::new);
         return loginMapper.userToUserLoginDto(user);

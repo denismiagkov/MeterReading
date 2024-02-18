@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.mapper;
 
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,5 +17,5 @@ public interface UserLoginMapper {
     @Mapping(source = "role", target = "role")
     @Mapping(source = "login", target = "login")
     @Mapping(source = "password", target = "password")
-    UserLoginDto userToUserLoginDto(User user);
+    LoginUserDto userToUserLoginDto(User user);
 }

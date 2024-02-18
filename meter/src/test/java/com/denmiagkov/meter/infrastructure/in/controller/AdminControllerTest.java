@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class AdminControllerTest {
 
-
     private MockMvc mockMvc;
     @Mock
     private UserService userService;

@@ -1,15 +1,12 @@
-package com.denmiagkov.meter.utils.yaml;
+package com.denmiagkov.meter.utils.yaml_config;
 
 import com.denmiagkov.meter.utils.exception.PropertiesFileNotFoundException;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.inspector.TagInspector;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class YamlUtil {
     private static final String YAML_FILE = "application.yaml";

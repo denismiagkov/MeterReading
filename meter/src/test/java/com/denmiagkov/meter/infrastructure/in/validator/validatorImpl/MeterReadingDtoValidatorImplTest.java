@@ -1,8 +1,8 @@
 package com.denmiagkov.meter.infrastructure.in.validator.validatorImpl;
 
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewActualDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingReviewForMonthDto;
-import com.denmiagkov.meter.application.dto.incoming.MeterReadingSubmitDto;
+import com.denmiagkov.meter.application.dto.incoming.ReviewActualMeterReadingDto;
+import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingForMonthDto;
+import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
@@ -39,7 +39,7 @@ class MeterReadingDtoValidatorImplTest {
     @Test
     @DisplayName("Returns true when dictionary size is more than utility Id")
     void isValidMeterReadingUtilityType_ReturnsTrue() {
-        MeterReadingSubmitDto newMeterReading = mock(MeterReadingSubmitDto.class);
+        SubmitNewMeterReadingDto newMeterReading = mock(SubmitNewMeterReadingDto.class);
         Map<Integer, String> dictionary = mock(HashMap.class);
         when(dictionaryService.getUtilitiesDictionary()).thenReturn(dictionary);
         when(dictionary.size()).thenReturn(3);
@@ -53,7 +53,7 @@ class MeterReadingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws UtilityTypeNotFoundException when dictionary size is less than utility Id")
     void isValidMeterReadingUtilityType_ThrowsException() {
-        MeterReadingReviewActualDto newMeterReading = mock(MeterReadingReviewActualDto.class);
+        ReviewActualMeterReadingDto newMeterReading = mock(ReviewActualMeterReadingDto.class);
         Map<Integer, String> dictionary = mock(HashMap.class);
         when(dictionaryService.getUtilitiesDictionary()).thenReturn(dictionary);
         when(dictionary.size()).thenReturn(3);
@@ -67,11 +67,7 @@ class MeterReadingDtoValidatorImplTest {
     @Test
     @DisplayName("Returns true when meter reading date is not later than now")
     void isValidMonth_ReturnsTrue() {
-        MeterReadingReviewForMonthDto requestDto = mock(MeterReadingReviewForMonthDto.class);
-        when(requestDto.getMonth()).thenReturn(2);
-        when(requestDto.getYear()).thenReturn(2024);
-
-        boolean result = validator.isValidMonth(requestDto);
+        boolean result = validator.isValidMonth(2, 2024);
 
         assertThat(result).isTrue();
     }
@@ -79,21 +75,14 @@ class MeterReadingDtoValidatorImplTest {
     @Test
     @DisplayName("Throws exception when meter reading date is later than now")
     void isValidMonth_ThrowsException() {
-        MeterReadingReviewForMonthDto requestDto = mock(MeterReadingReviewForMonthDto.class);
-        when(requestDto.getMonth()).thenReturn(9);
-        when(requestDto.getYear()).thenReturn(2024);
-
-        assertThatThrownBy((() -> validator.isValidMonth(requestDto)))
+        assertThatThrownBy((() -> validator.isValidMonth(9, 2024)))
                 .isInstanceOf(InvalidDateException.class);
     }
 
     @Test
     @DisplayName("Throws exception when month value is incorrect")
     void isValidMonth_ThrowsException_IncorrectMonthValue() {
-        MeterReadingReviewForMonthDto requestDto = mock(MeterReadingReviewForMonthDto.class);
-        when(requestDto.getMonth()).thenReturn(13);
-
-        assertThatThrownBy((() -> validator.isValidMonth(requestDto)))
+        assertThatThrownBy((() -> validator.isValidMonth(13, 2023)))
                 .isInstanceOf(InvalidDateException.class);
     }
 }
