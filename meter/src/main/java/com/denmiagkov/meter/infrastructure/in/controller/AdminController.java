@@ -9,7 +9,6 @@ import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.PublicUtilityValidatorImpl;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,7 +28,7 @@ import java.util.Set;
 /**
  * Контроллер, обрабатывающий обращения администратора
  */
-@Api(tags = "Admin")
+//@Api(tags = "Admin")
 @Loggable
 @RestController
 @RequestMapping("/api/v1/admin")

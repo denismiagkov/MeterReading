@@ -5,7 +5,6 @@ import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * Контроллер, обрабатывающий обращения пользователя
  */
-@Api(tags = "User")
+//@Api(tags = "User")
 @Loggable
 @RestController
 @RequestMapping("/api/v1/user")

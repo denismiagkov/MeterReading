@@ -33,7 +33,6 @@ class UserActionRepositoryImplTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        LiquibaseManager.startLiquibase();
         activityRepository = new ActivityRepositoryImpl();
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);

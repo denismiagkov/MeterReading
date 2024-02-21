@@ -30,7 +30,6 @@ class DictionaryRepositoryImplTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        LiquibaseManager.startLiquibase();
         dictionaryRepository = new DictionaryRepositoryImpl();
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);

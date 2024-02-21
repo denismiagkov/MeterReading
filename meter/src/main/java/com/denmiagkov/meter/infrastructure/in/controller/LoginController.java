@@ -8,7 +8,6 @@ import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Контроллер регистрации и входа в приложение
  */
-@Api(tags = "Login")
+//@Api(tags = "Login")
 @Loggable
 @RestController
 @RequestMapping("/api/v1")

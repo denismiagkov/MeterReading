@@ -2,11 +2,13 @@ package com.denmiagkov.meter.infrastructure.in.login_service;
 
 import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
+import com.denmiagkov.meter.config.yaml.AuthConfig;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -38,9 +40,12 @@ public class JwtProvider {
      */
     public static final String USER_ROLE = "role";
 
-    public JwtProvider() {
-        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtAccessSecretKey()));
-        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtRefreshSecretKey()));
+    private AuthConfig config;
+    @Autowired
+    public JwtProvider(AuthConfig authConfig) {
+        this.config = authConfig;
+        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(config.getValueOfJwtAccessSecretKey()));
+        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(config.getValueOfJwtRefreshSecretKey()));
     }
 
     /**

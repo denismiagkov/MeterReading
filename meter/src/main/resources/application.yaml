@@ -1,13 +1,19 @@
-datasource:
-  url: jdbc:postgresql://localhost:5431/meter
-  username: meter
-  password: 123
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5431/meter
+    username: meter
+    password: 123
+    driver-class-name: org.postgresql.Driver
 
-liquibase:
-  serviceSchemaName: migration
-  defaultSchemaName: meter_service
-  changelogFile: db/changelog/changelog.xml
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: meter_service
+    liquibase-schema: migration
+    enabled: true
 
 authentication:
   valueOfJwtAccessSecretKey: Nb3YCWOp7kghAjoQkiNze2PTiLjQPQYdegcPM9oC77UkpUyJIuobhbeWRN+OI8PjXyGrITKxJWhYvrBlgH4JFA==
   valueOfJwtRefreshSecretKey: tSlh5T96KurUBOsKV0Ja/AIVGKpakIvDpejeRBxukbL9xJrQ1XoCodsoQhH6gmWiUevBe/Gw1FRiHn9HzExyCQ==
+
+
+
