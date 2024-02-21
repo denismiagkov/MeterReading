@@ -31,7 +31,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
      * {@inheritDoc}
      * */
     @Override
-    public int addUtilityTypeToDictionary(String utilityName) {
+    public Map<Integer, String> addUtilityType(String utilityName) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(
                      ADD_PUBLIC_UTILITY_TYPE_TO_DICTIONARY,
@@ -43,7 +43,9 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
             if (generatedKey.next()) {
                 newUtilityId = generatedKey.getInt("id");
             }
-            return newUtilityId;
+            Map<Integer, String> newUtility = new HashMap<>();
+            newUtility.put(newUtilityId, utilityName);
+            return newUtility;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

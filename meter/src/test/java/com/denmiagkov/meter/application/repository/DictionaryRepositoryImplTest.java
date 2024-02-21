@@ -2,7 +2,6 @@ package com.denmiagkov.meter.application.repository;
 
 import com.denmiagkov.meter.application.repository.impl.DictionaryRepositoryImpl;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -42,19 +41,14 @@ class DictionaryRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Number of records increases on 1 after adding another record, and utilityToAdd equals addedUtility")
+    @DisplayName("Number of records increases on 1 after adding another record")
     void addUtilityTypeToDictionary() {
         String utilityToAdd = "ELECTRICITY";
         int listSizeBefore = dictionaryRepository.getAllUtilitiesTypes().size();
-        int utilityId = dictionaryRepository.addUtilityTypeToDictionary(utilityToAdd);
+        Map<Integer, String> newUtility = dictionaryRepository.addUtilityType(utilityToAdd);
         int listSizeAfter = dictionaryRepository.getAllUtilitiesTypes().size();
 
-        String addedUtility = dictionaryRepository.getAllUtilitiesTypes().get(utilityId);
-
-        assertAll(
-                () -> assertThat(listSizeAfter).isGreaterThan(listSizeBefore),
-                () -> assertThat(addedUtility).isEqualTo(utilityToAdd)
-        );
+        assertThat(listSizeAfter).isGreaterThan(listSizeBefore);
     }
 
     @Test

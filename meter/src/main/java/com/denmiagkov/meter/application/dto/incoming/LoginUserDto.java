@@ -10,8 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LoginUserDto extends IncomingDto {
-    /**
+public class LoginUserDto extends IncomingDto { /**
      * id пользователя
      */
     private int userId;

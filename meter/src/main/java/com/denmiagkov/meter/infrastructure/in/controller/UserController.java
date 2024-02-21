@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
@@ -11,7 +12,8 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +21,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.denmiagkov.meter.infrastructure.in.dto_handling.PageableCreator.createPageable;
+
 /**
  * Контроллер, обрабатывающий обращения пользователя
  */
-//@Api(tags = "User")
+@Tag(name = "User")
 @Loggable
 @RestController
 @RequestMapping("/api/v1/user")
+@AllArgsConstructor
 public class UserController {
     public static final String TOKEN_ATTRIBUTE_NAME = "token";
     /**
@@ -36,14 +41,6 @@ public class UserController {
      * Создатель входящих ДТО
      */
     private final IncomingDtoBuilder dtoHandler;
-
-    @Autowired
-    public UserController(MeterReadingService meterReadingService,
-                          IncomingDtoBuilder dtoHandler) {
-        this.meterReadingService = meterReadingService;
-        this.dtoHandler = dtoHandler;
-    }
-
     /**
      * Метод передачи показания счетчика
      *
@@ -149,8 +146,9 @@ public class UserController {
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
-        ReviewMeterReadingHistoryDto requestDto = dtoHandler.createMeterReadingReviewHistoryDto(page, size, token);
-        List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto);
+        Pageable pageable = createPageable(page, size);
+        ReviewMeterReadingHistoryDto requestDto = dtoHandler.createMeterReadingReviewHistoryDto(token);
+        List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto, pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(historySubmittingMeterReadingsByUser);

@@ -19,16 +19,6 @@ public class ReviewMeterReadingHistoryDto extends IncomingDto {
      */
     private ActionType action;
 
-    /**
-     * Параметр пагинации: размер страницы
-     */
-    private int pageSize;
-
-    /**
-     * Параметр пагинации: номер страницы
-     */
-    private int page;
-
     public ReviewMeterReadingHistoryDto() {
         this.action = ActionType.REVIEW_READINGS_HISTORY;
     }

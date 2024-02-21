@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.service.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.mapper.MeterReadingMapper;
@@ -22,11 +23,12 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * Репозиторий данных о показаниях счетчика
      */
     private final MeterReadingRepository meterReadingRepository;
-    private static final MeterReadingMapper mapper = MeterReadingMapper.INSTANCE;
+    private final MeterReadingMapper mapper;
 
     @Autowired
     public MeterReadingServiceImpl(MeterReadingRepository meterReadingRepository) {
         this.meterReadingRepository = meterReadingRepository;
+        this.mapper = MeterReadingMapper.INSTANCE;
     }
 
     /**
@@ -42,8 +44,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getAllMeterReadingsList(int page, int pageSize) {
-        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(page, pageSize);
+    public List<MeterReadingDto> getAllMeterReadingsList(Pageable pageable) {
+        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(pageable);
         return mapper.listMeterReadingToListMeterReadingDto(meterReadingList);
     }
 
@@ -70,11 +72,9 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto) {
+    public List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto, Pageable pageable) {
         List<MeterReading> meterReadingHistory = meterReadingRepository.findMeterReadingsHistory(
-                requestDto.getUserId(),
-                requestDto.getPageSize(),
-                requestDto.getPage());
+                requestDto.getUserId(), pageable);
         return mapper.listMeterReadingToListMeterReadingDto(meterReadingHistory);
     }
 

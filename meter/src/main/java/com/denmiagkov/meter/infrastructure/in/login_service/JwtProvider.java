@@ -4,7 +4,6 @@ import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.config.yaml.AuthConfig;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

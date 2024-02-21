@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.domain.MeterReading;
 
@@ -40,7 +41,7 @@ public interface MeterReadingRepository {
      *
      * @return List<MeterReading> Список всех переданных показаний
      */
-    List<MeterReading> findAllMeterReadings(int page, int pageSize);
+    List<MeterReading> findAllMeterReadings(Pageable pageable);
 
     /**
      * Метод получения истории передачи показаний конкретным пользователем
@@ -48,7 +49,7 @@ public interface MeterReadingRepository {
      * @param user Пользователь
      * @return List<MeterReading> Список показаний, переданных указанным пользователем
      */
-    List<MeterReading> findMeterReadingsHistory(int userId, int pageSize, int page);
+    List<MeterReading> findMeterReadingsHistory(int userId, Pageable pageable);
 
     /**
      * Метод получения всех показаний, переданных указанным пользователем за определенный месяц

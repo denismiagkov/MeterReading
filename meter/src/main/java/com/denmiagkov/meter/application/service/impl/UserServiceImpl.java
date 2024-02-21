@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.service.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.mapper.UserLoginMapper;
@@ -32,14 +33,17 @@ public class UserServiceImpl implements UserService {
      * Сервис обработки пользовательских действий в приложении
      */
     private final UserActivityService activityService;
-    UserRegisterMapper incomingDtoMapper = UserRegisterMapper.INSTANCE;
-    UserMapper outgoingDtoMapper = UserMapper.INSTANCE;
-    UserLoginMapper loginMapper = UserLoginMapper.INSTANCE;
+    private final UserRegisterMapper incomingDtoMapper;
+    private final UserMapper outgoingDtoMapper;
+    private final UserLoginMapper loginMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserActivityService activityService) {
         this.userRepository = userRepository;
         this.activityService = activityService;
+        this.incomingDtoMapper = UserRegisterMapper.INSTANCE;
+        this.outgoingDtoMapper = UserMapper.INSTANCE;
+        this.loginMapper = UserLoginMapper.INSTANCE;
     }
 
     /**
@@ -91,8 +95,8 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Set<UserDto> getAllUsers(int page, int pageSize) {
-        Set<User> users = userRepository.findAllUsers(page, pageSize);
+    public Set<UserDto> getAllUsers(Pageable pageable) {
+        Set<User> users = userRepository.findAllUsers(pageable);
         return outgoingDtoMapper.usersToUserDtos(users);
     }
 }

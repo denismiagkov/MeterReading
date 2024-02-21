@@ -2,6 +2,7 @@ package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ public class RegisterUserDto extends IncomingDto {
         this.action = ActionType.REGISTRATION;
     }
 
+    @Builder
     public RegisterUserDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
         this();
         this.name = name;

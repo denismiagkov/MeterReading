@@ -66,12 +66,10 @@ public class IncomingDtoBuilder {
      * @param token    JWT-token
      * @return Входящее ДТО
      */
-    public ReviewMeterReadingHistoryDto createMeterReadingReviewHistoryDto(int page, int pageSize, String token) {
+    public ReviewMeterReadingHistoryDto createMeterReadingReviewHistoryDto(String token) {
         ReviewMeterReadingHistoryDto requestDto = new ReviewMeterReadingHistoryDto();
         int userId = authService.getUserIdFromToken(token);
         requestDto.setUserId(userId);
-        requestDto.setPage(page);
-        requestDto.setPageSize(pageSize);
         return requestDto;
     }
 

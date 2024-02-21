@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.domain.ActionType;
@@ -54,12 +55,12 @@ public class ActivityRepositoryImpl implements ActivityRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<UserAction> findAllUsersActions(int page, int pageSize) {
+    public List<UserAction> findAllUsersActions(Pageable pageable) {
         List<UserAction> userActivitiesList = new ArrayList<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS_ACTIONS)) {
-            statement.setInt(1, pageSize);
-            statement.setInt(2, (page * pageSize));
+            statement.setInt(1, pageable.getPageSize());
+            statement.setInt(2, (pageable.getPage() * pageable.getPageSize()));
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {
                 UserAction userAction = getActivity(queryResult);

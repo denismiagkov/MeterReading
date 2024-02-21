@@ -22,12 +22,13 @@ public class UserFilterWrapper {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String TOKEN_ATTRIBUTE_NAME = "token";
     public static final Logger LOG = LoggerFactory.getLogger(UserFilterWrapper.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static ObjectMapper mapper;
     private static AuthService authService;
 
     @Autowired
     private UserFilterWrapper(AuthService service) {
         authService = service;
+        mapper = new ObjectMapper();
     }
 
     public static class UserFilter implements Filter {
@@ -47,7 +48,7 @@ public class UserFilterWrapper {
 
     private static void handleException(HttpServletResponse response, Exception e) throws IOException {
         LOG.error("EXCEPTION OCCURRED: ", e);
-        String errorMessage = MAPPER.writeValueAsString(e.getMessage());
+        String errorMessage = mapper.writeValueAsString(e.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.getWriter().write(errorMessage);

@@ -22,10 +22,6 @@ public class AuditAspect {
         this.activityService = activityService;
     }
 
-    void setActivityService(UserActivityService activityService) {
-        this.activityService = activityService;
-    }
-
     @Pointcut("within(@com.denmiagkov.meter.aspects.annotations.Audit *) && execution(* * (..))")
     private void annotatedByAudit() {
     }

@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 
@@ -24,7 +25,7 @@ public interface MeterReadingService {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметров панинации
      */
-    List<MeterReadingDto> getAllMeterReadingsList(int page, int pageSize);
+    List<MeterReadingDto> getAllMeterReadingsList(Pageable pageable);
 
     /**
      * Метод получения актуального (последнего переданного) показания счетчика конкретного пользователя
@@ -50,7 +51,7 @@ public interface MeterReadingService {
      * @param pageSize Параметр пагинации (размер страницы)
      * @return List<List < MeterReading>> Список поданных показаний с учетом параметров пагинации
      */
-    List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto);
+    List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto, Pageable pageable);
 
     /**
      * Метод просмотра показаний счетчиков определенного пользователя за конкретный месяц

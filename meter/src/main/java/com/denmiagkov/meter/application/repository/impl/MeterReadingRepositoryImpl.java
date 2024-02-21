@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.repository.MeterReadingRepository;
 import com.denmiagkov.meter.domain.MeterReading;
@@ -151,11 +152,11 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> findAllMeterReadings(int page, int pageSize) {
+    public List<MeterReading> findAllMeterReadings(Pageable pageable) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_METER_READINGS_BY_ALL_USERS)) {
-            statement.setInt(1, pageSize);
-            statement.setInt(2, (page * pageSize));
+            statement.setInt(1, pageable.getPageSize());
+            statement.setInt(2, (pageable.getPage() * pageable.getPageSize()));
             ResultSet queryResult = statement.executeQuery();
             List<MeterReading> userMeterReadingsByMonth = new ArrayList<>();
             while (queryResult.next()) {
@@ -171,12 +172,12 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReading> findMeterReadingsHistory(int userId, int pageSize, int page) {
+    public List<MeterReading> findMeterReadingsHistory(int userId, Pageable pageable) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_HISTORY_OF_METER_READINGS_BY_USER)) {
             statement.setInt(1, userId);
-            statement.setInt(2, pageSize);
-            statement.setInt(3, (page));
+            statement.setInt(2, pageable.getPageSize());
+            statement.setInt(3, (pageable.getPage() * pageable.getPageSize()));
             ResultSet resultSet = statement.executeQuery();
             List<MeterReading> userMeterReadingsHistory = new ArrayList<>();
             while (resultSet.next()) {

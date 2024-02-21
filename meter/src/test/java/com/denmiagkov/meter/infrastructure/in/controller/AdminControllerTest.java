@@ -25,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.util.NestedServletException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -159,7 +158,7 @@ class AdminControllerTest {
         when(utilityValidator.isValid(newUtility))
                 .thenReturn(true);
         Map<Integer, String> dictionary = new HashMap<>();
-        when(dictionaryService.addUtilityTypeToDictionary(newUtility))
+        when(dictionaryService.addUtilityType(newUtility))
                 .thenReturn(dictionary);
 
         mockMvc.perform(post("/api/v1/admin/dictionary/new/")

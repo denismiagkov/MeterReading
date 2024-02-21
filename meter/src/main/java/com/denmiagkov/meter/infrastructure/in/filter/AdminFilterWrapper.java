@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -20,15 +21,16 @@ import java.io.IOException;
 public class AdminFilterWrapper {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final Logger LOG = LoggerFactory.getLogger(AdminFilterWrapper.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static ObjectMapper mapper;
     private static AuthService authService;
 
     @Autowired
     private AdminFilterWrapper(AuthService service) {
         authService = service;
+        mapper = new ObjectMapper();
+
     }
 
-    //@WebFilter("/api/v1/admin/*")
     public static class AdminFilter implements Filter {
         @Override
         public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -45,7 +47,7 @@ public class AdminFilterWrapper {
 
     private static void handleException(HttpServletResponse response, Exception e) throws IOException {
         LOG.error("EXCEPTION OCCURRED: ", e);
-        String errorMessage = MAPPER.writeValueAsString(e.getMessage());
+        String errorMessage = mapper.writeValueAsString(e.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.getWriter().write(errorMessage);

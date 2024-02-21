@@ -13,7 +13,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Контроллер регистрации и входа в приложение
  */
-//@Api(tags = "Login")
+@Tag(name = "Login")
 @Loggable
 @RestController
 @RequestMapping("/api/v1")
+@AllArgsConstructor
 public class LoginController {
     /**
      * Сервис пользователя
@@ -35,24 +37,11 @@ public class LoginController {
     private final IncomingDtoBuilder dtoHandler;
 
     /**
-     * Конструктор
-     */
-    @Autowired
-    public LoginController(UserService userService,
-                           AuthService authService,
-                           IncomingDtoBuilder dtoHandler) {
-        this.userService = userService;
-        this.authService = authService;
-        this.dtoHandler = dtoHandler;
-    }
-
-    /**
      * Метод регистрации пользователя
      *
      * @param registerUserDto Входящее ДТО регистрации пользователя
      * @return User Зарегистрированный пользователь
      */
-
     @Operation(
             summary = "Registration of new user",
             responses = {

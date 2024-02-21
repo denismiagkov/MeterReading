@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.domain.UserRole;
@@ -142,12 +143,12 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public Set<User> findAllUsers(int page, int pageSize) {
+    public Set<User> findAllUsers(Pageable pageable) {
         Set<User> users = new HashSet<>();
         try (Connection connection = ConnectionManager.open();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_USERS)) {
-            preparedStatement.setInt(1, pageSize);
-            preparedStatement.setInt(2, (page * pageSize));
+            preparedStatement.setInt(1, pageable.getPageSize());
+            preparedStatement.setInt(2, (pageable.getPage() * pageable.getPageSize()));
             ResultSet queryResult = preparedStatement.executeQuery();
             while (queryResult.next()) {
                 User user = findUser(queryResult);

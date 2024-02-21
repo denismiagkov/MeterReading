@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 
@@ -53,7 +54,7 @@ public interface UserRepository {
      *
      * @return Set<User> Множество зарегистрованных пользователей
      */
-    Set<User> findAllUsers(int page, int pageSize);
+    Set<User> findAllUsers(Pageable pageable);
 
     /**
      * Метод возвращает пользователя на основе соответствующей записи в базе данных

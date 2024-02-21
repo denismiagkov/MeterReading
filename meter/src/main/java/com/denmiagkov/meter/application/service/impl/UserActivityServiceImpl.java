@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.service.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.mapper.UserActionMapper;
@@ -20,11 +21,12 @@ public class UserActivityServiceImpl implements UserActivityService {
      * Репозиторий данных о действиях пользователя
      */
     private final ActivityRepository activityRepository;
-    UserActionMapper mapper = UserActionMapper.INSTANCE;
+    private final UserActionMapper mapper;
 
     @Autowired
     public UserActivityServiceImpl(ActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
+        this.mapper = UserActionMapper.INSTANCE;
     }
 
     /**
@@ -40,8 +42,8 @@ public class UserActivityServiceImpl implements UserActivityService {
      * {@inheritDoc}
      */
     @Override
-    public List<UserActionDto> getUserActivitiesList(int page, int pageSize) {
-        List<UserAction> userActions = activityRepository.findAllUsersActions(page, pageSize);
+    public List<UserActionDto> getUserActivitiesList(Pageable pageable) {
+        List<UserAction> userActions = activityRepository.findAllUsersActions(pageable);
         return mapper.userActionsToUserActionDtos(userActions);
     }
 }
