@@ -1,4 +1,4 @@
-package com.denmiagkov.meter.domain;
+package com.denmiagkov.starter.audit.domain;
 
 import lombok.*;
 

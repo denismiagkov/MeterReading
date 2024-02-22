@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.mapper;
 
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
-import com.denmiagkov.meter.domain.UserAction;
+import com.denmiagkov.starter.audit.domain.UserAction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

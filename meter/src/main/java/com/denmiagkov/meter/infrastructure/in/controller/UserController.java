@@ -4,8 +4,8 @@ import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
+import com.denmiagkov.starter.logging.aspect.annotations.Loggable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.denmiagkov.meter.infrastructure.in.dto_handling.PageableCreator.createPageable;
 
 /**
  * Контроллер, обрабатывающий обращения пользователя
@@ -41,6 +39,7 @@ public class UserController {
      * Создатель входящих ДТО
      */
     private final IncomingDtoBuilder dtoHandler;
+
     /**
      * Метод передачи показания счетчика
      *
@@ -146,7 +145,7 @@ public class UserController {
             @RequestAttribute(TOKEN_ATTRIBUTE_NAME) @Parameter(description = "JWT token") String token,
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
-        Pageable pageable = createPageable(page, size);
+        Pageable pageable = Pageable.of(page, size);
         ReviewMeterReadingHistoryDto requestDto = dtoHandler.createMeterReadingReviewHistoryDto(token);
         List<MeterReadingDto> historySubmittingMeterReadingsByUser = meterReadingService.getMeterReadingsHistoryByUser(requestDto, pageable);
         return ResponseEntity

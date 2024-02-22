@@ -2,6 +2,7 @@ package com.denmiagkov.meter.config;
 
 import com.denmiagkov.meter.infrastructure.in.filter.AdminFilterWrapper;
 import com.denmiagkov.meter.infrastructure.in.filter.UserFilterWrapper;
+import com.denmiagkov.starter.logging.aspect.annotations.EnableLogging;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import java.util.List;
 
 @Configuration
+@EnableLogging
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean

@@ -2,11 +2,11 @@ package com.denmiagkov.meter.application.service.impl;
 
 import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
-import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
 import com.denmiagkov.meter.application.mapper.UserActionMapper;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.UserActivityService;
-import com.denmiagkov.meter.domain.UserAction;
+import com.denmiagkov.starter.audit.domain.UserAction;
+import com.denmiagkov.starter.audit.dto.IncomingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

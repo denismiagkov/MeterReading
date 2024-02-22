@@ -1,9 +1,10 @@
-package com.denmiagkov.meter.application.dto.incoming;
+package com.denmiagkov.starter.audit.dto;
 
-import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.starter.audit.domain.ActionType;
+
 /**
  * Класс-родитель для входящих ДТО
- * */
+ */
 public abstract class IncomingDto {
 
     public abstract Integer getUserId();

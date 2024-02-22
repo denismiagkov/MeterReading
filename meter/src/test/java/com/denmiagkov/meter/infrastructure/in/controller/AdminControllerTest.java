@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
@@ -14,6 +15,8 @@ import com.denmiagkov.meter.domain.*;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.PublicUtilityValidatorImpl;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.handlers.GlobalExceptionHandler;
+import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.starter.audit.domain.UserAction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -91,7 +94,8 @@ class AdminControllerTest {
                 .build();
         UserDto userDto2 = UserMapper.INSTANCE.userToUserDto(user2);
         Set<UserDto> users = Set.of(userDto1, userDto2);
-        when(userService.getAllUsers(page, size)).thenReturn(users);
+        Pageable pageable = Pageable.of(page, size);
+        when(userService.getAllUsers(pageable)).thenReturn(users);
 
         mockMvc.perform(get("/api/v1/admin/users?page={page}&size={size}", page, size))
                 .andDo(print())
@@ -112,7 +116,8 @@ class AdminControllerTest {
         MeterReadingDto meterReadingDto1 = MeterReadingMapper.INSTANCE.meterReadingToMeterReadingDto(meterReading1);
         MeterReadingDto meterReadingDto2 = MeterReadingMapper.INSTANCE.meterReadingToMeterReadingDto(meterReading2);
         List<MeterReadingDto> meterReadings = List.of(meterReadingDto1, meterReadingDto2);
-        when(meterReadingService.getAllMeterReadingsList(page, size)).thenReturn(meterReadings);
+        Pageable pageable = Pageable.of(page, size);
+        when(meterReadingService.getAllMeterReadingsList(pageable)).thenReturn(meterReadings);
 
         mockMvc.perform(get("/api/v1/admin/readings"))
                 .andDo(print())
@@ -135,7 +140,8 @@ class AdminControllerTest {
         UserActionDto userActionDto1 = UserActionMapper.INSTANCE.userActionToUserActionDto(userAction1);
         UserActionDto userActionDto2 = UserActionMapper.INSTANCE.userActionToUserActionDto(userAction2);
         List<UserActionDto> userActions = List.of(userActionDto1, userActionDto2);
-        when(activityService.getUserActivitiesList(page, size)).thenReturn(userActions);
+        Pageable pageable = Pageable.of(page, size);
+        when(activityService.getUserActivitiesList(pageable)).thenReturn(userActions);
 
         mockMvc.perform(get("/api/v1/admin/actions"))
                 .andDo(print())

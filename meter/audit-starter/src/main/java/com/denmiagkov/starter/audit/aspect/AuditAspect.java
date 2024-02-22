@@ -1,28 +1,22 @@
-package com.denmiagkov.meter.aspects;
+package com.denmiagkov.starter.audit.aspect;
 
-import com.denmiagkov.meter.application.dto.incoming.IncomingDto;
-import com.denmiagkov.meter.application.service.UserActivityService;
+import com.denmiagkov.starter.audit.dto.IncomingDto;
+import com.denmiagkov.starter.audit.service.AuditService;
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Aspect
-@Component
+@AllArgsConstructor
 public class AuditAspect {
     private static final Logger log = LoggerFactory.getLogger(AuditAspect.class);
     private static final String EXCEPTION_MESSAGE = "EXCEPTION OCCURRED: ";
-    public static final String INCOMING_DTO_PARENT_CLASS = "com.denmiagkov.meter.application.dto.incoming.IncomingDto";
-    private UserActivityService activityService;
+    public static final String INCOMING_DTO_PARENT_CLASS = "com.denmiagkov.starter.audit.dto.IncomingDto";
+    private AuditService activityService;
 
-    @Autowired
-    public AuditAspect(UserActivityService activityService) {
-        this.activityService = activityService;
-    }
-
-    @Pointcut("within(@com.denmiagkov.meter.aspects.annotations.Audit *) && execution(* * (..))")
+    @Pointcut("within(@com.denmiagkov.starter.audit.aspect.annotations.Audit *) && execution(* * (..))")
     private void annotatedByAudit() {
     }
 

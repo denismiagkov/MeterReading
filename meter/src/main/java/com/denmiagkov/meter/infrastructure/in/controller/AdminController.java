@@ -8,9 +8,8 @@ import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.aspects.annotations.Loggable;
-import com.denmiagkov.meter.infrastructure.in.dto_handling.PageableCreator;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.PublicUtilityValidatorImpl;
+import com.denmiagkov.starter.logging.aspect.annotations.Loggable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.denmiagkov.meter.infrastructure.in.dto_handling.PageableCreator.createPageable;
 
 /**
  * Контроллер, обрабатывающий обращения администратора
@@ -82,7 +79,7 @@ public class AdminController {
     public ResponseEntity<Set<UserDto>> getAllUsers(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
-        Pageable pageable = createPageable(page, size);
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getAllUsers(pageable));
@@ -111,7 +108,7 @@ public class AdminController {
     public ResponseEntity<List<MeterReadingDto>> getAllMeterReadingsList(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
-        Pageable pageable = createPageable(page, size);
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(meterReadingService.getAllMeterReadingsList(pageable));
@@ -139,7 +136,7 @@ public class AdminController {
     public ResponseEntity<List<UserActionDto>> getAllUsersActions(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
-        Pageable pageable = createPageable(page, size);
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(activityService.getUserActivitiesList(pageable));

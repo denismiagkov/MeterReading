@@ -1,10 +1,11 @@
 package com.denmiagkov.meter.application.service;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingHistoryDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.impl.UserActivityServiceImpl;
-import com.denmiagkov.meter.domain.UserAction;
+import com.denmiagkov.starter.audit.domain.UserAction;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +49,8 @@ class UserActionServiceImplTest {
     @DisplayName("Dependent object returns appropriate list")
     void getUserActivitiesList() {
         List<UserAction> activitiesDummy = mock(ArrayList.class);
-        when(activityRepository.findAllUsersActions(anyInt(), anyInt())).thenReturn(activitiesDummy);
+        Pageable pageable = mock(Pageable.class);
+        when(activityRepository.findAllUsersActions(pageable)).thenReturn(activitiesDummy);
         List<UserActionDto> userActionDtos = mock(ArrayList.class);
         when(INSTANCE.userActionsToUserActionDtos(activitiesDummy))
                 .thenReturn(userActionDtos);
@@ -56,7 +58,7 @@ class UserActionServiceImplTest {
         when(ListUtils.partition(userActionDtos, 2))
                 .thenReturn(userActionsPaginated);
 
-        List<UserActionDto> activities = activityService.getUserActivitiesList(0, 10);
+        List<UserActionDto> activities = activityService.getUserActivitiesList(Pageable.of(0, 10));
 
         assertThat(activities).isEqualTo(userActionsPaginated);
     }

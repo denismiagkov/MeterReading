@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.impl.UserRepositoryImpl;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
@@ -41,7 +42,7 @@ class UserRepositoryImplTest {
         connection.setAutoCommit(false);
         user = new User("John", "11-22-33", "Moscow", "user", "123");
         userRepository.addUser(user);
-        users = userRepository.findAllUsers(10, 0);
+        users = userRepository.findAllUsers(Pageable.of(0, 10));
     }
 
     @AfterEach
@@ -65,7 +66,7 @@ class UserRepositoryImplTest {
                 "aDmin", "123admin");
 
         userRepository.addUser(user2);
-        users = userRepository.findAllUsers(10, 0);
+        users = userRepository.findAllUsers(Pageable.of(0, 10));
 
         assertAll(
                 () -> assertThat(users.size()).isEqualTo(5),
@@ -129,7 +130,7 @@ class UserRepositoryImplTest {
                 "AdMiN", "123admin");
         userRepository.addUser(user2);
 
-        users = userRepository.findAllUsers(10, 0);
+        users = userRepository.findAllUsers(Pageable.of(0, 10));
 
         assertThat(users).isNotNull().hasSize(5);
     }

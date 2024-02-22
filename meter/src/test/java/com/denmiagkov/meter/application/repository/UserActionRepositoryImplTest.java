@@ -1,10 +1,10 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.impl.ActivityRepositoryImpl;
-import com.denmiagkov.meter.domain.ActionType;
-import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
+import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.starter.audit.domain.UserAction;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -52,7 +52,7 @@ class UserActionRepositoryImplTest {
         ActionType.REVIEW_READINGS_FOR_MONTH);
 
         boolean result = activityRepository.addUserAction(userAction);
-        List<UserAction> activities = activityRepository.findAllUsersActions(10, 0);
+        List<UserAction> activities = activityRepository.findAllUsersActions(Pageable.of(0, 10));
         UserAction testUserAction = activities.get(activities.size() - 1);
 
         assertAll(
@@ -66,7 +66,7 @@ class UserActionRepositoryImplTest {
     @Test
     @DisplayName("Returns activities list and verifies its elements")
     void getActivityList() {
-        List<UserAction> userActivities = activityRepository.findAllUsersActions(10, 0);
+        List<UserAction> userActivities = activityRepository.findAllUsersActions(Pageable.of(0, 10));
 
         assertAll(
                 () -> assertThat(userActivities)

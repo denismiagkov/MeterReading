@@ -2,9 +2,9 @@ package com.denmiagkov.meter.application.repository.impl;
 
 import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
-import com.denmiagkov.meter.domain.UserAction;
-import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.utils.ConnectionManager;
+import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.starter.audit.domain.UserAction;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 

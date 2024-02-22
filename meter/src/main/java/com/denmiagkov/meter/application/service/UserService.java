@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Интерфейс, объявляющий логику обработки данных о пользователе
  */
-public interface UserService {
+public interface UserService{
 
     /**
      * Метод регистрации обычного пользователя

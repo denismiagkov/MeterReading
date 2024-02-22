@@ -1,9 +1,9 @@
-package com.denmiagkov.meter.domain;
+package com.denmiagkov.starter.audit.domain;
 
 /**
  * Перечисление типов действий пользователей
  */
-public enum ActionType {
+public enum ActionType{
     /**
      * Авторизация
      */
