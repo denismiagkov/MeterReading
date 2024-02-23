@@ -66,7 +66,7 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public int addUser(User user) {
+    public int saveUser(User user) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(
                      ADD_USER, Statement.RETURN_GENERATED_KEYS)) {

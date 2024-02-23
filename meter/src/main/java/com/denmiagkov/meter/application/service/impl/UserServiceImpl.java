@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     private UserDto addNewUserToDatabase(User user) {
         if (!userRepository.isExistUser(user)) {
             if (!userRepository.isExistLogin(user.getLogin())) {
-                int userId = userRepository.addUser(user);
+                int userId = userRepository.saveUser(user);
                 user.setId(userId);
                 return outgoingDtoMapper.userToUserDto(user);
             } else {

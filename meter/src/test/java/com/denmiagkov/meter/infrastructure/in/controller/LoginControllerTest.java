@@ -45,6 +45,7 @@ class LoginControllerTest {
     IncomingDtoBuilder dtoHandler;
     @InjectMocks
     LoginController loginController;
+
     ObjectMapper mapper = new ObjectMapper();
     MockMvc mockMvc;
 
@@ -56,7 +57,7 @@ class LoginControllerTest {
     @Test
     @DisplayName("Method receives post-request and sends response with user dto in json format")
     void registerUser() throws Exception {
-        RegisterUserDto registerDto = new RegisterUserDto("Ivan", "+7112233", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Ivan", "+7112233", "Moscow",
                 "user", "123");
         User user = new User(1, "Ivan", "+7112233", "Moscow", UserRole.USER,
                 "user", "123");
@@ -81,7 +82,7 @@ class LoginControllerTest {
     @Test
     @DisplayName("Method throws exception when user enters invalid data (incorrect name)")
     void registerUser_ThrowsException() throws Exception {
-        RegisterUserDto registerDto = new RegisterUserDto("Ivan100", "+7112233", "Moscow", UserRole.USER,
+        RegisterUserDto registerDto = new RegisterUserDto("Ivan100", "+7112233", "Moscow",
                 "user", "123");
         String requestJson = mapper.writeValueAsString(registerDto);
         doThrow(IncorrectInputNameException.class)

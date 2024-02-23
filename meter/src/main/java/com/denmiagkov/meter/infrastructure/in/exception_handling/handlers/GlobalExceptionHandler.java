@@ -2,6 +2,7 @@ package com.denmiagkov.meter.infrastructure.in.exception_handling.handlers;
 
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.HasNoAdminStatusException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -30,10 +31,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<String> handleException(ValidationException exception) {
+    @ExceptionHandler(UtilityTypeNotFoundException.class)
+    public ResponseEntity<String> handleException(UtilityTypeNotFoundException exception) {
         LOG.error(EXCEPTION_MESSAGE, exception);
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler()

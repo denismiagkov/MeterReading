@@ -20,7 +20,7 @@ public interface UserRepository {
      * @param user Новый пользователь
      * @return int id пользователя
      */
-    int addUser(User user);
+    int saveUser(User user);
 
     /**
      * Метод проверки, содержатся ли сведения о пользователе в базе данных

@@ -6,6 +6,8 @@ import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserAction;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
@@ -17,7 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
+@SpringBootTest
 class UserActionRepositoryImplTest {
+    @Autowired
     ActivityRepositoryImpl activityRepository;
     Connection connection;
 
@@ -33,7 +37,6 @@ class UserActionRepositoryImplTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        activityRepository = new ActivityRepositoryImpl();
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);
     }

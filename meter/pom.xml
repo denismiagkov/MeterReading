@@ -21,6 +21,7 @@
         <jjwt.jackson.version>0.11.5</jjwt.jackson.version>
         <jjwt.api.version>0.11.5</jjwt.api.version>
         <jjwt.impl.version>0.11.5</jjwt.impl.version>
+        <jackson.datatype.jsr310.version>2.16.1</jackson.datatype.jsr310.version>
         <spring.boot.configuration.processor.version>3.1.5</spring.boot.configuration.processor.version>
         <logging.starter.version>0.0.1-SNAPSHOT</logging.starter.version>
         <audit.starter.version>0.0.1-SNAPSHOT</audit.starter.version>
@@ -101,6 +102,11 @@
             <artifactId>jjwt-impl</artifactId>
             <version>${jjwt.impl.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.datatype.jsr310.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

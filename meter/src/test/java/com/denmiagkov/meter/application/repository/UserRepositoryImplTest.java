@@ -1,13 +1,15 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.IT.config.PostgresExtension;
 import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.impl.UserRepositoryImpl;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,22 +20,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
+@SpringBootTest
+@ExtendWith(PostgresExtension.class)
+@DirtiesContext
 class UserRepositoryImplTest {
     UserRepositoryImpl userRepository;
     Connection connection;
     User user;
     Set<User> users;
-
-    @BeforeAll
-    static void beforeAll() {
-        PostgresContainerManager.startContainer();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        PostgresContainerManager.stopContainer();
-    }
+//
+//    @BeforeAll
+//    static void beforeAll() {
+//        PostgresContainerManager.startContainer();
+//    }
+//
+//    @AfterAll
+//    static void afterAll() {
+//        PostgresContainerManager.stopContainer();
+//    }
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -41,7 +45,7 @@ class UserRepositoryImplTest {
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);
         user = new User("John", "11-22-33", "Moscow", "user", "123");
-        userRepository.addUser(user);
+        userRepository.saveUser(user);
         users = userRepository.findAllUsers(Pageable.of(0, 10));
     }
 
@@ -113,7 +117,7 @@ class UserRepositoryImplTest {
     @DisplayName("Returns collection of all users in database")
     void getUsers() {
         User user2 = new User( "Paul", "11-22-33", "user2", "msk", "321");
-        userRepository.addUser(user2);
+        userRepository.saveUser(user2);
 
         users = userRepository.findAllUsers(Pageable.of(0, 10));
 

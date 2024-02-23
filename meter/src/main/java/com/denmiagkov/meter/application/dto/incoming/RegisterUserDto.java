@@ -28,12 +28,11 @@ public class RegisterUserDto extends IncomingDto<ActionType> {
     }
 
     @Builder
-    public RegisterUserDto(String name, String phone, String address, UserRole role, String login, String password) {
+    public RegisterUserDto(String name, String phone, String address, String login, String password) {
         this();
         this.name = name;
         this.phone = phone;
         this.address = address;
-        this.role = role;
         this.login = login;
         this.password = password;
     }

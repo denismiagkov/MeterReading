@@ -168,9 +168,9 @@ public class AdminController {
             @RequestBody @Parameter(description = "new utility name") Map<String, String> utility) {
         String newUtility = utility.get("name");
         utilityValidator.isValid(newUtility);
-        Map<Integer, String> utilitiesDictionary = dictionaryService.addUtilityType(newUtility);
+        Map<Integer, String> utilityInDictionary = dictionaryService.addUtilityType(newUtility);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(utilitiesDictionary);
+                .body(utilityInDictionary);
     }
 }

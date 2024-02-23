@@ -50,6 +50,7 @@ public class User {
      */
     private String password;
 
+    @Builder
     public User(String name, String phone, String address, String login, String password) {
         this.name = name;
         this.phone = phone;
