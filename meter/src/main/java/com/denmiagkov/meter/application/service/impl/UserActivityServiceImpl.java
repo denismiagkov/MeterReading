@@ -5,7 +5,8 @@ import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.mapper.UserActionMapper;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.UserActivityService;
-import com.denmiagkov.starter.audit.domain.UserAction;
+import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.starter.audit.dto.IncomingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,8 @@ public class UserActivityServiceImpl implements UserActivityService {
      */
     @Override
     public void registerUserAction(IncomingDto incomingDto) {
-        UserAction userAction = new UserAction(incomingDto.getUserId(), incomingDto.getAction());
+        UserAction userAction = new UserAction(incomingDto.getUserId(),
+                (ActionType) incomingDto.getAction());
         activityRepository.addUserAction(userAction);
     }
 

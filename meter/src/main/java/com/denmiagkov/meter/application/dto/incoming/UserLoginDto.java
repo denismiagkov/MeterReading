@@ -1,17 +1,18 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.starter.audit.dto.IncomingDto;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Входяще ДТО для аутентификации пользователя
+ * Входящее ДТО для аутентификации пользователя
  */
 @Getter
 @Setter
-public class LoginUserDto extends IncomingDto { /**
+public class UserLoginDto extends IncomingDto<ActionType> {
+    /**
      * id пользователя
      */
     private int userId;
@@ -32,7 +33,7 @@ public class LoginUserDto extends IncomingDto { /**
      */
     private String password;
 
-    public LoginUserDto() {
+    public UserLoginDto() {
         this.action = ActionType.AUTHENTICATION;
     }
 
@@ -40,7 +41,6 @@ public class LoginUserDto extends IncomingDto { /**
     public ActionType getAction() {
         return action;
     }
-
     @Override
     public Integer getUserId() {
         return userId;

@@ -1,9 +1,10 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.config.yaml.AuthConfig;
 import com.denmiagkov.meter.domain.UserRole;
+import com.denmiagkov.starter.audit.aspect.annotations.Audit;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,6 +21,7 @@ import java.util.Date;
 /**
  * Класс, отвечающий за создание и валидацию access и refresh токенов.
  */
+@Audit
 @Component
 public class JwtProvider {
     /**
@@ -52,7 +54,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateAccessToken(LoginUserDto loginDto) {
+    public String generateAccessToken(UserLoginDto loginDto) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
@@ -70,7 +72,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateRefreshToken(LoginUserDto loginDto) {
+    public String generateRefreshToken(UserLoginDto loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);

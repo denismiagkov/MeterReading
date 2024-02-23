@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
-import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.starter.audit.dto.IncomingDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ReviewMeterReadingForMonthDto extends IncomingDto {
+public class ReviewMeterReadingForMonthDto extends IncomingDto<ActionType> {
     /**
      * id пользователя
      */

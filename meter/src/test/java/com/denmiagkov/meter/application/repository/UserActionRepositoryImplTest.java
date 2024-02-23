@@ -3,8 +3,8 @@ package com.denmiagkov.meter.application.repository;
 import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.impl.ActivityRepositoryImpl;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.starter.audit.domain.ActionType;
-import com.denmiagkov.starter.audit.domain.UserAction;
+import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.meter.domain.UserAction;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 

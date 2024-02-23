@@ -1,4 +1,4 @@
-package com.denmiagkov.starter.audit.domain;
+package com.denmiagkov.meter.domain;
 
 /**
  * Перечисление типов действий пользователей

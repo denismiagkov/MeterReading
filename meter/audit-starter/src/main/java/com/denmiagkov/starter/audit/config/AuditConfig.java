@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AuditConfig {
+public class AuditConfig<E extends Enum<E>> {
 
     @Bean
     @ConditionalOnBean(AuditService.class)
-    AuditAspect auditAspect(AuditService service){
-        return new AuditAspect(service);
+    AuditAspect<E> auditAspect(AuditService<E> service) {
+        return new AuditAspect<>(service);
     }
 }

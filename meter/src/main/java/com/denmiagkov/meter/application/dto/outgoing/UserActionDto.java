@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.dto.outgoing;
 
-import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.meter.domain.ActionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

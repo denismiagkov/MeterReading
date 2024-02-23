@@ -5,7 +5,7 @@ import com.denmiagkov.meter.application.dto.incoming.ReviewMeterReadingHistoryDt
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.application.service.impl.UserActivityServiceImpl;
-import com.denmiagkov.starter.audit.domain.UserAction;
+import com.denmiagkov.meter.domain.UserAction;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -5,11 +5,10 @@ import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.mapper.UserLoginMapper;
 import com.denmiagkov.meter.application.mapper.UserMapper;
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.mapper.UserRegisterMapper;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.application.service.exceptions.AdminNotAuthorizedException;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.application.service.exceptions.LoginAlreadyInUseException;
 import com.denmiagkov.meter.application.service.exceptions.UserAlreadyExistsException;
@@ -50,12 +49,11 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public UserDto registerUser(RegisterUserDto userIncomingDto) {
-        User user = incomingDtoMapper.incomingUserDtoToUser(userIncomingDto);
-        setUserRole(userIncomingDto, user);
+    public UserDto registerUser(RegisterUserDto registerDto) {
+        User user = incomingDtoMapper.incomingUserDtoToUser(registerDto);
         UserDto userOutgoingDto = addNewUserToDatabase(user);
-        userIncomingDto.setUserId(user.getId());
-        activityService.registerUserAction(userIncomingDto);
+        registerDto.setUserId(user.getId());
+        activityService.registerUserAction(registerDto);
         return userOutgoingDto;
     }
 
@@ -73,19 +71,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void setUserRole(RegisterUserDto userDto, User user) {
-        if (user.getRole() != null &&
-            user.getRole().equals(UserRole.ADMIN) &&
-            (userDto.getAdminPassword() == null ||
-             !userDto.getAdminPassword().equals(user.getAdminPassword()))) {
-            throw new AdminNotAuthorizedException();
-        } else if (user.getRole() == null) {
-            user.setRole(UserRole.USER);
-        }
-    }
-
     @Override
-    public LoginUserDto getPasswordByLogin(String login) {
+    public UserLoginDto getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)
                 .orElseThrow(AuthenticationFailedException::new);
         return loginMapper.userToUserLoginDto(user);

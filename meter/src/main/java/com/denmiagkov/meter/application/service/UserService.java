@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
 import com.denmiagkov.meter.application.dto.Pageable;
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.application.service.exceptions.LoginAlreadyInUseException;
@@ -38,5 +38,5 @@ public interface UserService{
     /**
      * Метод возвращает пароль пользователя по его логину
      */
-    LoginUserDto getPasswordByLogin(String login);
+    UserLoginDto getPasswordByLogin(String login);
 }

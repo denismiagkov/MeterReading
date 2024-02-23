@@ -60,20 +60,6 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Method adds new admin in database")
-    void addUser_TestAddAdmin() {
-        User user2 = new User("Paul", "11-22-33", "Moscow", "admin1", "123",
-                "aDmin", "123admin");
-
-        userRepository.addUser(user2);
-        users = userRepository.findAllUsers(Pageable.of(0, 10));
-
-        assertAll(
-                () -> assertThat(users.size()).isEqualTo(5),
-                () -> assertThat(users.contains(user2)).isTrue());
-    }
-
-    @Test
     @DisplayName("Returns true if user exists in database")
     void isExistUser_ReturnsTrue() {
         assertThat(users.contains(user)).isTrue();
@@ -126,8 +112,7 @@ class UserRepositoryImplTest {
     @Test
     @DisplayName("Returns collection of all users in database")
     void getUsers() {
-        User user2 = new User("Paul", "11-22-33", "user2", "msk", "321",
-                "AdMiN", "123admin");
+        User user2 = new User( "Paul", "11-22-33", "user2", "msk", "321");
         userRepository.addUser(user2);
 
         users = userRepository.findAllUsers(Pageable.of(0, 10));

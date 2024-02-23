@@ -1,5 +1,6 @@
-package com.denmiagkov.starter.audit.domain;
+package com.denmiagkov.meter.domain;
 
+import com.denmiagkov.meter.domain.ActionType;
 import lombok.*;
 
 import java.time.LocalDateTime;

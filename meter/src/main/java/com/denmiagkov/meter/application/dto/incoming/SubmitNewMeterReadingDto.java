@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
-import com.denmiagkov.starter.audit.domain.ActionType;
+import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.starter.audit.dto.IncomingDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class SubmitNewMeterReadingDto extends IncomingDto {
+public class SubmitNewMeterReadingDto extends IncomingDto<ActionType> {
     /**
      * id пользователя
      */

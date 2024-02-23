@@ -1,7 +1,7 @@
 package com.denmiagkov.meter.application.repository;
 
 import com.denmiagkov.meter.application.dto.Pageable;
-import com.denmiagkov.starter.audit.domain.UserAction;
+import com.denmiagkov.meter.domain.UserAction;
 
 import java.util.List;
 

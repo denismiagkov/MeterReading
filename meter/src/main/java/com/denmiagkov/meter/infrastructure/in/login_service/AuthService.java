@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
@@ -31,7 +31,7 @@ public class AuthService {
      */
     public JwtResponse login(JwtRequest jwtRequest) {
         try {
-            LoginUserDto loginDto = userService.getPasswordByLogin(jwtRequest.getLogin());
+            UserLoginDto loginDto = userService.getPasswordByLogin(jwtRequest.getLogin());
             if (loginDto.getPassword().equals(jwtRequest.getPassword())) {
                 String accessToken = jwtProvider.generateAccessToken(loginDto);
                 String refreshToken = jwtProvider.generateRefreshToken(loginDto);
@@ -54,7 +54,7 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String login = claims.getSubject();
-            LoginUserDto loginDto = userService.getPasswordByLogin(login);
+            UserLoginDto loginDto = userService.getPasswordByLogin(login);
             String accessToken = jwtProvider.generateAccessToken(loginDto);
             return new JwtResponse(accessToken, null);
         }
