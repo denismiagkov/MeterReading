@@ -14,9 +14,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class DictionaryServiceImpl implements DictionaryService {
 
-    /**
-     * Репозиторий справочника показаний
-     */
     private final DictionaryRepository dictionaryRepository;
 
     /**

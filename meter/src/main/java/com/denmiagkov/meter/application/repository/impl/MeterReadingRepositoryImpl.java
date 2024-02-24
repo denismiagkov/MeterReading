@@ -77,7 +77,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
      * {@inheritDoc}
      */
     @Override
-    public MeterReading addNewMeterReading(SubmitNewMeterReadingDto meterReading) {
+    public MeterReading addNewMeterReading(MeterReading meterReading) {
         try (Connection connection = ConnectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_NEW_METER_READING)) {
             statement.setInt(1, meterReading.getUserId());

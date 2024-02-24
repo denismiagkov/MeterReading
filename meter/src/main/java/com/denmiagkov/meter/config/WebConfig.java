@@ -1,8 +1,10 @@
 package com.denmiagkov.meter.config;
 
+import com.denmiagkov.meter.application.mapper.*;
 import com.denmiagkov.meter.infrastructure.in.filter.AdminFilterWrapper;
 import com.denmiagkov.meter.infrastructure.in.filter.UserFilterWrapper;
 import com.denmiagkov.starter.logging.aspect.annotations.EnableLogging;
+import org.mapstruct.factory.Mappers;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,31 @@ public class WebConfig implements WebMvcConfigurer {
         registrationBean.setFilter(new AdminFilterWrapper.AdminFilter());
         registrationBean.addUrlPatterns("/api/v1/admin/*");
         return registrationBean;
+    }
+
+    @Bean
+    public MeterReadingMapper meterReadingMapper() {
+        return Mappers.getMapper(MeterReadingMapper.class);
+    }
+
+    @Bean
+    public UserActionMapper userActionMapper() {
+        return Mappers.getMapper(UserActionMapper.class);
+    }
+
+    @Bean
+    public UserLoginMapper userLoginMapper() {
+        return Mappers.getMapper(UserLoginMapper.class);
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+        return Mappers.getMapper(UserMapper.class);
+    }
+
+    @Bean
+    public UserRegisterMapper userRegisterMapper() {
+        return Mappers.getMapper(UserRegisterMapper.class);
     }
 
     @Override

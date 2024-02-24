@@ -14,6 +14,7 @@ import com.denmiagkov.meter.application.service.exceptions.LoginAlreadyInUseExce
 import com.denmiagkov.meter.application.service.exceptions.UserAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,27 +24,14 @@ import java.util.Set;
  * Класс реализует логику обработки данных о пользователях
  */
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    /**
-     * Репозиторий данных о пользователе
-     */
+
     private final UserRepository userRepository;
-    /**
-     * Сервис обработки пользовательских действий в приложении
-     */
     private final UserActivityService activityService;
     private final UserRegisterMapper incomingDtoMapper;
     private final UserMapper outgoingDtoMapper;
     private final UserLoginMapper loginMapper;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserActivityService activityService) {
-        this.userRepository = userRepository;
-        this.activityService = activityService;
-        this.incomingDtoMapper = UserRegisterMapper.INSTANCE;
-        this.outgoingDtoMapper = UserMapper.INSTANCE;
-        this.loginMapper = UserLoginMapper.INSTANCE;
-    }
 
     /**
      * {@inheritDoc}

@@ -8,6 +8,7 @@ import com.denmiagkov.meter.application.repository.*;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.domain.*;
 import com.denmiagkov.starter.audit.aspect.annotations.Audit;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +19,19 @@ import java.util.List;
  */
 @Audit
 @Service
+@AllArgsConstructor
 public class MeterReadingServiceImpl implements MeterReadingService {
-    /**
-     * Репозиторий данных о показаниях счетчика
-     */
+
     private final MeterReadingRepository meterReadingRepository;
     private final MeterReadingMapper mapper;
-
-    @Autowired
-    public MeterReadingServiceImpl(MeterReadingRepository meterReadingRepository) {
-        this.meterReadingRepository = meterReadingRepository;
-        this.mapper = MeterReadingMapper.INSTANCE;
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public MeterReadingDto submitNewMeterReading(SubmitNewMeterReadingDto meterReadingDto) {
-        MeterReading meterReading = meterReadingRepository.addNewMeterReading(meterReadingDto);
+        MeterReading meterReading = mapper.meterReadingDtoToMeterReading(meterReadingDto);
+        meterReading = meterReadingRepository.addNewMeterReading(meterReading);
         return mapper.meterReadingToMeterReadingDto(meterReading);
     }
 

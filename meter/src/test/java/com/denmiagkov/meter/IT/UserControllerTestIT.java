@@ -47,13 +47,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(PostgresExtension.class)
 @DirtiesContext
 class UserControllerTestIT {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private MeterReadingRepository meterReadingRepository;
     @Autowired
     AuthService authService;
-    private ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    MeterReadingMapper meterReadingMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     Pageable pageable = new Pageable(0, 50);
     private MeterReadingDto meterReadingDto1;
     private String token;
@@ -63,14 +66,14 @@ class UserControllerTestIT {
         JwtRequest loginRequest = new JwtRequest();
         loginRequest.setLogin("user1");
         loginRequest.setPassword("123");
-        String jsonRequest = mapper.writeValueAsString(loginRequest);
+        String jsonRequest = objectMapper.writeValueAsString(loginRequest);
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/login")
                         .content(jsonRequest)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
-        JwtResponse jwtResponse = mapper.readValue(responseBody, JwtResponse.class);
+        JwtResponse jwtResponse = objectMapper.readValue(responseBody, JwtResponse.class);
         token = jwtResponse.getAccessToken();
 
         meterReadingDto1 = new MeterReadingDto();
@@ -83,7 +86,7 @@ class UserControllerTestIT {
     @DisplayName("Method receives new meter reading values, records these in database and returns " +
                  "new meter reading successfully: all meter readings list increases by 1 ")
     void submitNewMeterReading_Successful() throws Exception {
-        String jsonRequest = mapper.writeValueAsString(meterReadingDto1);
+        String jsonRequest = objectMapper.writeValueAsString(meterReadingDto1);
         int initialMeterReadingsListSize = meterReadingRepository.findAllMeterReadings(pageable).size();
 
         mockMvc.perform(post("/api/v1/user/reading/new")
@@ -106,11 +109,11 @@ class UserControllerTestIT {
     @Test
     @DisplayName("New meter reading is submitting on the same month like previous, so method throws exception")
     void submitNewMeterReading_ThrowsSubmitMeterReadingOnTheSameMonthException() throws Exception {
-        String jsonRequestPrevious = mapper.writeValueAsString(meterReadingDto1);
+        String jsonRequestPrevious = objectMapper.writeValueAsString(meterReadingDto1);
         MeterReadingDto meterReadingDto3 = new MeterReadingDto();
         meterReadingDto3.setUtilityId(1);
         meterReadingDto3.setValue(340.00);
-        String jsonRequestNew = mapper.writeValueAsString(meterReadingDto1);
+        String jsonRequestNew = objectMapper.writeValueAsString(meterReadingDto1);
 
         mockMvc.perform(post("/api/v1/user/reading/new")
                 .header("Authorization", String.join(" ",
@@ -135,7 +138,7 @@ class UserControllerTestIT {
         MeterReadingDto meterReadingDto3 = new MeterReadingDto();
         meterReadingDto3.setUtilityId(3);
         meterReadingDto3.setValue(10.50); //previous value = 23.5
-        String jsonRequestNew = mapper.writeValueAsString(meterReadingDto3);
+        String jsonRequestNew = objectMapper.writeValueAsString(meterReadingDto3);
 
         mockMvc.perform(post("/api/v1/user/reading/new")
                         .header("Authorization", String.join(" ",
@@ -152,7 +155,7 @@ class UserControllerTestIT {
     @DisplayName("User submits new meter reading and later requests actual value on appropriate utility:" +
                  "method returns value of newly added meter reading")
     void getActualReadingOnExactUtilityByUser_Successful() throws Exception {
-        String jsonRequest = mapper.writeValueAsString(meterReadingDto1);
+        String jsonRequest = objectMapper.writeValueAsString(meterReadingDto1);
         mockMvc.perform(post("/api/v1/user/reading/new")
                 .header("Authorization", String.join(" ",
                         "Bearer", token))
@@ -189,7 +192,7 @@ class UserControllerTestIT {
     void getActualMeterReadingsOnAllUtilitiesByUser() throws Exception {
         var userActualMeterReadings = meterReadingRepository.findActualMeterReadingsOnAllUtilitiesByUser(
                 authService.getUserIdFromToken(token));
-        List<MeterReadingDto> expectedMeterReadingsList = MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(userActualMeterReadings);
+        List<MeterReadingDto> expectedMeterReadingsList = meterReadingMapper.listMeterReadingToListMeterReadingDto(userActualMeterReadings);
 
         var mvcResult = mockMvc.perform(get("/api/v1/user/readings/actual")
                         .header("Authorization", String.join(" ",
@@ -211,7 +214,7 @@ class UserControllerTestIT {
                  "output list is equal to one got immediately from repository")
     void getMeterReadingsHistoryByUser() throws Exception {
         List<MeterReading> meterReadingsHistory = meterReadingRepository.findMeterReadingsHistory(1, pageable);
-        List<MeterReadingDto> expectedMeterReadingsList = MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingsHistory);
+        List<MeterReadingDto> expectedMeterReadingsList = meterReadingMapper.listMeterReadingToListMeterReadingDto(meterReadingsHistory);
 
         var mvcResult = mockMvc.perform(get("/api/v1/user/readings")
                         .header("Authorization", String.join(" ",
@@ -237,7 +240,7 @@ class UserControllerTestIT {
         List<MeterReading> meterReadingsList = meterReadingRepository.findMeterReadingsForExactMonthByUser(
                 1, currentYear, currentMonth);
         List<MeterReadingDto> expectedMeterReadingsList =
-                MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(meterReadingsList);
+                meterReadingMapper.listMeterReadingToListMeterReadingDto(meterReadingsList);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/user/readings/month")
                         .header("Authorization", String.join(" ",
@@ -270,9 +273,9 @@ class UserControllerTestIT {
 
     private List<MeterReadingDto> convertToDtoFrom(MvcResult mvcResult) throws UnsupportedEncodingException, JsonProcessingException {
         String jsonResponseString = mvcResult.getResponse().getContentAsString();
-        JsonNode jsonResponseObjects = mapper.readValue(jsonResponseString, JsonNode.class);
-        mapper.findAndRegisterModules();
-        List<MeterReadingDto> actualMeterReadingsList = mapper.convertValue(
+        JsonNode jsonResponseObjects = objectMapper.readValue(jsonResponseString, JsonNode.class);
+        objectMapper.findAndRegisterModules();
+        List<MeterReadingDto> actualMeterReadingsList = objectMapper.convertValue(
                 jsonResponseObjects,
                 new TypeReference<List<MeterReadingDto>>() {
                 }

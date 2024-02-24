@@ -44,6 +44,8 @@ class LoginControllerTestIT {
     private MockMvc mockMvc;
     @Autowired
     private UserRepository repository;
+    @Autowired
+    UserRegisterMapper userRegisterMapper;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
@@ -69,7 +71,7 @@ class LoginControllerTestIT {
 
         String responseBody = mvcResult.getResponse().getContentAsString();
         UserDto resultUserDto = mapper.readValue(responseBody, UserDto.class);
-        User user = UserRegisterMapper.INSTANCE.incomingUserDtoToUser(registerUserDto);
+        User user = userRegisterMapper.incomingUserDtoToUser(registerUserDto);
 
         assertAll(
                 () -> assertThat(registerUserDto.getName()).isEqualTo(resultUserDto.getName()),

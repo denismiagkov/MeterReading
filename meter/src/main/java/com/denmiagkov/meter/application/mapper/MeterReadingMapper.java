@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.mapper;
 
+import com.denmiagkov.meter.application.dto.incoming.SubmitNewMeterReadingDto;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.domain.MeterReading;
 import org.mapstruct.Mapper;
@@ -14,13 +15,17 @@ import java.util.List;
 @Mapper
 public interface MeterReadingMapper {
 
-    MeterReadingMapper INSTANCE = Mappers.getMapper(MeterReadingMapper.class);
-
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "date", target = "date")
     @Mapping(source = "utilityId", target = "utilityId")
     @Mapping(source = "value", target = "value")
     MeterReadingDto meterReadingToMeterReadingDto(MeterReading meterReading);
+
+    @Mapping(source = "userId", target = "userId")
+    @Mapping(source = "date", target = "date")
+    @Mapping(source = "utilityId", target = "utilityId")
+    @Mapping(source = "value", target = "value")
+    MeterReading meterReadingDtoToMeterReading(SubmitNewMeterReadingDto meterReadingDto);
 
     List<MeterReadingDto> listMeterReadingToListMeterReadingDto(List<MeterReading> meterReadings);
 }

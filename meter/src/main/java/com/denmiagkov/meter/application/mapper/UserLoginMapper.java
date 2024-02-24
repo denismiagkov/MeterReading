@@ -11,7 +11,6 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface UserLoginMapper {
-    UserLoginMapper INSTANCE = Mappers.getMapper(UserLoginMapper.class);
 
     @Mapping(source = "id", target = "userId")
     @Mapping(source = "role", target = "role")

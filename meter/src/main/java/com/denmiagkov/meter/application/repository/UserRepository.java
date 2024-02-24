@@ -43,7 +43,6 @@ public interface UserRepository {
      * и определения пользователя, владеющего ими
      *
      * @param login    Введенный пользователем логин
-     * @param password Введенный пользователем пароль
      * @return User Зарегистрированный пользователь с указанными логином и паролем
      * @throws AuthenticationFailedException в случае, если пользователь с указанными логином и паролем не зарегистрирован
      */
@@ -55,13 +54,4 @@ public interface UserRepository {
      * @return Set<User> Множество зарегистрованных пользователей
      */
     Set<User> findAllUsers(Pageable pageable);
-
-    /**
-     * Метод возвращает пользователя на основе соответствующей записи в базе данных
-     *
-     * @param queryResult Запись о пользователе в базе данных
-     * @return User Пользователь
-     * @throws SQLException
-     */
-    User findUser(ResultSet queryResult) throws SQLException;
 }

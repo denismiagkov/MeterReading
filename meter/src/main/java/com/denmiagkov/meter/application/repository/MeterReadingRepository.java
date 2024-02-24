@@ -16,7 +16,7 @@ public interface MeterReadingRepository {
      *
      * @param reading новое показание счетчика
      */
-    MeterReading addNewMeterReading(SubmitNewMeterReadingDto reading);
+    MeterReading addNewMeterReading(MeterReading reading);
 
     /**
      * Метод выборки данных об актуальных показаниях счетчиков определенного пользователя

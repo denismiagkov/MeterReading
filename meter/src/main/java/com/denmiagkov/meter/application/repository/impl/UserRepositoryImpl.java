@@ -167,8 +167,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */
-    @Override
-    public User findUser(ResultSet queryResult) throws SQLException {
+    private User findUser(ResultSet queryResult) throws SQLException {
         int id = queryResult.getInt("id");
         String name = queryResult.getString("name");
         String phone = queryResult.getString("phone");

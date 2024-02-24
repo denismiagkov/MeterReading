@@ -58,7 +58,13 @@ class AdminControllerTestIT {
     private ActivityRepository activityRepository;
     @Autowired
     private DictionaryRepository dictionaryRepository;
-    private ObjectMapper mapper = new ObjectMapper();
+    @Autowired
+    MeterReadingMapper meterReadingMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    UserActionMapper userActionMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private String token;
 
     @BeforeEach
@@ -66,14 +72,14 @@ class AdminControllerTestIT {
         JwtRequest loginRequest = new JwtRequest();
         loginRequest.setLogin("admin");
         loginRequest.setPassword("321");
-        String jsonRequest = mapper.writeValueAsString(loginRequest);
+        String jsonRequest = objectMapper.writeValueAsString(loginRequest);
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/login")
                         .content(jsonRequest)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
-        JwtResponse jwtResponse = mapper.readValue(responseBody, JwtResponse.class);
+        JwtResponse jwtResponse = objectMapper.readValue(responseBody, JwtResponse.class);
         token = jwtResponse.getAccessToken();
     }
 
@@ -94,7 +100,7 @@ class AdminControllerTestIT {
     @DisplayName("Admin authorized and method returns all users set successfully")
     void getAllUsers_Successful() throws Exception {
         Set<User> users = userRepository.findAllUsers(new Pageable(0, 5));
-        Set<UserDto> expectedResultSet = UserMapper.INSTANCE.usersToUserDtos(users);
+        Set<UserDto> expectedResultSet = userMapper.usersToUserDtos(users);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users")
                         .param("page", "0")
@@ -105,8 +111,8 @@ class AdminControllerTestIT {
                 .andExpect(status().isOk())
                 .andReturn();
         var contentAsString = mvcResult.getResponse().getContentAsString();
-        JsonNode jsonObjects = mapper.readValue(contentAsString, JsonNode.class);
-        Set<UserDto> actualResultSet = mapper.convertValue(
+        JsonNode jsonObjects = objectMapper.readValue(contentAsString, JsonNode.class);
+        Set<UserDto> actualResultSet = objectMapper.convertValue(
                 jsonObjects,
                 new TypeReference<Set<UserDto>>() {
                 }
@@ -123,7 +129,7 @@ class AdminControllerTestIT {
     void getAllMeterReadingsList() throws Exception {
         List<MeterReading> allMeterReadings = meterReadingRepository.findAllMeterReadings(
                 new Pageable(0, 10));
-        List<MeterReadingDto> expectedResultList = MeterReadingMapper.INSTANCE.listMeterReadingToListMeterReadingDto(allMeterReadings);
+        List<MeterReadingDto> expectedResultList = meterReadingMapper.listMeterReadingToListMeterReadingDto(allMeterReadings);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/readings")
                         .param("page", "0")
@@ -135,9 +141,9 @@ class AdminControllerTestIT {
                 .andReturn();
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-        mapper.findAndRegisterModules();
-        JsonNode jsonObjects = mapper.readValue(jsonResponse, JsonNode.class);
-        List<MeterReadingDto> actualResultList = mapper.convertValue(
+        objectMapper.findAndRegisterModules();
+        JsonNode jsonObjects = objectMapper.readValue(jsonResponse, JsonNode.class);
+        List<MeterReadingDto> actualResultList = objectMapper.convertValue(
                 jsonObjects,
                 new TypeReference<List<MeterReadingDto>>() {
                 }
@@ -151,7 +157,7 @@ class AdminControllerTestIT {
     void getAllUsersActions() throws Exception {
         List<UserAction> allUserActions = activityRepository.findAllUsersActions(
                 new Pageable(0, 10));
-        List<UserActionDto> expectedResultList = UserActionMapper.INSTANCE.userActionsToUserActionDtos(allUserActions);
+        List<UserActionDto> expectedResultList = userActionMapper.userActionsToUserActionDtos(allUserActions);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/actions")
                         .param("page", "0")
@@ -163,9 +169,9 @@ class AdminControllerTestIT {
                 .andReturn();
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-        mapper.findAndRegisterModules();
-        JsonNode jsonObjects = mapper.readValue(jsonResponse, JsonNode.class);
-        List<UserActionDto> actualResultList = mapper.convertValue(
+        objectMapper.findAndRegisterModules();
+        JsonNode jsonObjects = objectMapper.readValue(jsonResponse, JsonNode.class);
+        List<UserActionDto> actualResultList = objectMapper.convertValue(
                 jsonObjects,
                 new TypeReference<List<UserActionDto>>() {
                 }
@@ -180,7 +186,7 @@ class AdminControllerTestIT {
         int initialDictionarySize = dictionaryRepository.getAllUtilitiesTypes().size();
         Map<String, String> newUtility = new HashMap<>();
         newUtility.put("name", "electricity");
-        String jsonRequest = mapper.writeValueAsString(newUtility);
+        String jsonRequest = objectMapper.writeValueAsString(newUtility);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/dictionary/new")
                         .content(jsonRequest)
@@ -191,7 +197,7 @@ class AdminControllerTestIT {
                 .andExpect(status().isOk())
                 .andReturn();
         var contentAsString = mvcResult.getResponse().getContentAsString();
-        var actualOutput = mapper.readValue(contentAsString, HashMap.class);
+        var actualOutput = objectMapper.readValue(contentAsString, HashMap.class);
         Map<Integer, String> dictionary = dictionaryRepository.getAllUtilitiesTypes();
         int finalDictionarySize = dictionary.size();
 
@@ -207,7 +213,7 @@ class AdminControllerTestIT {
     void addUtilityTypeToDictionary_ThrowsPublicUtilityTypeAlreadyExistsException() throws Exception {
         Map<String, String> newUtility = new HashMap<>();
         newUtility.put("name", "heating");
-        String jsonRequest = mapper.writeValueAsString(newUtility);
+        String jsonRequest = objectMapper.writeValueAsString(newUtility);
 
         mockMvc.perform(post("/api/v1/admin/dictionary/new")
                         .content(jsonRequest)
