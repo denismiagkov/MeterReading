@@ -23,7 +23,5 @@ public interface UserMapper {
     @Mapping(source = "login", target = "login")
     UserDto userToUserDto(User user);
 
-    User userDtoToUser(UserDto userDto);
-
     HashSet<UserDto> usersToUserDtos(Set<User> users);
 }

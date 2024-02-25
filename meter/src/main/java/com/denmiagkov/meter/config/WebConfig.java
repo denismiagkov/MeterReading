@@ -15,6 +15,9 @@ import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
+/**
+ * Конфигурация приложения
+ */
 @Configuration
 @EnableLogging
 public class WebConfig implements WebMvcConfigurer {

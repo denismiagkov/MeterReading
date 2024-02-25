@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Класс реализует логику взаимодействия с базой данных, связанную с показаниями счетчиков
  */
-
 @Repository
 public class MeterReadingRepositoryImpl implements MeterReadingRepository {
+
     /**
      * SQL-запрос на добавление в базу данных нового показания счетчика
      */
@@ -36,6 +36,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
             ORDER BY date desc
             LIMIT 1;
             """;
+
     /**
      * SQL-запрос на получение из базы данных актуальных показателей счетчиков по всем услугам для одного пользователя
      */
@@ -45,6 +46,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
             WHERE user_id = ?
             ORDER BY utility_id, date desc ;
             """;
+
     /**
      * SQL-запрос на выборку всех переданных показаний счетчиков всеми пользователями
      */
@@ -53,6 +55,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
             FROM meter_service.meter_readings
             LIMIT ? OFFSET ?;
             """;
+
     /**
      * SQL-запрос на получение из базы данных истории переданных показаний счетчиков указанным пользователем
      */
@@ -62,6 +65,7 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
             WHERE user_id = ?
             LIMIT ? OFFSET ?;
             """;
+
     /**
      * SQL-запрос на получение всех переданных определенным пользователем показаний счетчиков за определенный месяц
      */
@@ -129,7 +133,6 @@ public class MeterReadingRepositoryImpl implements MeterReadingRepository {
         }
         return meterReading;
     }
-
 
     /**
      * Метод получения объекта показания счетчика из выбранной записи из базы данных

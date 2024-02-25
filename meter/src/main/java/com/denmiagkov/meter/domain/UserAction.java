@@ -10,10 +10,8 @@ import java.util.Objects;
  * Класс действия пользователя
  */
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(of = "id")
-@ToString
 public class UserAction {
 
     /**

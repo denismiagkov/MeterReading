@@ -19,6 +19,7 @@ import java.util.List;
 @Repository
 @NoArgsConstructor
 public class ActivityRepositoryImpl implements ActivityRepository {
+
     /**
      * SQL-запрос на добавление одного пользовательского действия в базу данных
      */
@@ -26,6 +27,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
             INSERT INTO meter_service.activities (user_id, date, action)
             VALUES (?, ?, ?);
             """;
+
     /**
      * SQL-запрос на выборку из базы данных всех записей о пользовательских действиях
      */

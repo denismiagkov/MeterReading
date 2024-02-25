@@ -7,21 +7,24 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Класс реализует логику взаимодействия с базой данных по поводу справочника услуг (типов показаний)
- * */
+ */
 @Repository
 public class DictionaryRepositoryImpl implements DictionaryRepository {
+
     /**
      * SQL-запрос на добавление в справочник нового типа услуг
-     * */
+     */
     public static final String ADD_PUBLIC_UTILITY_TYPE_TO_DICTIONARY = """
             INSERT INTO meter_service.utilities_dictionary (utility_type)
             VALUES (?);
             """;
+
     /**
      * SQL-запрос на выборку всех типов услуг из справочника
-     * */
+     */
     private static final String GET_ALL_PUBLIC_UTILITIES_TYPES = """
             SELECT id, utility_type
             FROM meter_service.utilities_dictionary;
@@ -29,7 +32,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public Map<Integer, String> addUtilityType(String utilityName) {
         try (Connection connection = ConnectionManager.open();
@@ -53,7 +56,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public Map<Integer, String> getAllUtilitiesTypes() {
         Map<Integer, String> allPublicUtilitiesTypes = new HashMap<>();

@@ -4,6 +4,7 @@ import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.MeterReadingDtoValidatorImpl;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.UserIncomingDtoValidatorImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,19 +14,12 @@ import java.time.LocalDateTime;
  * Класс реализует создание и валидацию ДТО на основе входящих данных
  */
 @Component
+@AllArgsConstructor
 public class IncomingDtoBuilder {
+
     private final AuthService authService;
     private final MeterReadingDtoValidatorImpl meterReadingValidator;
     private final UserIncomingDtoValidatorImpl userIncomingDtoValidator;
-
-    @Autowired
-    public IncomingDtoBuilder(MeterReadingDtoValidatorImpl meterReadingDtoValidator,
-                              UserIncomingDtoValidatorImpl userIncomingDtoValidator,
-                              AuthService authService) {
-        this.meterReadingValidator = meterReadingDtoValidator;
-        this.userIncomingDtoValidator = userIncomingDtoValidator;
-        this.authService = authService;
-    }
 
     /**
      * Обновление и валидация входящего ДТО передачи нового показания счетчика

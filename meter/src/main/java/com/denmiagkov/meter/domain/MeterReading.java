@@ -14,7 +14,6 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString
 public class MeterReading {
 
     /**

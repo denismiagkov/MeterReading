@@ -9,10 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(of = {"name", "phone"})
-@ToString
 public class User {
 
     /**

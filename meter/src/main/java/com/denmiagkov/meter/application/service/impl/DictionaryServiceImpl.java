@@ -31,5 +31,4 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Map<Integer, String> getUtilitiesDictionary() {
         return dictionaryRepository.getAllUtilitiesTypes();
     }
-
 }

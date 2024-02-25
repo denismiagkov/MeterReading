@@ -29,9 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 @AllArgsConstructor
 public class LoginController {
-    /**
-     * Сервис пользователя
-     */
+
     private final UserService userService;
     private final AuthService authService;
     private final IncomingDtoBuilder dtoHandler;

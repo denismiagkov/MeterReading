@@ -10,7 +10,7 @@ public interface DictionaryRepository {
      * Метод добавляет в справочник новый тип коммунальных услуг (новый тип показаний)
      *
      * @param name Название типа услуг
-     * @return int Уникальный идентификатор нового типа услуг
+     * @return Map<Integer, String> Уникальный идентификатор и название нового типа услуг
      */
     Map<Integer, String> addUtilityType(String name);
 

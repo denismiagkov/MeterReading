@@ -6,6 +6,9 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
+/**
+ * Конфигурационные данные SpringDoc
+ */
 @OpenAPIDefinition(
         info = @Info(
                 title = "Meter Reading Service",

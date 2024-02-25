@@ -14,15 +14,15 @@ public interface MeterReadingService {
     /**
      * Метод передачи нового показания
      *
-     * @param user    Пользователь
-     * @param reading Показание счетчика
+     * @param meterReading Входящее ДТО нового показания счетчика
+     * @return MeterReadingDto Исходящее ДТО добавленного показания счетчика
      */
     MeterReadingDto submitNewMeterReading(SubmitNewMeterReadingDto meterReading);
 
     /**
      * Метод получения всех показаний счетчиков всех пользователей с учетом параметров пагинации
      *
-     * @param pageSize Параметр пагинации (размер страницы)
+     * @param pageable Параметры пагинации
      * @return List<List < MeterReading>> Общий список показаний счетчиков с учетом параметров панинации
      */
     List<MeterReadingDto> getAllMeterReadingsList(Pageable pageable);
@@ -30,16 +30,15 @@ public interface MeterReadingService {
     /**
      * Метод получения актуального (последнего переданного) показания счетчика конкретного пользователя
      *
-     * @param user      Пользователь
-     * @param utilityId Тип услуги
-     * @return MeterReading Актуальное показание счетчика
+     * @param requestDto      Входящее ДТО на предоставление актуального показания счетчика
+     * @return MeterReadingDto Исходящее ДТО актуального показания счетчика
      */
     MeterReadingDto getActualMeterReadingOnExactUtilityByUser(ReviewActualMeterReadingDto requestDto);
 
     /**
      * Метод получения всех актуальных (последних переданноых) показаний счетчиков конкретного пользователя
      *
-     * @param user Пользователь
+     * @param requestDto Входящее ДТО на предоставление актуальных показаний счетчика
      * @return List<MeterReading> Список актуальных показаний счетчика
      */
     List<MeterReadingDto> getActualMeterReadingsOnAllUtilitiesByUser(ReviewActualMeterReadingDto requestDto);
@@ -47,19 +46,17 @@ public interface MeterReadingService {
     /**
      * Метод просмотра истории подачи показаний конкретным пользователем с учетом параметров пагинации
      *
-     * @param user     Пользователь
-     * @param pageSize Параметр пагинации (размер страницы)
-     * @return List<List < MeterReading>> Список поданных показаний с учетом параметров пагинации
+     * @param requestDto    Входящее ДТО на предоствление истории подачи показаний пользователем
+     * @param pageable Параметры пагинации
+     * @return List < MeterReadingDto> Список поданных показаний с учетом параметров пагинации
      */
     List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto, Pageable pageable);
 
     /**
      * Метод просмотра показаний счетчиков определенного пользователя за конкретный месяц
      *
-     * @param user  Пользователь
-     * @param year  Год
-     * @param month Месяц
-     * @return List<MeterReading> Список показаний счетчиков
+     * @param requestDto Входящее ДТО с информацией о пользователе, месяце и годе подачи показаний счетчика
+     * @return List<MeterReadingDto> Список показаний счетчиков
      */
     List<MeterReadingDto> getReadingsForMonthByUser(ReviewMeterReadingForMonthDto requestDto);
 }

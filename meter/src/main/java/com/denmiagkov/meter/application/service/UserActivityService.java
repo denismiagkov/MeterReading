@@ -15,7 +15,8 @@ public interface UserActivityService extends AuditService<ActionType> {
     /**
      * Метод возвращает список всех действий, совершенных пользователями в приложении
      *
-     * @return List<Activity> Список всех действий пользователей в приложении
+     * @param pageable Праматры пагинации
+     * @return List<UserActionDto> Список всех действий пользователей в приложении
      */
     List<UserActionDto> getUserActivitiesList(Pageable pageable);
 }

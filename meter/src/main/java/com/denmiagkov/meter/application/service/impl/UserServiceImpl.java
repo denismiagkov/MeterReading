@@ -45,6 +45,12 @@ public class UserServiceImpl implements UserService {
         return userOutgoingDto;
     }
 
+    /**
+     * Метод добавления нового пользователя в базу данных
+     *
+     * @param user Новый пользователь
+     * @return UserDto Исходящее ДТО со сведениями о зарегистрированном пользователе
+     */
     private UserDto addNewUserToDatabase(User user) {
         if (!userRepository.isExistUser(user)) {
             if (!userRepository.isExistLogin(user.getLogin())) {
@@ -59,6 +65,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Метод получения пароля пользователя по его логину
+     *
+     * @param login логин пользователя
+     * @return UserLoginDto  Сведения о пользователе, содержащие пароль
+     */
     @Override
     public UserLoginDto getPasswordByLogin(String login) {
         User user = userRepository.findUserByLogin(login)

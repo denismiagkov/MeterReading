@@ -21,6 +21,7 @@ public interface ActivityRepository {
     /**
      * Метод получения всех записей о действиях, совершенных пользователями в системе
      *
+     * @param pageable Параметры пагинации
      * @return List<Activity> Список действий пользователей
      */
     List<UserAction> findAllUsersActions(Pageable pageable);

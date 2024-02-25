@@ -23,7 +23,7 @@ public class LoggableAspect {
 
     @Around("annotatedByLoggable()")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        log.info("Calling method %s".formatted( proceedingJoinPoint.getSignature()));
+        log.info("Calling method %s".formatted(proceedingJoinPoint.getSignature()));
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         Long executionTime = System.currentTimeMillis() - start;

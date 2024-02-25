@@ -36,25 +36,11 @@ import java.util.Set;
 @RequestMapping("/api/v1/admin")
 @AllArgsConstructor
 public class AdminController {
-    /**
-     * Сервис пользователя
-     */
+
     private final UserService userService;
-    /**
-     * Сервис подачи показаний
-     */
     private final MeterReadingService meterReadingService;
-    /**
-     * Сервис действий пользователя
-     */
     private final UserActivityService activityService;
-    /**
-     * Сервис справочника показаний (типов услуг)
-     */
     private final DictionaryService dictionaryService;
-    /**
-     * Валидатор типа услуг (показаний счетчика)
-     */
     private final PublicUtilityValidatorImpl utilityValidator;
 
     /**

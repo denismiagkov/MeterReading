@@ -30,6 +30,7 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 @AllArgsConstructor
 public class UserController {
+
     public static final String TOKEN_ATTRIBUTE_NAME = "token";
     /**
      * Сервис подачи показаний
@@ -102,7 +103,6 @@ public class UserController {
      * @param requestDto Входящее ДТО просмотра текущих показаний счетчика
      * @return List<MeterReadingDto> Список актуальных показаний счетчика
      */
-
     @Operation(
             summary = "Shows actual meter readings on all utilities, submitted by user",
             responses = {

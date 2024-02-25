@@ -6,6 +6,7 @@ import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedE
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.HasNoAdminStatusException;
 import io.jsonwebtoken.Claims;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +14,11 @@ import org.springframework.stereotype.Service;
  * Сервис аутентификации пользователя
  */
 @Service
+@AllArgsConstructor
 public class AuthService {
+
     private final UserService userService;
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    private AuthService(UserService userService, JwtProvider jwtProvider) {
-        this.userService = userService;
-        this.jwtProvider = jwtProvider;
-    }
 
     /**
      * Метод проверки логина и пароля пользователя. В случае прохождения проверки генерируется токен,
@@ -71,7 +68,6 @@ public class AuthService {
         return jwtProvider.validateRefreshToken(refreshToken);
     }
 
-
     /**
      * Метод извлечения id пользователя из токена
      *
@@ -81,7 +77,6 @@ public class AuthService {
     public int getUserIdFromToken(String token) {
         return jwtProvider.getUserIdFromToken(token);
     }
-
 
     public void verifyAdmin(String header) {
         String token = getTokenFromHeader(header);

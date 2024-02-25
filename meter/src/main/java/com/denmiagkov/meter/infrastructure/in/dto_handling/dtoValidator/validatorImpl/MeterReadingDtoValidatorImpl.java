@@ -10,6 +10,7 @@ import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.DtoValid
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.InvalidDateException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.SubmitMeterReadingOnTheSameMonthException;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.UtilityTypeNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,19 +20,14 @@ import java.time.LocalDateTime;
  * Класс, валидирующий данные о новом показании счетчика, введенные пользователем
  */
 @Component
+@AllArgsConstructor
 public class MeterReadingDtoValidatorImpl implements DtoValidator<SubmitNewMeterReadingDto> {
 
     DictionaryService dictionaryService;
     MeterReadingService meterReadingService;
 
-    @Autowired
-    public MeterReadingDtoValidatorImpl(DictionaryService dictionaryService, MeterReadingService meterReadingService) {
-        this.dictionaryService = dictionaryService;
-        this.meterReadingService = meterReadingService;
-    }
-
     /**
-     * Метод проверки передачи корректного id типа услуг (показаний)
+     * Методы проверки передачи корректного id типа услуг (показаний)
      *
      * @param newMeterReading Новое показание счетчика
      * @return boolean возвращает true - если условие выполняется, false - если нет
