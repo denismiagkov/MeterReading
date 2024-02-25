@@ -47,8 +47,6 @@ class UserControllerTest {
     @InjectMocks
     UserController userController;
     ObjectMapper mapper = new ObjectMapper();
-    private int page;
-    private int size;
     MeterReadingDto meterReading1, meterReading2;
     String token;
 
@@ -148,7 +146,7 @@ class UserControllerTest {
                         .param("utilityId", "200"))
                 .andDo(print())
                 .andExpectAll(
-                        status().isBadRequest(),
+                        status().isNotFound(),
                         result -> assertTrue(result.getResolvedException() instanceof UtilityTypeNotFoundException)
                 );
     }

@@ -51,17 +51,17 @@ class UserActionServiceImplTest {
     @DisplayName("Dependent object returns appropriate list")
     void getUserActivitiesList() {
         List<UserAction> activitiesDummy = mock(ArrayList.class);
+        List<UserActionDto> activitiesDtoDummy = mock(ArrayList.class);
         Pageable pageable = mock(Pageable.class);
         when(activityRepository.findAllUsersActions(pageable)).thenReturn(activitiesDummy);
-        List<UserActionDto> userActionDtos = mock(ArrayList.class);
         when(userActionMapper.userActionsToUserActionDtos(activitiesDummy))
-                .thenReturn(userActionDtos);
-        List<List<UserActionDto>> userActionsPaginated = mock((ArrayList.class));
-        when(ListUtils.partition(userActionDtos, 2))
-                .thenReturn(userActionsPaginated);
+                .thenReturn(activitiesDtoDummy);
 
-        List<UserActionDto> activities = activityService.getUserActivitiesList(Pageable.of(0, 10));
+        activityService.getUserActivitiesList(pageable);
 
-        assertThat(activities).isEqualTo(userActionsPaginated);
+        verify(activityRepository, times(1))
+                .findAllUsersActions(pageable);
+        verify(userActionMapper, times(1))
+                .userActionsToUserActionDtos(activitiesDummy);
     }
 }

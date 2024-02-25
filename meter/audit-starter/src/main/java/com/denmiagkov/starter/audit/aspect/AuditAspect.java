@@ -9,6 +9,10 @@ import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Класс-аспект, реализующий аудит действий пользователей. Содержит параматризированный тип,
+ * определяющий виды совершаемых пользователями действий
+ */
 @Aspect
 @AllArgsConstructor
 @Slf4j

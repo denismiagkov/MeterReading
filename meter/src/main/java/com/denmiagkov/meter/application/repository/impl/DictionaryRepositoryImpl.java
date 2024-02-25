@@ -2,6 +2,7 @@ package com.denmiagkov.meter.application.repository.impl;
 
 import com.denmiagkov.meter.application.repository.DictionaryRepository;
 import com.denmiagkov.meter.utils.ConnectionManager;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -12,7 +13,10 @@ import java.util.Map;
  * Класс реализует логику взаимодействия с базой данных по поводу справочника услуг (типов показаний)
  */
 @Repository
+@AllArgsConstructor
 public class DictionaryRepositoryImpl implements DictionaryRepository {
+
+    private final ConnectionManager connectionManager;
 
     /**
      * SQL-запрос на добавление в справочник нового типа услуг
@@ -35,7 +39,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
      */
     @Override
     public Map<Integer, String> addUtilityType(String utilityName) {
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(
                      ADD_PUBLIC_UTILITY_TYPE_TO_DICTIONARY,
                      Statement.RETURN_GENERATED_KEYS)) {
@@ -60,7 +64,7 @@ public class DictionaryRepositoryImpl implements DictionaryRepository {
     @Override
     public Map<Integer, String> getAllUtilitiesTypes() {
         Map<Integer, String> allPublicUtilitiesTypes = new HashMap<>();
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(GET_ALL_PUBLIC_UTILITIES_TYPES)) {
             ResultSet queryResult = statement.executeQuery();
             while (queryResult.next()) {

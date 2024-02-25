@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuditConfig<E extends Enum<E>> {
 
+    /**
+     * Бин аспекта аудита, содаваемый автоматически при запуске приложения
+     * (при наличии сервиса, реализующего запись информации о действиях пользователей)
+     * */
     @Bean
     @ConditionalOnBean(AuditService.class)
     AuditAspect<E> auditAspect(AuditService<E> service) {

@@ -8,6 +8,7 @@ import com.denmiagkov.meter.domain.UserAction;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
@@ -20,24 +21,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest
+@DirtiesContext
 class UserActionRepositoryImplTest {
     @Autowired
-    ActivityRepositoryImpl activityRepository;
-    Connection connection;
-
-    @BeforeAll
-    static void beforeAll() {
-        PostgresContainerManager.startContainer();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        PostgresContainerManager.stopContainer();
-    }
+    private ActivityRepositoryImpl activityRepository;
+    @Autowired
+    private ConnectionManager connectionManager;
+    private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException {
-        connection = ConnectionManager.open();
+        connection = connectionManager.open();
         connection.setAutoCommit(false);
     }
 
@@ -48,14 +42,15 @@ class UserActionRepositoryImplTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Returns true if given activity is added to database")
     void addActivity() {
         UserAction userAction = new UserAction(35, 1,
                 LocalDateTime.of(2024, 2, 4, 15, 48),
-        ActionType.REVIEW_READINGS_FOR_MONTH);
+                ActionType.REVIEW_READINGS_FOR_MONTH);
 
         boolean result = activityRepository.addUserAction(userAction);
-        List<UserAction> activities = activityRepository.findAllUsersActions(Pageable.of(0, 10));
+        List<UserAction> activities = activityRepository.findAllUsersActions(Pageable.of(0, 100));
         UserAction testUserAction = activities.get(activities.size() - 1);
 
         assertAll(

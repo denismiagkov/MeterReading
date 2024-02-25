@@ -5,7 +5,7 @@ import com.denmiagkov.meter.application.repository.ActivityRepository;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserAction;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -17,8 +17,10 @@ import java.util.List;
  * Класс реализовывает логику взаимодействия с базой данных по поводу действий пользователей в приложении
  */
 @Repository
-@NoArgsConstructor
+@AllArgsConstructor
 public class ActivityRepositoryImpl implements ActivityRepository {
+
+    private final ConnectionManager connectionManager;
 
     /**
      * SQL-запрос на добавление одного пользовательского действия в базу данных
@@ -42,7 +44,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
      */
     @Override
     public boolean addUserAction(UserAction userAction) {
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(ADD_USER_ACTION)) {
             statement.setInt(1, userAction.getUserId());
             statement.setTimestamp(2, Timestamp.valueOf(userAction.getDateTime()));
@@ -59,7 +61,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
     @Override
     public List<UserAction> findAllUsersActions(Pageable pageable) {
         List<UserAction> userActivitiesList = new ArrayList<>();
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS_ACTIONS)) {
             statement.setInt(1, pageable.getPageSize());
             statement.setInt(2, (pageable.getPage() * pageable.getPageSize()));

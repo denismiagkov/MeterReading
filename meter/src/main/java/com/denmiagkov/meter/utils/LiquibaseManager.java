@@ -16,13 +16,14 @@ import java.sql.SQLException;
 public final class LiquibaseManager {
     private static final String QUERY_CREATE_MIGRATION_SCHEMA = "CREATE SCHEMA IF NOT EXISTS";
     private final LiquibaseConfig config;
+    private final ConnectionManager connectionManager;
 
     @PostConstruct
     void init() {
         String template = String.join(" ",
                 QUERY_CREATE_MIGRATION_SCHEMA,
                 config.getLiquibaseSchema());
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(template)) {
             statement.executeUpdate();
         } catch (SQLException e) {

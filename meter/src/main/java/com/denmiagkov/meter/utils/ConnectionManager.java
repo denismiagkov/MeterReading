@@ -14,14 +14,10 @@ import java.sql.SQLException;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
-    private static DatasourceConfig config;
 
-    @Autowired
-    private ConnectionManager(DatasourceConfig datasourceConfig) {
-        config = datasourceConfig;
-    }
+    private final DatasourceConfig config;
 
-    public static Connection open() {
+    public Connection open() {
         try {
             return DriverManager.getConnection(
                     config.getUrl(),

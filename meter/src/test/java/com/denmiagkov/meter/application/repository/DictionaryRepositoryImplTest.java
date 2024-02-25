@@ -14,28 +14,19 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@Testcontainers
 @SpringBootTest
 @ExtendWith(PostgresExtension.class)
 @DirtiesContext
 class DictionaryRepositoryImplTest {
     @Autowired
     DictionaryRepository dictionaryRepository;
+    @Autowired
+    ConnectionManager connectionManager;
     Connection connection;
-//
-//    @BeforeAll
-//    static void beforeAll() {
-//        PostgresContainerManager.startContainer();
-//    }
-//
-//    @AfterAll
-//    static void afterAll() {
-//        PostgresContainerManager.stopContainer();
-//    }
 
     @BeforeEach
     void setUp() throws SQLException {
-        connection = ConnectionManager.open();
+        connection = connectionManager.open();
         connection.setAutoCommit(false);
     }
 

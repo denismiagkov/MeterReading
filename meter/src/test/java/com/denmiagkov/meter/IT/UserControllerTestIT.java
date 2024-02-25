@@ -82,7 +82,7 @@ class UserControllerTestIT {
     }
 
     @Test
-    @Disabled
+    @Disabled("flaky test, need to see")
     @DisplayName("Method receives new meter reading values, records these in database and returns " +
                  "new meter reading successfully: all meter readings list increases by 1 ")
     void submitNewMeterReading_Successful() throws Exception {

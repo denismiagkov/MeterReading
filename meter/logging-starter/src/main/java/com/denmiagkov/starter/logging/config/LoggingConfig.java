@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LoggingConfig {
 
+    /**
+     * Бин аспекта логирования, создаваемый при условии наличия в контексте приложения бина, помеченного аннотацией EnableLogging
+     *
+     * @see EnableLoggingCondition
+     */
     @Bean
     @Conditional(EnableLoggingCondition.class)
     public LoggableAspect startLogging() {

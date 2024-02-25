@@ -10,9 +10,8 @@ public interface AuditService<E extends Enum<E>> {
 
     /**
      * Метод добавляет действие пользователя в базу данных
-     * @param incomingDto Входящее ДТО
      *
-     * @return boolean true - в случае успешного добавления,в противном случае - false
+     * @param incomingDto Входящее ДТО
      */
     void registerUserAction(IncomingDto<E> incomingDto);
 }

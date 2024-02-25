@@ -27,11 +27,11 @@ public class JwtProvider {
     /**
      * Секретный ключ для генерации и валидации access токена
      */
-    private final SecretKey JWT_ACCESS_SECRET_KEY;
+    private final SecretKey jwtAccessSecretKey;
     /**
      * Секретный ключ для генерации и валидации access токена
      */
-    private final SecretKey JWT_REFRESH_SECRET_KEY;
+    private final SecretKey jwtRefreshSecretKey;
     /**
      * Поле токена для хранения id пользователя
      */
@@ -41,12 +41,10 @@ public class JwtProvider {
      */
     public static final String USER_ROLE = "role";
 
-    private AuthConfig config;
     @Autowired
     public JwtProvider(AuthConfig authConfig) {
-        this.config = authConfig;
-        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(config.getValueOfJwtAccessSecretKey()));
-        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(config.getValueOfJwtRefreshSecretKey()));
+        this.jwtAccessSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(authConfig.getValueOfJwtAccessSecretKey()));
+        this.jwtRefreshSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(authConfig.getValueOfJwtRefreshSecretKey()));
     }
 
     /**
@@ -63,7 +61,7 @@ public class JwtProvider {
                 .setExpiration(accessExpiration)
                 .claim(USER_ID, loginDto.getUserId())
                 .claim(USER_ROLE, loginDto.getRole())
-                .signWith(JWT_ACCESS_SECRET_KEY)
+                .signWith(jwtAccessSecretKey)
                 .compact();
     }
 
@@ -81,7 +79,7 @@ public class JwtProvider {
                 .setExpiration(refreshExpiration)
                 .claim(USER_ID, loginDto.getUserId())
                 .claim(USER_ROLE, loginDto.getRole())
-                .signWith(JWT_REFRESH_SECRET_KEY)
+                .signWith(jwtRefreshSecretKey)
                 .compact();
     }
 
@@ -92,7 +90,7 @@ public class JwtProvider {
      * @return boolean в случае успешной валидации
      */
     public boolean validateAccessToken(String accessToken) {
-        return validateToken(accessToken, JWT_ACCESS_SECRET_KEY);
+        return validateToken(accessToken, jwtAccessSecretKey);
     }
 
     /**
@@ -102,7 +100,7 @@ public class JwtProvider {
      * @return boolean в случае успешной валидации
      */
     public boolean validateRefreshToken(String refreshToken) {
-        return validateToken(refreshToken, JWT_REFRESH_SECRET_KEY);
+        return validateToken(refreshToken, jwtRefreshSecretKey);
     }
 
     /**
@@ -125,11 +123,11 @@ public class JwtProvider {
     }
 
     public Claims getAccessClaims(String token) {
-        return getClaims(token, JWT_ACCESS_SECRET_KEY);
+        return getClaims(token, jwtAccessSecretKey);
     }
 
     public Claims getRefreshClaims(String token) {
-        return getClaims(token, JWT_REFRESH_SECRET_KEY);
+        return getClaims(token, jwtRefreshSecretKey);
     }
 
     private Claims getClaims(String token, Key secret) {
@@ -148,7 +146,7 @@ public class JwtProvider {
      */
     public String getLoginFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         String login = claims.getSubject();
@@ -163,7 +161,7 @@ public class JwtProvider {
      */
     public int getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         int userId = claims.get(USER_ID, Integer.class);
@@ -178,7 +176,7 @@ public class JwtProvider {
      */
     public UserRole getUserRoleFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         String userRole = claims.get(USER_ROLE, String.class);
