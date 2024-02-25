@@ -1,24 +1,26 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.infrastructure.in.validator.exception.NoAccessRightsException;
+import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.HasNoAdminStatusException;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Сервис аутентификации пользователя
  */
+@Service
 public class AuthService {
-    public static final AuthService INSTANCE = new AuthService();
-    private final UserService service;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
 
-    private AuthService() {
-        this.service = UserServiceImpl.INSTANCE;
-        this.jwtProvider = JwtProvider.INSTANCE;
+    @Autowired
+    private AuthService(UserService userService, JwtProvider jwtProvider) {
+        this.userService = userService;
+        this.jwtProvider = jwtProvider;
     }
 
     /**
@@ -29,16 +31,16 @@ public class AuthService {
      */
     public JwtResponse login(JwtRequest jwtRequest) {
         try {
-            UserLoginDto loginDto = service.getPasswordByLogin(jwtRequest.getLogin());
+            LoginUserDto loginDto = userService.getPasswordByLogin(jwtRequest.getLogin());
             if (loginDto.getPassword().equals(jwtRequest.getPassword())) {
                 String accessToken = jwtProvider.generateAccessToken(loginDto);
                 String refreshToken = jwtProvider.generateRefreshToken(loginDto);
                 return new JwtResponse(accessToken, refreshToken);
             } else {
-                throw new AuthException();
+                throw new AuthenticationFailedException();
             }
         } catch (RuntimeException e) {
-            throw new AuthException();
+            throw new AuthenticationFailedException();
         }
     }
 
@@ -52,21 +54,11 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String login = claims.getSubject();
-            UserLoginDto loginDto = service.getPasswordByLogin(login);
+            LoginUserDto loginDto = userService.getPasswordByLogin(login);
             String accessToken = jwtProvider.generateAccessToken(loginDto);
             return new JwtResponse(accessToken, null);
         }
         return new JwtResponse(null, null);
-    }
-
-    /**
-     * Метод вызывает метод валидации access токена
-     *
-     * @param token
-     * @return boolean возвращает true в случае успешной проверки
-     */
-    public boolean validateAccessToken(String token) throws RuntimeException {
-        return jwtProvider.validateAccessToken(token);
     }
 
     /**
@@ -79,19 +71,6 @@ public class AuthService {
         return jwtProvider.validateRefreshToken(refreshToken);
     }
 
-    /**
-     * Метод извлечения токена из HttpServletRequest
-     *
-     * @param request HttpServletRequest
-     * @return String токен
-     */
-    public String getTokenFromRequest(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-        return null;
-    }
 
     /**
      * Метод извлечения id пользователя из токена
@@ -104,19 +83,42 @@ public class AuthService {
     }
 
 
+    public void verifyAdmin(String header) {
+        String token = getTokenFromHeader(header);
+        jwtProvider.validateAccessToken(token);
+        isAdmin(token);
+    }
+
+    public String verifyUser(String header) {
+        String token = getTokenFromHeader(header);
+        jwtProvider.validateAccessToken(token);
+        return token;
+    }
+
+    /**
+     * Метод извлечения токена из HttpServletRequest
+     *
+     * @param request HttpServletRequest
+     * @return String токен
+     */
+    public String getTokenFromHeader(String header) {
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        throw new AuthenticationFailedException();
+    }
+
     /**
      * Метод проверки статуса админа у пользователя
      *
      * @param token
      * @return boolean результат проверки
-     * @throws NoAccessRightsException в случае отсутствия статуса админа
+     * @throws HasNoAdminStatusException в случае отсутствия статуса админа
      */
-    public boolean isAdmin(String token) {
+    public void isAdmin(String token) {
         UserRole role = jwtProvider.getUserRoleFromToken(token);
-        if (role.equals(UserRole.ADMIN)) {
-            return true;
-        } else {
-            throw new NoAccessRightsException();
+        if (!role.equals(UserRole.ADMIN)) {
+            throw new HasNoAdminStatusException();
         }
     }
 }

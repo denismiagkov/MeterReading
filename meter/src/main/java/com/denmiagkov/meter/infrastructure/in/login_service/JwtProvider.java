@@ -1,13 +1,13 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
-import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.application.service.UserServiceImpl;
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.utils.PropertiesUtil;
+import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
@@ -19,17 +19,8 @@ import java.util.Date;
 /**
  * Класс, отвечающий за создание и валидацию access и refresh токенов.
  */
+@Component
 public class JwtProvider {
-
-    public static final JwtProvider INSTANCE = new JwtProvider();
-    /**
-     * Ссылка на значение секретного ключа для создания и валидации access токена в формате BASE64
-     */
-    private static final String VALUE_OF_JWT_ACCESS_SECRET_KEY = "authentication.valueOfJwtAccessSecretKey";
-    /**
-     * Ссылка на значение секретного ключа для создания и валидации refresh токена в формате BASE64
-     */
-    private static final String VALUE_OF_JWT_REFRESH_SECRET_KEY = "authentication.valueOfJwtRefreshSecretKey";
     /**
      * Секретный ключ для генерации и валидации access токена
      */
@@ -48,8 +39,8 @@ public class JwtProvider {
     public static final String USER_ROLE = "role";
 
     public JwtProvider() {
-        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_ACCESS_SECRET_KEY)));
-        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(PropertiesUtil.get(VALUE_OF_JWT_REFRESH_SECRET_KEY)));
+        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtAccessSecretKey()));
+        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtRefreshSecretKey()));
     }
 
     /**
@@ -57,7 +48,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateAccessToken(UserLoginDto loginDto) {
+    public String generateAccessToken(LoginUserDto loginDto) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
@@ -75,7 +66,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateRefreshToken(UserLoginDto loginDto) {
+    public String generateRefreshToken(LoginUserDto loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
@@ -116,11 +107,15 @@ public class JwtProvider {
      * @return boolean в случае успешной валидации
      */
     private boolean validateToken(String token, Key secret) {
-        Jwts.parserBuilder()
-                .setSigningKey(secret)
-                .build()
-                .parseClaimsJws(token);
-        return true;
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secret)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            throw new AuthenticationFailedException(e.getMessage());
+        }
     }
 
     public Claims getAccessClaims(String token) {

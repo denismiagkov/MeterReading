@@ -1,11 +1,10 @@
 package com.denmiagkov.meter.application.service;
 
-
+import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
-import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
-import com.denmiagkov.meter.application.service.exception.LoginAlreadyInUseException;
-import com.denmiagkov.meter.application.service.exception.UserAlreadyExistsException;
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
+import com.denmiagkov.meter.application.service.exceptions.LoginAlreadyInUseException;
+import com.denmiagkov.meter.application.service.exceptions.UserAlreadyExistsException;
 
 import java.util.Set;
 
@@ -26,17 +25,17 @@ public interface UserService {
      * @throws LoginAlreadyInUseException при использовании логина, уже зарегистрированного в системе
      * @throws UserAlreadyExistsException при попытке повторной регистрации одного и того же пользователя
      */
-    UserDto registerUser(UserRegisterDto userDto);
+    UserDto registerUser(RegisterUserDto userDto);
 
     /**
      * Метод возвращает множество всех пользователей
      *
      * @return Set<User> Множество всех зарегистрированных пользователей
      */
-    Set<UserDto> getAllUsers();
+    Set<UserDto> getAllUsers(int page, int pageSize);
 
     /**
      * Метод возвращает пароль пользователя по его логину
      */
-    UserLoginDto getPasswordByLogin(String login);
+    LoginUserDto getPasswordByLogin(String login);
 }

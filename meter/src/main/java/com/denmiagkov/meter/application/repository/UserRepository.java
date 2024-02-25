@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.service.exception.AuthenticationFailedException;
+import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 
 import java.sql.ResultSet;
@@ -53,7 +53,7 @@ public interface UserRepository {
      *
      * @return Set<User> Множество зарегистрованных пользователей
      */
-    Set<User> getAllUsers();
+    Set<User> findAllUsers(int page, int pageSize);
 
     /**
      * Метод возвращает пользователя на основе соответствующей записи в базе данных
@@ -62,5 +62,5 @@ public interface UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */
-    User getUser(ResultSet queryResult) throws SQLException;
+    User findUser(ResultSet queryResult) throws SQLException;
 }

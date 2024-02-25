@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface MeterReadingMapper {
 
-    MeterReadingMapper METER_READING_OUTGOING_DTO_MAPPER = Mappers.getMapper(MeterReadingMapper.class);
+    MeterReadingMapper INSTANCE = Mappers.getMapper(MeterReadingMapper.class);
 
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "date", target = "date")

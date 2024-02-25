@@ -22,5 +22,5 @@ public interface UserActivityService {
      *
      * @return List<Activity> Список всех действий пользователей в приложении
      */
-    List<List<UserActionDto>> getUserActivitiesList(int pageSize);
+    List<UserActionDto> getUserActivitiesList(int page, int pageSize);
 }

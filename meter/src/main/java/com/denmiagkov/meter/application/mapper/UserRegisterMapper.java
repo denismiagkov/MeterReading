@@ -1,6 +1,6 @@
 package com.denmiagkov.meter.application.mapper;
 
-import com.denmiagkov.meter.application.dto.incoming.UserRegisterDto;
+import com.denmiagkov.meter.application.dto.incoming.RegisterUserDto;
 import com.denmiagkov.meter.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface UserRegisterMapper {
-    UserRegisterMapper USER_INCOMING_DTO_MAPPER = Mappers.getMapper(UserRegisterMapper.class);
+    UserRegisterMapper INSTANCE = Mappers.getMapper(UserRegisterMapper.class);
 
     @Mapping(source = "userId", target = "id")
     @Mapping(source = "name", target = "name")
@@ -20,5 +20,5 @@ public interface UserRegisterMapper {
     @Mapping(source = "role", target = "role")
     @Mapping(source = "login", target = "login")
     @Mapping(source = "password", target = "password")
-    User incomingUserDtoToUser(UserRegisterDto userRegisterDto);
+    User incomingUserDtoToUser(RegisterUserDto registerUserDto);
 }

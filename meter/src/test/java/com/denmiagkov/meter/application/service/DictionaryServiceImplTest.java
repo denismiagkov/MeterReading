@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.application.service;
 
-import com.denmiagkov.meter.application.repository.DictionaryRepositoryImpl;
+import com.denmiagkov.meter.application.repository.impl.DictionaryRepositoryImpl;
+import com.denmiagkov.meter.application.service.impl.DictionaryServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

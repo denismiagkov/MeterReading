@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.repository.impl.ActivityRepositoryImpl;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserAction;
 import com.denmiagkov.meter.utils.ConnectionManager;
@@ -33,7 +34,7 @@ class UserActionRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         LiquibaseManager.startLiquibase();
-        activityRepository = ActivityRepositoryImpl.INSTANCE;
+        activityRepository = new ActivityRepositoryImpl();
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);
     }
@@ -51,8 +52,8 @@ class UserActionRepositoryImplTest {
                 LocalDateTime.of(2024, 2, 4, 15, 48),
         ActionType.REVIEW_READINGS_FOR_MONTH);
 
-        boolean result = activityRepository.addActivity(userAction);
-        List<UserAction> activities = activityRepository.getActivitiesList();
+        boolean result = activityRepository.addUserAction(userAction);
+        List<UserAction> activities = activityRepository.findAllUsersActions(10, 0);
         UserAction testUserAction = activities.get(activities.size() - 1);
 
         assertAll(
@@ -66,7 +67,7 @@ class UserActionRepositoryImplTest {
     @Test
     @DisplayName("Returns activities list and verifies its elements")
     void getActivityList() {
-        List<UserAction> userActivities = activityRepository.getActivitiesList();
+        List<UserAction> userActivities = activityRepository.findAllUsersActions(10, 0);
 
         assertAll(
                 () -> assertThat(userActivities)

@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.repository.impl.DictionaryRepositoryImpl;
 import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
@@ -30,7 +31,7 @@ class DictionaryRepositoryImplTest {
     @BeforeEach
     void setUp() throws SQLException {
         LiquibaseManager.startLiquibase();
-        dictionaryRepository = DictionaryRepositoryImpl.INSTANCE;
+        dictionaryRepository = new DictionaryRepositoryImpl();
         connection = ConnectionManager.open();
         connection.setAutoCommit(false);
     }
