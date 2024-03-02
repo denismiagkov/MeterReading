@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * Маппер пользователя и входящего ДТО для аутентификации
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserLoginMapper {
 
     @Mapping(source = "id", target = "userId")

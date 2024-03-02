@@ -38,31 +38,6 @@ public class WebConfig implements WebMvcConfigurer {
         return registrationBean;
     }
 
-    @Bean
-    public MeterReadingMapper meterReadingMapper() {
-        return Mappers.getMapper(MeterReadingMapper.class);
-    }
-
-    @Bean
-    public UserActionMapper userActionMapper() {
-        return Mappers.getMapper(UserActionMapper.class);
-    }
-
-    @Bean
-    public UserLoginMapper userLoginMapper() {
-        return Mappers.getMapper(UserLoginMapper.class);
-    }
-
-    @Bean
-    public UserMapper userMapper() {
-        return Mappers.getMapper(UserMapper.class);
-    }
-
-    @Bean
-    public UserRegisterMapper userRegisterMapper() {
-        return Mappers.getMapper(UserRegisterMapper.class);
-    }
-
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder()

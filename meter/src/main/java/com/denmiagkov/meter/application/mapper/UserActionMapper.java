@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Маппер объекта действия пользователя в приложении и его исходящего ДТО
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserActionMapper {
 
     @Mapping(source = "id", target = "id")

@@ -53,11 +53,11 @@ class UserControllerTestIT {
     @Autowired
     private MeterReadingRepository meterReadingRepository;
     @Autowired
-    AuthService authService;
+    private AuthService authService;
     @Autowired
-    MeterReadingMapper meterReadingMapper;
+    private MeterReadingMapper meterReadingMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    Pageable pageable = new Pageable(0, 50);
+    private final Pageable pageable = Pageable.of(0, 50);
     private MeterReadingDto meterReadingDto1;
     private String token;
 

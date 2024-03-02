@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Маппер объекта пользователя и его исходящего ДТО
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     @Mapping(source = "id", target = "id")

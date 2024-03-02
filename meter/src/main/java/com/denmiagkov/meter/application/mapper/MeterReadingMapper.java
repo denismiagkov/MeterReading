@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Маппер объекта показания счетчика и его исходящего ДТО
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MeterReadingMapper {
 
     @Mapping(source = "userId", target = "userId")

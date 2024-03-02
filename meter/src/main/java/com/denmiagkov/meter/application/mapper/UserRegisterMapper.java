@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * Маппер пользователя и входящего ДТО для регистрации
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserRegisterMapper {
 
     @Mapping(source = "userId", target = "id")

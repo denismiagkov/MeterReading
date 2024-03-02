@@ -45,7 +45,7 @@ class LoginControllerTestIT {
     @Autowired
     private UserRepository repository;
     @Autowired
-    UserRegisterMapper userRegisterMapper;
+    private UserRegisterMapper userRegisterMapper;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
@@ -74,7 +74,6 @@ class LoginControllerTestIT {
         User user = userRegisterMapper.incomingUserDtoToUser(registerUserDto);
 
         assertAll(
-                () -> assertThat(registerUserDto.getName()).isEqualTo(resultUserDto.getName()),
                 () -> assertThat(registerUserDto.getName()).isEqualTo(resultUserDto.getName()),
                 () -> assertThat(registerUserDto.getPhone()).isEqualTo(resultUserDto.getPhone()),
                 () -> assertThat(registerUserDto.getAddress()).isEqualTo(resultUserDto.getAddress()),

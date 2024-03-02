@@ -59,11 +59,11 @@ class AdminControllerTestIT {
     @Autowired
     private DictionaryRepository dictionaryRepository;
     @Autowired
-    MeterReadingMapper meterReadingMapper;
+    private MeterReadingMapper meterReadingMapper;
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    UserActionMapper userActionMapper;
+    private UserActionMapper userActionMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private String token;
 
@@ -99,7 +99,7 @@ class AdminControllerTestIT {
     @Test
     @DisplayName("Admin authorized and method returns all users set successfully")
     void getAllUsers_Successful() throws Exception {
-        Set<User> users = userRepository.findAllUsers(new Pageable(0, 5));
+        Set<User> users = userRepository.findAllUsers(Pageable.of(0, 5));
         Set<UserDto> expectedResultSet = userMapper.usersToUserDtos(users);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users")
@@ -128,7 +128,7 @@ class AdminControllerTestIT {
     @DisplayName("Admin authorized and method returns all meter readings list ")
     void getAllMeterReadingsList() throws Exception {
         List<MeterReading> allMeterReadings = meterReadingRepository.findAllMeterReadings(
-                new Pageable(0, 10));
+                Pageable.of(0, 10));
         List<MeterReadingDto> expectedResultList = meterReadingMapper.listMeterReadingToListMeterReadingDto(allMeterReadings);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/readings")
@@ -156,7 +156,7 @@ class AdminControllerTestIT {
     @DisplayName("Admin authorized and method returns all user actions list ")
     void getAllUsersActions() throws Exception {
         List<UserAction> allUserActions = activityRepository.findAllUsersActions(
-                new Pageable(0, 10));
+                Pageable.of(0, 10));
         List<UserActionDto> expectedResultList = userActionMapper.userActionsToUserActionDtos(allUserActions);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/actions")
