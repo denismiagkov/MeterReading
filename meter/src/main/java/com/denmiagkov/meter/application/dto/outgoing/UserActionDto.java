@@ -1,9 +1,7 @@
 package com.denmiagkov.meter.application.dto.outgoing;
 
 import com.denmiagkov.meter.domain.ActionType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,22 +9,24 @@ import java.time.LocalDateTime;
  * Исходящее ДТО действия пользователя в приложении
  */
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class UserActionDto {
 
     /**
      * Уникальный идентификатор действия
      */
     private int id;
+
     /**
      * Идентификатор пользователя, совершившего действие
      */
     private final int userId;
+
     /**
      * Дата и время совершения действия
      */
     private final LocalDateTime dateTime;
+
     /**
      * Тип действия
      */

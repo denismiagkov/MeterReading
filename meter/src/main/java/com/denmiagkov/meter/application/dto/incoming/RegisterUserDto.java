@@ -1,7 +1,9 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
-import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserRole;
+import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.starter.audit.dto.IncomingDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class RegisterUserDto extends IncomingDto {
+public class RegisterUserDto extends IncomingDto<ActionType> {
     private int userId;
     private ActionType action;
     private String name;
@@ -19,21 +21,20 @@ public class RegisterUserDto extends IncomingDto {
     private UserRole role;
     private String login;
     private String password;
-    private String adminPassword;
 
     public RegisterUserDto() {
         this.action = ActionType.REGISTRATION;
+        this.role = UserRole.USER;
     }
 
-    public RegisterUserDto(String name, String phone, String address, UserRole role, String login, String password, String adminPassword) {
+    @Builder
+    public RegisterUserDto(String name, String phone, String address, String login, String password) {
         this();
         this.name = name;
         this.phone = phone;
         this.address = address;
-        this.role = role;
         this.login = login;
         this.password = password;
-        this.adminPassword = adminPassword;
     }
 
     @Override

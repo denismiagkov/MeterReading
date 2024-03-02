@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.infrastructure.in.controller;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserActionDto;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
@@ -7,16 +8,16 @@ import com.denmiagkov.meter.application.service.DictionaryService;
 import com.denmiagkov.meter.application.service.MeterReadingService;
 import com.denmiagkov.meter.application.service.UserActivityService;
 import com.denmiagkov.meter.application.service.UserService;
-import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.dtoValidator.validatorImpl.PublicUtilityValidatorImpl;
-import io.swagger.annotations.Api;
+import com.denmiagkov.starter.logging.aspect.annotations.Loggable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,44 +30,18 @@ import java.util.Set;
 /**
  * Контроллер, обрабатывающий обращения администратора
  */
-@Api(tags = "Admin")
+@Tag(name = "Admin")
 @Loggable
 @RestController
 @RequestMapping("/api/v1/admin")
+@AllArgsConstructor
 public class AdminController {
-    /**
-     * Сервис пользователя
-     */
+
     private final UserService userService;
-    /**
-     * Сервис подачи показаний
-     */
     private final MeterReadingService meterReadingService;
-    /**
-     * Сервис действий пользователя
-     */
     private final UserActivityService activityService;
-    /**
-     * Сервис справочника показаний (типов услуг)
-     */
     private final DictionaryService dictionaryService;
     private final PublicUtilityValidatorImpl utilityValidator;
-
-    /**
-     * Конструктор
-     */
-    @Autowired
-    public AdminController(UserService userService,
-                           MeterReadingService meterReadingService,
-                           UserActivityService activityService,
-                           DictionaryService dictionaryService,
-                           PublicUtilityValidatorImpl utilityValidator) {
-        this.userService = userService;
-        this.meterReadingService = meterReadingService;
-        this.activityService = activityService;
-        this.dictionaryService = dictionaryService;
-        this.utilityValidator = utilityValidator;
-    }
 
     /**
      * Метод возвращает множество всех пользователей
@@ -90,9 +65,10 @@ public class AdminController {
     public ResponseEntity<Set<UserDto>> getAllUsers(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userService.getAllUsers(page, size));
+                .body(userService.getAllUsers(pageable));
     }
 
     /**
@@ -118,9 +94,10 @@ public class AdminController {
     public ResponseEntity<List<MeterReadingDto>> getAllMeterReadingsList(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(meterReadingService.getAllMeterReadingsList(page, size));
+                .body(meterReadingService.getAllMeterReadingsList(pageable));
     }
 
     /**
@@ -145,9 +122,10 @@ public class AdminController {
     public ResponseEntity<List<UserActionDto>> getAllUsersActions(
             @RequestParam(name = "page", defaultValue = "0") @Parameter(description = "parameter of pagination - page") int page,
             @RequestParam(name = "size", defaultValue = "50") @Parameter(description = "parameter of pagination - page size") int size) {
+        Pageable pageable = Pageable.of(page, size);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(activityService.getUserActivitiesList(page, size));
+                .body(activityService.getUserActivitiesList(pageable));
     }
 
     /**
@@ -176,9 +154,9 @@ public class AdminController {
             @RequestBody @Parameter(description = "new utility name") Map<String, String> utility) {
         String newUtility = utility.get("name");
         utilityValidator.isValid(newUtility);
-        Map<Integer, String> utilitiesDictionary = dictionaryService.addUtilityTypeToDictionary(newUtility);
+        Map<Integer, String> utilityInDictionary = dictionaryService.addUtilityType(newUtility);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(utilitiesDictionary);
+                .body(utilityInDictionary);
     }
 }

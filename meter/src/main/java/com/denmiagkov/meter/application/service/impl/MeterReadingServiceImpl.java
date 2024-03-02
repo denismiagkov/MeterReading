@@ -1,12 +1,14 @@
 package com.denmiagkov.meter.application.service.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.MeterReadingDto;
 import com.denmiagkov.meter.application.mapper.MeterReadingMapper;
 import com.denmiagkov.meter.application.repository.*;
 import com.denmiagkov.meter.application.service.MeterReadingService;
-import com.denmiagkov.meter.aspects.annotations.Audit;
 import com.denmiagkov.meter.domain.*;
+import com.denmiagkov.starter.audit.aspect.annotations.Audit;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,24 +19,19 @@ import java.util.List;
  */
 @Audit
 @Service
+@AllArgsConstructor
 public class MeterReadingServiceImpl implements MeterReadingService {
-    /**
-     * Репозиторий данных о показаниях счетчика
-     */
-    private final MeterReadingRepository meterReadingRepository;
-    private static final MeterReadingMapper mapper = MeterReadingMapper.INSTANCE;
 
-    @Autowired
-    public MeterReadingServiceImpl(MeterReadingRepository meterReadingRepository) {
-        this.meterReadingRepository = meterReadingRepository;
-    }
+    private final MeterReadingRepository meterReadingRepository;
+    private final MeterReadingMapper mapper;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public MeterReadingDto submitNewMeterReading(SubmitNewMeterReadingDto meterReadingDto) {
-        MeterReading meterReading = meterReadingRepository.addNewMeterReading(meterReadingDto);
+        MeterReading meterReading = mapper.meterReadingDtoToMeterReading(meterReadingDto);
+        meterReading = meterReadingRepository.addNewMeterReading(meterReading);
         return mapper.meterReadingToMeterReadingDto(meterReading);
     }
 
@@ -42,8 +39,8 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getAllMeterReadingsList(int page, int pageSize) {
-        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(page, pageSize);
+    public List<MeterReadingDto> getAllMeterReadingsList(Pageable pageable) {
+        List<MeterReading> meterReadingList = meterReadingRepository.findAllMeterReadings(pageable);
         return mapper.listMeterReadingToListMeterReadingDto(meterReadingList);
     }
 
@@ -70,11 +67,9 @@ public class MeterReadingServiceImpl implements MeterReadingService {
      * {@inheritDoc}
      */
     @Override
-    public List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto) {
+    public List<MeterReadingDto> getMeterReadingsHistoryByUser(ReviewMeterReadingHistoryDto requestDto, Pageable pageable) {
         List<MeterReading> meterReadingHistory = meterReadingRepository.findMeterReadingsHistory(
-                requestDto.getUserId(),
-                requestDto.getPageSize(),
-                requestDto.getPage());
+                requestDto.getUserId(), pageable);
         return mapper.listMeterReadingToListMeterReadingDto(meterReadingHistory);
     }
 

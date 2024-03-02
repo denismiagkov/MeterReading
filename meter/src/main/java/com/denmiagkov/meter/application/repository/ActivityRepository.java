@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.domain.UserAction;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public interface ActivityRepository {
     /**
      * Метод получения всех записей о действиях, совершенных пользователями в системе
      *
+     * @param pageable Параметры пагинации
      * @return List<Activity> Список действий пользователей
      */
-    List<UserAction> findAllUsersActions(int page, int pageSize);
+    List<UserAction> findAllUsersActions(Pageable pageable);
 }

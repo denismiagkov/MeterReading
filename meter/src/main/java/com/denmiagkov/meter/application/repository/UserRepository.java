@@ -1,5 +1,6 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.User;
 
@@ -19,7 +20,7 @@ public interface UserRepository {
      * @param user Новый пользователь
      * @return int id пользователя
      */
-    int addUser(User user);
+    int saveUser(User user);
 
     /**
      * Метод проверки, содержатся ли сведения о пользователе в базе данных
@@ -41,8 +42,7 @@ public interface UserRepository {
      * Метод проверки, содержится ли в базе данных запись с указанными логином и паролем,
      * и определения пользователя, владеющего ими
      *
-     * @param login    Введенный пользователем логин
-     * @param password Введенный пользователем пароль
+     * @param login Введенный пользователем логин
      * @return User Зарегистрированный пользователь с указанными логином и паролем
      * @throws AuthenticationFailedException в случае, если пользователь с указанными логином и паролем не зарегистрирован
      */
@@ -51,16 +51,8 @@ public interface UserRepository {
     /**
      * Метод получения сведений о всех пользователях из базы данных
      *
+     * @param pageable Параметры пагинации
      * @return Set<User> Множество зарегистрованных пользователей
      */
-    Set<User> findAllUsers(int page, int pageSize);
-
-    /**
-     * Метод возвращает пользователя на основе соответствующей записи в базе данных
-     *
-     * @param queryResult Запись о пользователе в базе данных
-     * @return User Пользователь
-     * @throws SQLException
-     */
-    User findUser(ResultSet queryResult) throws SQLException;
+    Set<User> findAllUsers(Pageable pageable);
 }

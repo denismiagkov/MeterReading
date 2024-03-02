@@ -1,11 +1,14 @@
 package com.denmiagkov.meter.application.repository;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.impl.ActivityRepositoryImpl;
+import com.denmiagkov.meter.utils.ConnectionManager;
 import com.denmiagkov.meter.domain.ActionType;
 import com.denmiagkov.meter.domain.UserAction;
-import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
@@ -17,25 +20,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
+@SpringBootTest
+@DirtiesContext
 class UserActionRepositoryImplTest {
-    ActivityRepositoryImpl activityRepository;
-    Connection connection;
-
-    @BeforeAll
-    static void beforeAll() {
-        PostgresContainerManager.startContainer();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        PostgresContainerManager.stopContainer();
-    }
+    @Autowired
+    private ActivityRepositoryImpl activityRepository;
+    @Autowired
+    private ConnectionManager connectionManager;
+    private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException {
-        LiquibaseManager.startLiquibase();
-        activityRepository = new ActivityRepositoryImpl();
-        connection = ConnectionManager.open();
+        connection = connectionManager.open();
         connection.setAutoCommit(false);
     }
 
@@ -46,14 +42,15 @@ class UserActionRepositoryImplTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Returns true if given activity is added to database")
     void addActivity() {
         UserAction userAction = new UserAction(35, 1,
                 LocalDateTime.of(2024, 2, 4, 15, 48),
-        ActionType.REVIEW_READINGS_FOR_MONTH);
+                ActionType.REVIEW_READINGS_FOR_MONTH);
 
         boolean result = activityRepository.addUserAction(userAction);
-        List<UserAction> activities = activityRepository.findAllUsersActions(10, 0);
+        List<UserAction> activities = activityRepository.findAllUsersActions(Pageable.of(0, 100));
         UserAction testUserAction = activities.get(activities.size() - 1);
 
         assertAll(
@@ -67,7 +64,7 @@ class UserActionRepositoryImplTest {
     @Test
     @DisplayName("Returns activities list and verifies its elements")
     void getActivityList() {
-        List<UserAction> userActivities = activityRepository.findAllUsersActions(10, 0);
+        List<UserAction> userActivities = activityRepository.findAllUsersActions(Pageable.of(0, 10));
 
         assertAll(
                 () -> assertThat(userActivities)

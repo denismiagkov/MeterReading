@@ -7,29 +7,34 @@ import lombok.*;
  * Исходящее ДТО пользователя
  */
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class UserDto {
+
     /**
      * id пользователя
      */
     private int id;
+
     /**
      * Имя пользователя
      */
     private String name;
+
     /**
      * Телефон пользователя
      */
     private String phone;
+
     /**
      * Адрес пользователя
      */
     private String address;
+
     /**
      * Роль пользователя
      */
     private UserRole role;
+
     /**
      * Логин пользователя
      */

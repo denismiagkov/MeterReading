@@ -1,6 +1,7 @@
 package com.denmiagkov.meter.application.dto.incoming;
 
 import com.denmiagkov.meter.domain.ActionType;
+import com.denmiagkov.starter.audit.dto.IncomingDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ReviewMeterReadingHistoryDto extends IncomingDto {
+public class ReviewMeterReadingHistoryDto extends IncomingDto<ActionType> {
     /**
      * id пользователя
      */
@@ -18,16 +19,6 @@ public class ReviewMeterReadingHistoryDto extends IncomingDto {
      * Тип действия пользователя
      */
     private ActionType action;
-
-    /**
-     * Параметр пагинации: размер страницы
-     */
-    private int pageSize;
-
-    /**
-     * Параметр пагинации: номер страницы
-     */
-    private int page;
 
     public ReviewMeterReadingHistoryDto() {
         this.action = ActionType.REVIEW_READINGS_HISTORY;

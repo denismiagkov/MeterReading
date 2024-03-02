@@ -1,12 +1,14 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
+import com.denmiagkov.meter.config.yaml.AuthConfig;
 import com.denmiagkov.meter.domain.UserRole;
-import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
+import com.denmiagkov.starter.audit.aspect.annotations.Audit;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -19,16 +21,17 @@ import java.util.Date;
 /**
  * Класс, отвечающий за создание и валидацию access и refresh токенов.
  */
+@Audit
 @Component
 public class JwtProvider {
     /**
      * Секретный ключ для генерации и валидации access токена
      */
-    private final SecretKey JWT_ACCESS_SECRET_KEY;
+    private final SecretKey jwtAccessSecretKey;
     /**
      * Секретный ключ для генерации и валидации access токена
      */
-    private final SecretKey JWT_REFRESH_SECRET_KEY;
+    private final SecretKey jwtRefreshSecretKey;
     /**
      * Поле токена для хранения id пользователя
      */
@@ -38,9 +41,10 @@ public class JwtProvider {
      */
     public static final String USER_ROLE = "role";
 
-    public JwtProvider() {
-        this.JWT_ACCESS_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtAccessSecretKey()));
-        this.JWT_REFRESH_SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(YamlUtil.getYaml().getAuthentication().getValueOfJwtRefreshSecretKey()));
+    @Autowired
+    public JwtProvider(AuthConfig authConfig) {
+        this.jwtAccessSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(authConfig.getValueOfJwtAccessSecretKey()));
+        this.jwtRefreshSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(authConfig.getValueOfJwtRefreshSecretKey()));
     }
 
     /**
@@ -48,7 +52,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateAccessToken(LoginUserDto loginDto) {
+    public String generateAccessToken(UserLoginDto loginDto) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
@@ -57,7 +61,7 @@ public class JwtProvider {
                 .setExpiration(accessExpiration)
                 .claim(USER_ID, loginDto.getUserId())
                 .claim(USER_ROLE, loginDto.getRole())
-                .signWith(JWT_ACCESS_SECRET_KEY)
+                .signWith(jwtAccessSecretKey)
                 .compact();
     }
 
@@ -66,7 +70,7 @@ public class JwtProvider {
      *
      * @param loginDto Входяще ДТО для аутентификации пользователя
      */
-    public String generateRefreshToken(LoginUserDto loginDto) {
+    public String generateRefreshToken(UserLoginDto loginDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
@@ -75,7 +79,7 @@ public class JwtProvider {
                 .setExpiration(refreshExpiration)
                 .claim(USER_ID, loginDto.getUserId())
                 .claim(USER_ROLE, loginDto.getRole())
-                .signWith(JWT_REFRESH_SECRET_KEY)
+                .signWith(jwtRefreshSecretKey)
                 .compact();
     }
 
@@ -86,7 +90,7 @@ public class JwtProvider {
      * @return boolean в случае успешной валидации
      */
     public boolean validateAccessToken(String accessToken) {
-        return validateToken(accessToken, JWT_ACCESS_SECRET_KEY);
+        return validateToken(accessToken, jwtAccessSecretKey);
     }
 
     /**
@@ -96,7 +100,7 @@ public class JwtProvider {
      * @return boolean в случае успешной валидации
      */
     public boolean validateRefreshToken(String refreshToken) {
-        return validateToken(refreshToken, JWT_REFRESH_SECRET_KEY);
+        return validateToken(refreshToken, jwtRefreshSecretKey);
     }
 
     /**
@@ -119,11 +123,11 @@ public class JwtProvider {
     }
 
     public Claims getAccessClaims(String token) {
-        return getClaims(token, JWT_ACCESS_SECRET_KEY);
+        return getClaims(token, jwtAccessSecretKey);
     }
 
     public Claims getRefreshClaims(String token) {
-        return getClaims(token, JWT_REFRESH_SECRET_KEY);
+        return getClaims(token, jwtRefreshSecretKey);
     }
 
     private Claims getClaims(String token, Key secret) {
@@ -142,7 +146,7 @@ public class JwtProvider {
      */
     public String getLoginFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         String login = claims.getSubject();
@@ -157,7 +161,7 @@ public class JwtProvider {
      */
     public int getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         int userId = claims.get(USER_ID, Integer.class);
@@ -172,7 +176,7 @@ public class JwtProvider {
      */
     public UserRole getUserRoleFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(JWT_ACCESS_SECRET_KEY)
+                .setSigningKey(jwtAccessSecretKey)
                 .parseClaimsJws(token)
                 .getBody();
         String userRole = claims.get(USER_ROLE, String.class);

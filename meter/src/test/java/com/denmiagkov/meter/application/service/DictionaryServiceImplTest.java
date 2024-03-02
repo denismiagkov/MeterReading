@@ -26,9 +26,9 @@ class DictionaryServiceImplTest {
     @DisplayName("Method invokes appropriate method on dependent object")
     void addUtilityTypeToDictionary() {
         String utilityName = "ELECTRICITY";
-        dictionaryService.addUtilityTypeToDictionary(utilityName);
+        dictionaryService.addUtilityType(utilityName);
         verify(dictionaryRepository, times(1))
-                .addUtilityTypeToDictionary(utilityName);
+                .addUtilityType(utilityName);
     }
 
     @Test

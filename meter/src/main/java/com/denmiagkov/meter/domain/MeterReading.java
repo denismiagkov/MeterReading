@@ -14,24 +14,28 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString
 public class MeterReading {
+
     /**
      * Уникальный идентификатор показания
      */
     private int id;
+
     /**
      * Идентификатор пользователя
      */
     private final int userId;
+
     /**
      * Дата и время подачи показания
      */
     private final LocalDateTime date;
+
     /**
      * Идентификатор типа услуг
      */
     private final int utilityId;
+
     /**
      * Значение счетчика
      */

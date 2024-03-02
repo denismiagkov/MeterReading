@@ -8,13 +8,15 @@ import java.util.Map;
 public interface DictionaryRepository {
     /**
      * Метод добавляет в справочник новый тип коммунальных услуг (новый тип показаний)
+     *
      * @param name Название типа услуг
-     * @return int Уникальный идентификатор нового типа услуг
+     * @return Map<Integer, String> Уникальный идентификатор и название нового типа услуг
      */
-    int addUtilityTypeToDictionary(String name);
+    Map<Integer, String> addUtilityType(String name);
 
     /**
      * Метод возвращает коллекцию всех типов услуг (типов показаний)
+     *
      * @return Map<Integer, String> Коллекция всех актуальных типов услуг (показаний)
      */
     Map<Integer, String> getAllUtilitiesTypes();

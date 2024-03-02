@@ -10,9 +10,10 @@ public interface DictionaryService {
      * Метод добавляет новый тип услуг (расширяет перечень подаваемых показаний)
      *
      * @param utilityName новый тип подаваемых показаний
-     * @return boolean возвращает true в случае успешного добавления записи в справочник
+     * @return Map<Integer, String> id и название добавленного типа показания
      */
-    Map<Integer, String> addUtilityTypeToDictionary(String utilityName);
+    Map<Integer, String> addUtilityType(String utilityName);
+
     /**
      * Метод возвращает справочник типов услуг (типов показаний счетчиков)
      *

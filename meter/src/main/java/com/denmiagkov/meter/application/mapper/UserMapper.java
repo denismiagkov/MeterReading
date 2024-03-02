@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +14,6 @@ import java.util.Set;
  */
 @Mapper
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
@@ -23,5 +23,5 @@ public interface UserMapper {
     @Mapping(source = "login", target = "login")
     UserDto userToUserDto(User user);
 
-    Set<UserDto> usersToUserDtos(Set<User> users);
+    HashSet<UserDto> usersToUserDtos(Set<User> users);
 }

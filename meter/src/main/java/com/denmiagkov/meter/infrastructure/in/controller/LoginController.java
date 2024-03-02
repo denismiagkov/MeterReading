@@ -3,18 +3,18 @@ package com.denmiagkov.meter.infrastructure.in.controller;
 import com.denmiagkov.meter.application.dto.incoming.*;
 import com.denmiagkov.meter.application.dto.outgoing.UserDto;
 import com.denmiagkov.meter.application.service.*;
-import com.denmiagkov.meter.aspects.annotations.Loggable;
 import com.denmiagkov.meter.infrastructure.in.login_service.AuthService;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtRequest;
 import com.denmiagkov.meter.infrastructure.in.login_service.JwtResponse;
 import com.denmiagkov.meter.infrastructure.in.dto_handling.IncomingDtoBuilder;
-import io.swagger.annotations.Api;
+import com.denmiagkov.starter.logging.aspect.annotations.Loggable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,29 +23,16 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Контроллер регистрации и входа в приложение
  */
-@Api(tags = "Login")
+@Tag(name = "Login")
 @Loggable
 @RestController
 @RequestMapping("/api/v1")
+@AllArgsConstructor
 public class LoginController {
-    /**
-     * Сервис пользователя
-     */
+
     private final UserService userService;
     private final AuthService authService;
     private final IncomingDtoBuilder dtoHandler;
-
-    /**
-     * Конструктор
-     */
-    @Autowired
-    public LoginController(UserService userService,
-                           AuthService authService,
-                           IncomingDtoBuilder dtoHandler) {
-        this.userService = userService;
-        this.authService = authService;
-        this.dtoHandler = dtoHandler;
-    }
 
     /**
      * Метод регистрации пользователя
@@ -53,7 +40,6 @@ public class LoginController {
      * @param registerUserDto Входящее ДТО регистрации пользователя
      * @return User Зарегистрированный пользователь
      */
-
     @Operation(
             summary = "Registration of new user",
             responses = {

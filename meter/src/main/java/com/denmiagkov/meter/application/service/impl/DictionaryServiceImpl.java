@@ -1,9 +1,8 @@
 package com.denmiagkov.meter.application.service.impl;
 
 import com.denmiagkov.meter.application.service.DictionaryService;
-import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.PublicUtilityTypeAlreadyExistsException;
 import com.denmiagkov.meter.application.repository.DictionaryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,25 +11,17 @@ import java.util.Map;
  * Класс реализует логику обработки данных о справочнике показаний (типов услуг)
  */
 @Service
+@AllArgsConstructor
 public class DictionaryServiceImpl implements DictionaryService {
 
-    /**
-     * Репозиторий справочника показаний
-     */
     private final DictionaryRepository dictionaryRepository;
-
-    @Autowired
-    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
-        this.dictionaryRepository = dictionaryRepository;
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Map<Integer, String> addUtilityTypeToDictionary(String utilityName) {
-        dictionaryRepository.addUtilityTypeToDictionary(utilityName.toUpperCase());
-        return getUtilitiesDictionary();
+    public Map<Integer, String> addUtilityType(String utilityName) {
+        return dictionaryRepository.addUtilityType(utilityName.toUpperCase());
     }
 
     /**
@@ -40,5 +31,4 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Map<Integer, String> getUtilitiesDictionary() {
         return dictionaryRepository.getAllUtilitiesTypes();
     }
-
 }

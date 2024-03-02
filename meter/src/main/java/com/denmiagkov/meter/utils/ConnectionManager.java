@@ -1,38 +1,28 @@
 package com.denmiagkov.meter.utils;
 
+import com.denmiagkov.meter.config.yaml.DatasourceConfig;
 import com.denmiagkov.meter.utils.exceptions.DatabaseConnectionNotEstablishedException;
-import com.denmiagkov.meter.utils.yaml_config.YamlUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 @Component
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConnectionManager {
 
-    private ConnectionManager() {
-    }
+    private final DatasourceConfig config;
 
-    static {
-        loadDriver();
-    }
-
-    private static void loadDriver() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Connection open() {
+    public Connection open() {
         try {
             return DriverManager.getConnection(
-                    YamlUtil.getYaml().getDatasource().getUrl(),
-                    YamlUtil.getYaml().getDatasource().getUsername(),
-                    YamlUtil.getYaml().getDatasource().getPassword()
+                    config.getUrl(),
+                    config.getUsername(),
+                    config.getPassword()
             );
         } catch (SQLException e) {
             throw new DatabaseConnectionNotEstablishedException(e.getMessage());

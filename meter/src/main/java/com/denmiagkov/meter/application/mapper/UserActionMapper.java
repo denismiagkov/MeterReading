@@ -7,12 +7,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+
 /**
  * Маппер объекта действия пользователя в приложении и его исходящего ДТО
- * */
+ */
 @Mapper
 public interface UserActionMapper {
-    UserActionMapper INSTANCE = Mappers.getMapper(UserActionMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "userId", target = "userId")

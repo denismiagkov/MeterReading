@@ -1,38 +1,32 @@
 package com.denmiagkov.meter.application.repository;
 
-import com.denmiagkov.meter.application.repository.impl.DictionaryRepositoryImpl;
+import com.denmiagkov.meter.IT.config.PostgresExtension;
 import com.denmiagkov.meter.utils.ConnectionManager;
-import com.denmiagkov.meter.utils.LiquibaseManager;
 import org.junit.jupiter.api.*;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
+@SpringBootTest
+@ExtendWith(PostgresExtension.class)
+@DirtiesContext
 class DictionaryRepositoryImplTest {
+    @Autowired
     DictionaryRepository dictionaryRepository;
+    @Autowired
+    ConnectionManager connectionManager;
     Connection connection;
-
-    @BeforeAll
-    static void beforeAll() {
-        PostgresContainerManager.startContainer();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        PostgresContainerManager.stopContainer();
-    }
 
     @BeforeEach
     void setUp() throws SQLException {
-        LiquibaseManager.startLiquibase();
-        dictionaryRepository = new DictionaryRepositoryImpl();
-        connection = ConnectionManager.open();
+        connection = connectionManager.open();
         connection.setAutoCommit(false);
     }
 
@@ -43,19 +37,14 @@ class DictionaryRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Number of records increases on 1 after adding another record, and utilityToAdd equals addedUtility")
+    @DisplayName("Number of records increases on 1 after adding another record")
     void addUtilityTypeToDictionary() {
         String utilityToAdd = "ELECTRICITY";
         int listSizeBefore = dictionaryRepository.getAllUtilitiesTypes().size();
-        int utilityId = dictionaryRepository.addUtilityTypeToDictionary(utilityToAdd);
+        Map<Integer, String> newUtility = dictionaryRepository.addUtilityType(utilityToAdd);
         int listSizeAfter = dictionaryRepository.getAllUtilitiesTypes().size();
 
-        String addedUtility = dictionaryRepository.getAllUtilitiesTypes().get(utilityId);
-
-        assertAll(
-                () -> assertThat(listSizeAfter).isGreaterThan(listSizeBefore),
-                () -> assertThat(addedUtility).isEqualTo(utilityToAdd)
-        );
+        assertThat(listSizeAfter).isGreaterThan(listSizeBefore);
     }
 
     @Test

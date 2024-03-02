@@ -1,11 +1,12 @@
 package com.denmiagkov.meter.infrastructure.in.login_service;
 
-import com.denmiagkov.meter.application.dto.incoming.LoginUserDto;
+import com.denmiagkov.meter.application.dto.incoming.UserLoginDto;
 import com.denmiagkov.meter.application.service.UserService;
 import com.denmiagkov.meter.application.service.exceptions.AuthenticationFailedException;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.infrastructure.in.exception_handling.exceptions.HasNoAdminStatusException;
 import io.jsonwebtoken.Claims;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +14,11 @@ import org.springframework.stereotype.Service;
  * Сервис аутентификации пользователя
  */
 @Service
+@AllArgsConstructor
 public class AuthService {
+
     private final UserService userService;
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    private AuthService(UserService userService, JwtProvider jwtProvider) {
-        this.userService = userService;
-        this.jwtProvider = jwtProvider;
-    }
 
     /**
      * Метод проверки логина и пароля пользователя. В случае прохождения проверки генерируется токен,
@@ -31,7 +28,7 @@ public class AuthService {
      */
     public JwtResponse login(JwtRequest jwtRequest) {
         try {
-            LoginUserDto loginDto = userService.getPasswordByLogin(jwtRequest.getLogin());
+            UserLoginDto loginDto = userService.getPasswordByLogin(jwtRequest.getLogin());
             if (loginDto.getPassword().equals(jwtRequest.getPassword())) {
                 String accessToken = jwtProvider.generateAccessToken(loginDto);
                 String refreshToken = jwtProvider.generateRefreshToken(loginDto);
@@ -54,7 +51,7 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String login = claims.getSubject();
-            LoginUserDto loginDto = userService.getPasswordByLogin(login);
+            UserLoginDto loginDto = userService.getPasswordByLogin(login);
             String accessToken = jwtProvider.generateAccessToken(loginDto);
             return new JwtResponse(accessToken, null);
         }
@@ -71,7 +68,6 @@ public class AuthService {
         return jwtProvider.validateRefreshToken(refreshToken);
     }
 
-
     /**
      * Метод извлечения id пользователя из токена
      *
@@ -81,7 +77,6 @@ public class AuthService {
     public int getUserIdFromToken(String token) {
         return jwtProvider.getUserIdFromToken(token);
     }
-
 
     public void verifyAdmin(String header) {
         String token = getTokenFromHeader(header);

@@ -1,9 +1,11 @@
 package com.denmiagkov.meter.application.repository.impl;
 
+import com.denmiagkov.meter.application.dto.Pageable;
 import com.denmiagkov.meter.application.repository.UserRepository;
 import com.denmiagkov.meter.domain.User;
 import com.denmiagkov.meter.domain.UserRole;
 import com.denmiagkov.meter.utils.ConnectionManager;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -15,7 +17,10 @@ import java.util.Set;
  * Класс, отвечающий за реализацию логики взаимодействия с базой данных по поводу сведений о пользователях
  */
 @Repository
+@AllArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
+    
+    private final ConnectionManager connectionManager;
 
     /**
      * SQL-запрос на добавление пользователя в таблицу
@@ -65,8 +70,8 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public int addUser(User user) {
-        try (Connection connection = ConnectionManager.open();
+    public int saveUser(User user) {
+        try (Connection connection = connectionManager.open();
              PreparedStatement statement = connection.prepareStatement(
                      ADD_USER, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
@@ -92,7 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public boolean isExistUser(User user) {
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement preparedStatement = connection.prepareStatement(IS_EXIST_USER)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getPhone());
@@ -108,7 +113,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public boolean isExistLogin(String login) {
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement preparedStatement = connection.prepareStatement(IS_EXIST_LOGIN)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -124,7 +129,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findUserByLogin(String login) {
         User user = null;
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement statementFindUserByLoginAndPassword =
                      connection.prepareStatement(FIND_USER_BY_LOGIN)) {
             statementFindUserByLoginAndPassword.setString(1, login);
@@ -142,12 +147,12 @@ public class UserRepositoryImpl implements UserRepository {
      * {@inheritDoc}
      */
     @Override
-    public Set<User> findAllUsers(int page, int pageSize) {
+    public Set<User> findAllUsers(Pageable pageable) {
         Set<User> users = new HashSet<>();
-        try (Connection connection = ConnectionManager.open();
+        try (Connection connection = connectionManager.open();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_USERS)) {
-            preparedStatement.setInt(1, pageSize);
-            preparedStatement.setInt(2, (page * pageSize));
+            preparedStatement.setInt(1, pageable.getPageSize());
+            preparedStatement.setInt(2, (pageable.getPage() * pageable.getPageSize()));
             ResultSet queryResult = preparedStatement.executeQuery();
             while (queryResult.next()) {
                 User user = findUser(queryResult);
@@ -166,8 +171,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return User Пользователь
      * @throws SQLException
      */
-    @Override
-    public User findUser(ResultSet queryResult) throws SQLException {
+    private User findUser(ResultSet queryResult) throws SQLException {
         int id = queryResult.getInt("id");
         String name = queryResult.getString("name");
         String phone = queryResult.getString("phone");

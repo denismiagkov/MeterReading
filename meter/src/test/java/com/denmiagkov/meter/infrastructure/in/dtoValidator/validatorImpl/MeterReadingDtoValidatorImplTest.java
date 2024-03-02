@@ -61,7 +61,7 @@ class MeterReadingDtoValidatorImplTest {
 
         assertThatThrownBy(() -> validator.isValidMeterReadingUtilityType(newMeterReading))
                 .isInstanceOf(UtilityTypeNotFoundException.class)
-                .hasMessage("This type of utilities is not registered!");
+                .hasMessage("Data input error: This type of utilities is not registered!");
     }
 
     @Test
